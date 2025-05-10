@@ -29,7 +29,7 @@ export function RegisterForm({
                 More effectively with optimized workflows.</p>
               </div>
               <div className="flex gap-3">
-                <div>
+                <div className="grid gap-3">
                 <Label htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
@@ -38,7 +38,7 @@ export function RegisterForm({
                   required
                 />
                 </div>
-                <div>
+                <div className="grid gap-3">
                 <Label htmlFor="lastName">Last Name</Label>
                 <Input
                   id="lastName"
