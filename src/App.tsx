@@ -3,12 +3,12 @@ import { LoginForm } from "@/features/auth/components/Login-form"
 import AuthLayout from "./features/auth/pages/AuthLayout"
 import { RegisterForm } from "./features/auth/components/Register-form"
 import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from "./components/mode-toggle"
+import Navbar from "./components/navbar"
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-    <ModeToggle />
+    <Navbar/>
   <Routes>
       <Route path="/" element={<div>Home</div>} />
       <Route path="auth" element={<AuthLayout/>}>
