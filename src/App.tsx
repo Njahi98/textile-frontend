@@ -10,7 +10,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <Navbar/>
   <Routes>
-      <Route path="/" element={<div>Home</div>} />
+      <Route path="/" element={""} />
       <Route path="auth" element={<AuthLayout/>}>
       <Route path="login" element={ <LoginForm /> } />
       <Route path="register" element={ <RegisterForm /> } />
