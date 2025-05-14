@@ -4,6 +4,7 @@ import AuthLayout from "./features/auth/pages/AuthLayout"
 import { RegisterForm } from "./features/auth/components/Register-form"
 import { ThemeProvider } from "@/components/theme-provider"
 import Navbar from "./components/navbar"
+import Dashboard from "./features/dashboard/pages/Dashboard"
 
 function App() {
   return (
@@ -12,11 +13,10 @@ function App() {
   <Routes>
       <Route path="/" element={""} />
       <Route path="auth" element={<AuthLayout/>}>
-      <Route path="login" element={ <LoginForm /> } />
-      <Route path="register" element={ <RegisterForm /> } />
-
+        <Route path="login" element={ <LoginForm /> } />
+        <Route path="register" element={ <RegisterForm /> } />
       </Route>
-
+      <Route path="dashboard" element={<Dashboard/>} />
 
     </Routes>
 
