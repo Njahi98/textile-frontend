@@ -7,7 +7,6 @@ import Backdrop from "./ui/backdrop";
 import { AnimatePresence, motion } from "framer-motion";
 import AccordionNavbar from "./ui/accordion-navbar";
 
-
 function Navbar() {
   const [isBackDropOpen, setIsBackDropOpen] = useState(false);
 
@@ -66,12 +65,49 @@ function Navbar() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mx-auto px-4 py-6 flex flex-col gap-4">
-              <ul className="flex flex-col gap-4 *:border-b *:pb-3 *:last:border-b-0 text-sm font-medium">
+                <ul className="flex flex-col gap-4 *:border-b *:pb-3 *:last:border-b-0 text-sm font-medium">
 
-                <AccordionNavbar name="Features" hasDetails={false} onClick={closeBackdrop} path="/features"/>
-                <AccordionNavbar name="Features" hasDetails={true} onClick={()=>{""}} path="/features"/>
-                <AccordionNavbar name="Features" hasDetails={false} onClick={closeBackdrop} path="/features"/>
 
+                  <AccordionNavbar 
+                    name="Home" 
+                    hasDetails={false} 
+                    onClick={closeBackdrop} 
+                    path="/"
+                  />
+                  
+
+                  <AccordionNavbar 
+                    name="Products" 
+                    hasDetails={true} 
+                    onClick={closeBackdrop} 
+                    path="/products"
+                    children={[
+                      { name: "Overview", path: "/products" },
+                      { name: "Fabrics", path: "/products/fabrics" },
+                      { name: "Pricing", path: "/products/pricing" }
+                    ]}
+                  />
+                  
+
+                  <AccordionNavbar 
+                    name="About Us" 
+                    hasDetails={false} 
+                    onClick={closeBackdrop} 
+                    path="/about"
+                  />
+                  
+
+                  <AccordionNavbar 
+                    name="Resources" 
+                    hasDetails={true} 
+                    onClick={closeBackdrop} 
+                    path="/resources"
+                    children={[
+                      { name: "Blog", path: "/blog" },
+                      { name: "Documentation", path: "/docs" },
+                      { name: "Support", path: "/support" }
+                    ]}
+                  />
                 </ul>
 
                 <div className="flex justify-end">
