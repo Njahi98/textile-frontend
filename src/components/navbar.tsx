@@ -25,14 +25,14 @@ function Navbar() {
   return (
     <>
       <nav className="max-w-screen-xl mx-auto py-4 border-b rounded-xl px-4 md:px-6 shadow-sm flex justify-between">
-        <a href="/" className="flex items-center gap-2">
+        <Link to="/" reloadDocument className="flex items-center gap-2">
           <img
             src="/logo.webp"
             alt="site logo"
             className="h-10 object-cover dark:grayscale"
           />
           <p className="text-2xl font-bold">Textile.</p>
-        </a>
+        </Link>
         <Button
           variant="outline"
           size="icon"

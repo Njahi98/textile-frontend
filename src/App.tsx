@@ -1,10 +1,11 @@
 import { Route, Routes } from "react-router-dom"
 import { LoginForm } from "@/features/auth/components/LoginForm"
-import AuthLayout from "./features/auth/pages/AuthLayout"
-import { RegisterForm } from "./features/auth/components/RegisterForm"
+import AuthLayout from "@/features/auth/pages/AuthLayout"
+import { RegisterForm } from "@/features/auth/components/RegisterForm"
 import { ThemeProvider } from "@/components/theme-provider"
-import Dashboard from "./features/dashboard/pages/Dashboard"
-import AppLayout from "./layouts/AppLayout"
+import AppLayout from "@/layouts/AppLayout"
+import DashboardLayout from "@/features/dashboard/pages/DashboardLayout";
+import DashboardHome from "@/features/dashboard/pages/DashboardHome";
 
 function App() {
   return (
@@ -17,7 +18,10 @@ function App() {
             <Route path="register" element={<RegisterForm />} />
           </Route>
         </Route>
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="dashboard" element={<DashboardLayout/>}>
+        <Route index element={<DashboardHome/>}/>
+          
+        </Route>
       </Routes>
     </ThemeProvider>
 
