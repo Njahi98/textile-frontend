@@ -60,7 +60,7 @@ const data = {
       items: [
         {
           title: "Line Overview",
-          url: "/dashboard/production-lines/overview",
+          url: "/production-lines",
         },
         {
           title: "Worker Assignment",

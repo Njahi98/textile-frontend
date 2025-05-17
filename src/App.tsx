@@ -18,8 +18,11 @@ function App() {
             <Route path="register" element={<RegisterForm />} />
           </Route>
         </Route>
-        <Route path="dashboard" element={<DashboardLayout/>}>
-        <Route index element={<DashboardHome/>}/>
+        <Route element={<DashboardLayout/>}>
+        <Route path="dashboard" element={<DashboardHome/>}/>
+        <Route path="production-lines/" element={<p>production main page</p>}/>
+        <Route path="production-lines/assignment" element={<p>production assignment page</p>}/>
+        <Route path="production-lines/analytics" element={<p>production analytics page</p>}/>
           
         </Route>
       </Routes>
