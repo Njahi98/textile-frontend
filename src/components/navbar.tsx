@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ModeToggle } from "./mode-toggle";
+import { ThemeSwitcher } from "./theme/ThemeSwitcher";
 import { Button } from "./ui/button";
 import { useEffect, useState, useCallback } from "react";
 import { Menu, X } from "lucide-react";
@@ -43,7 +43,7 @@ function Navbar() {
         </Button>
 
         <div className="items-center gap-4 hidden md:flex">
-          <ModeToggle />
+          <ThemeSwitcher />
           <Link to="/auth/login">
             <p className="hover:cursor-pointer">Log in</p>
           </Link>
@@ -111,7 +111,7 @@ function Navbar() {
                 </ul>
 
                 <div className="flex justify-end">
-                  <ModeToggle />
+                  <ThemeSwitcher />
                 </div>
                 <div className="flex gap-4 justify-center">
                   <Link

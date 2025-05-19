@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import { LoginForm } from "@/features/auth/components/LoginForm"
 import AuthLayout from "@/features/auth/pages/AuthLayout"
 import { RegisterForm } from "@/features/auth/components/RegisterForm"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme/ThemeProvider"
 import AppLayout from "@/layouts/AppLayout"
 import DashboardLayout from "@/features/dashboard/pages/DashboardLayout";
 import DashboardHome from "@/features/dashboard/pages/DashboardHome";

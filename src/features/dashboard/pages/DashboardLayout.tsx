@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
 import { NavUser } from "@/components/nav-user";
 import {
   Breadcrumb,
@@ -25,7 +25,14 @@ export default function DashboardLayout() {
     avatar: "/vite.svg",
   };
   const location = useLocation();
+  //Extract current path from URL 
   const paths = location.pathname.split("/").slice(1);
+
+  //Show BreadCrumb texts properly 
+  function toTitleCase(str: string) {
+  return str.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
 
   return (
     <SidebarProvider>
@@ -33,21 +40,21 @@ export default function DashboardLayout() {
       <SidebarInset>
         <header className="flex h-16 justify-between items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-
+            <SidebarTrigger variant='outline' className='scale-125 sm:scale-100' />
+            <Separator orientation="vertical" className="h-6" />
             <Breadcrumb>
               <BreadcrumbList>
                 {paths.map((segment, index) => {
-                  const href = "/" + paths.slice(0, index + 1).join("/"); // join all the previous segments with a "/"
+                  // join all the previous segments with a "/"
+                  const href = "/" + paths.slice(0, index + 1).join("/"); 
                   return (
                     <React.Fragment key={index}>
                       <BreadcrumbItem className="hidden md:block">
                         {index === paths.length - 1 ? (
-                          <BreadcrumbPage>{segment}</BreadcrumbPage>
+                          <BreadcrumbPage>{toTitleCase(segment)}</BreadcrumbPage>
                         ) : (
                           <BreadcrumbLink asChild>
-                            <Link to={href}>{segment}</Link>
+                            <Link to={href}>{toTitleCase(segment)}</Link>
                           </BreadcrumbLink>
                         )}
                       </BreadcrumbItem>
@@ -61,8 +68,8 @@ export default function DashboardLayout() {
             </Breadcrumb>
           </div>
           <div className="flex items-center gap-2 px-4">
-            <ModeToggle />
-            <NavUser user={user} />
+            <ThemeSwitcher />
+            <NavUser isPartOfHeader={true} user={user} />
           </div>
         </header>
         <Outlet />

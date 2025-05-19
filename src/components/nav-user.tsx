@@ -1,12 +1,12 @@
 "use client"
 
 import {
-  BadgeCheck,
   Bell,
   ChevronsUpDown,
-  CreditCard,
+  House,
   LogOut,
-  Sparkles,
+  Settings,
+  SquareUser,
 } from "lucide-react"
 
 import {
@@ -30,17 +30,20 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavUser({
-  user,
-}: {
+interface NavUserProps{
   user: {
     name: string
     email: string
     avatar: string
   }
-}) {
-  const { isMobile } = useSidebar()
+  ,isPartOfHeader:boolean
+}
 
+export function NavUser({
+  user,isPartOfHeader
+}:NavUserProps ) {
+  const { isMobile } = useSidebar()
+  const side = !isPartOfHeader ? (isMobile ? "bottom" : "right") : "bottom";
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -48,31 +51,32 @@ export function NavUser({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">A</AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+            {!isPartOfHeader &&  <> <div className="grid flex-1 text-left text-sm leading-tight">
+                            <span className="truncate font-medium">{user.name}</span>
+                            <span className="truncate text-xs">{user.email}</span>
+                          </div>
+              <ChevronsUpDown className="ml-auto size-4" /></>
+            }
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side= {side}
             align="end"
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+               {!isPartOfHeader && <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
+                </Avatar> }
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
@@ -80,29 +84,27 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+            <DropdownMenuGroup className="*:hover:cursor-pointer">
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <House />
+                Home
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
-                Billing
+                <SquareUser />
+                Profile
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
                 Notifications
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings />
+                Settings
+              </DropdownMenuItem>
             </DropdownMenuGroup>
+            
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
               <LogOut />
               Log out
             </DropdownMenuItem>
