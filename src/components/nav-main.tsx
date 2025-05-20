@@ -1,5 +1,5 @@
 "use client";
-
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
 import {
@@ -97,7 +97,16 @@ export function NavMain({ items }: { items: NavItem[] }) {
                             to={subItem.url}
                             onClick={() => setOpenMobile(false)}
                           >
-                            <span>{subItem.title}</span>
+                            <AnimatePresence>
+                              <motion.span
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -20, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                {subItem.title}
+                              </motion.span>
+                            </AnimatePresence>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>

@@ -7,7 +7,7 @@ import {
   LayoutDashboard,
   Map,
   PieChart,
-  Settings2,
+  Settings,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -132,7 +132,7 @@ const data = {
     {
       title: "Settings",
       url: "/settings",
-      icon: Settings2,
+      icon: Settings,
       items: [
         {
           title: "General",

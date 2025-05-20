@@ -17,12 +17,13 @@ import {
 } from "@/components/ui/sidebar";
 import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { ProfileSheet } from "@/components/ProfileSheet";
 
 export default function DashboardLayout() {
   const user = {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/vite.svg",
+    avatar: "/av.webp",
   };
   const location = useLocation();
   //Extract current path from URL 
@@ -70,6 +71,7 @@ export default function DashboardLayout() {
           <div className="flex items-center gap-2 px-4">
             <ThemeSwitcher />
             <NavUser isPartOfHeader={true} user={user} />
+            <ProfileSheet user={user}/>
           </div>
         </header>
         <Outlet />
