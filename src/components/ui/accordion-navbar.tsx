@@ -69,8 +69,8 @@ function AccordionNavbar({ name, path, hasDetails, onClick, children }: NavbarIt
                         transition={{ duration: 0.2 }}
                         className="pl-4 mt-2 space-y-2 border-l ml-2"
                     >
-                        {children.map((item, index) => (
-                            <li key={index} className="py-1">
+                        {children.map((item) => (
+                            <li key={item.name} className="py-1">
                                 <Link
                                     to={item.path}
                                     onClick={onClick}
