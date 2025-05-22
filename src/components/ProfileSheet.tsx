@@ -68,7 +68,7 @@ export function ProfileSheet({ user, onLogout }: ProfileSheetProps) {
       </SheetTrigger>
       <SheetTitle className="sr-only" />
       <SheetDescription className="sr-only" />
-      <SheetContent className="w-full max-w-[300px] sm:w-[400px]">
+      <SheetContent className="w-full max-w-[300px] sm:w-[290px] bg-sidebar text-sidebar-foreground">
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col items-center space-y-2 p-6">
             <Avatar className="h-16 w-16">
