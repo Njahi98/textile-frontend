@@ -24,7 +24,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="max-w-screen-xl mx-auto py-4 border-b rounded-xl px-4 md:px-6 shadow-sm flex justify-between">
+      <nav className="max-w-screen-xl mx-auto py-4 border rounded-xl px-4 md:px-6 shadow-sm flex justify-between">
         <Link to="/" reloadDocument className="flex items-center gap-2">
           <img
             src="/logo.webp"
