@@ -22,25 +22,14 @@ export function RegisterForm({
                   More effectively with optimized workflows.
                 </p>
               </div>
-              <div className="flex gap-3">
-                <div className="grid gap-3">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    type="firstName"
-                    placeholder="John"
-                    required
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    type="lastName"
-                    placeholder="Doe"
-                    required
-                  />
-                </div>
+              <div className="grid gap-3">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  type="name"
+                  placeholder="John Doe"
+                  required
+                />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
