@@ -4,6 +4,7 @@ export interface User {
   name: string;
   role: string;
   createdAt: string;
+  avatar?:string
 }
 
 export interface AuthResponse {
@@ -23,6 +24,7 @@ export interface AuthState {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
+  isInitialized: boolean;
 }
 
 // Auth store actions interface

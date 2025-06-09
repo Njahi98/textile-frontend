@@ -1,10 +1,14 @@
 import { RouteObject } from "react-router-dom";
 import DashboardLayout from "@/features/dashboard/pages/DashboardLayout";
 import DashboardHome from "@/features/dashboard/pages/DashboardHome";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const dashboardRoutes: RouteObject = {
-  element: <DashboardLayout />,
-  children: [
+ element: (
+    <ProtectedRoute>
+      <DashboardLayout />
+    </ProtectedRoute>
+  ),  children: [
     {
       path: "dashboard",
       element: <DashboardHome />,

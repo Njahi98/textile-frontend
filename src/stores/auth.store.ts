@@ -7,9 +7,10 @@ const initialState: AuthState = {
   isLoading: false,
   isAuthenticated: false,
   error: null,
+  isInitialized: false,
 };
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
   ...initialState,
 
   setLoading: (loading: boolean) => set({ isLoading: loading }),
@@ -77,6 +78,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user: response.user,
         isAuthenticated: true,
         isLoading: false,
+        isInitialized: true,
       });
     } catch (error) {
       set({
@@ -84,6 +86,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isAuthenticated: false,
         error: error instanceof Error ? error.message : 'Failed to get current user',
         isLoading: false,
+        isInitialized: true,
       });
       throw error;
     }

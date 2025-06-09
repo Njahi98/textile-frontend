@@ -1,6 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
-import { NavUser } from "@/components/nav-user";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -10,14 +9,10 @@ import {
 import { Outlet } from "react-router-dom";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import DynamicBreadCrumb from "@/components/DynamicBreadCrumb";
+import { useAuthStore } from "@/stores/auth.store";
 
 export default function DashboardLayout() {
-  const user = {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/av.webp",
-  };
-
+  const {user}=useAuthStore();
 
   return (
     <SidebarProvider>
@@ -31,7 +26,6 @@ export default function DashboardLayout() {
           </div>
           <div className="flex items-center gap-2 px-4">
             <ThemeSwitcher />
-            <NavUser isPartOfHeader={true} user={user} />
             <ProfileSheet user={user}/>
           </div>
         </header>

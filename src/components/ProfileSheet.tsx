@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SidebarMenuButton } from "./ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Bell, Home, LogOut, LucideProps, Settings, User } from "lucide-react";
+import { AuthState } from "@/types/auth";
 
 interface NavItem {
   icon: React.ForwardRefExoticComponent<
@@ -21,11 +22,7 @@ interface NavItem {
 }
 
 interface ProfileSheetProps {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
+  user: AuthState["user"];
   onLogout?: () => void;
 }
 
@@ -61,8 +58,8 @@ export function ProfileSheet({ user, onLogout }: ProfileSheetProps) {
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
         >
           <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarImage src={user?.avatar} alt={user?.name} />
+            <AvatarFallback>{user?.name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </SidebarMenuButton>
       </SheetTrigger>
@@ -72,14 +69,14 @@ export function ProfileSheet({ user, onLogout }: ProfileSheetProps) {
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col items-center space-y-2 p-6">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarImage src={user?.avatar} alt={user?.name} />
               <AvatarFallback>
-                {user.name.charAt(0).toUpperCase()}
+                {user?.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-center space-y-1">
-              <h4 className="text-lg font-medium">{user.name}</h4>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
+              <h4 className="text-lg font-medium">{user?.name}</h4>
+              <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
           </div>
           <Separator />
