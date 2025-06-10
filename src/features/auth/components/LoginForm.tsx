@@ -41,10 +41,12 @@ export function LoginForm({
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password);
-      toast?.success?.('Login successful!');
-      navigate('/dashboard');
+      toast.success('Login successful!');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 5000);
     } catch (error) {
-      // Error is handled by the store
+      // Error is already handled by the store, but we can add additional handling here if needed
       console.error('Login error:', error);
     }
   };

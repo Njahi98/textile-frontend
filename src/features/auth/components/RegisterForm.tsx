@@ -41,10 +41,10 @@ export function RegisterForm({
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await registerUser(data)
-      toast?.success?.('Registration successful!')
+      toast.success('Registration successful!')
       navigate('/dashboard')
     } catch (error) {
-      // Error is handled by the store
+      // Error is already handled by the store, but we can add additional handling here if needed
       console.error('Registration error:', error)
     }
   }

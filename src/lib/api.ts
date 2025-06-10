@@ -21,9 +21,12 @@ api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
+      if (error.response?.status === 401 && !window.location.pathname.includes('/auth/')) {
         window.location.href = '/auth/login';
       }
+      
+      const errorMessage = error.response?.data?.message || error.message;
+      return Promise.reject(new Error(errorMessage));
     }
 
     return Promise.reject(error instanceof Error ? error : new Error(String(error)));
