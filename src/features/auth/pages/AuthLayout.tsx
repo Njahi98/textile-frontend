@@ -6,7 +6,7 @@ function AuthLayout() {
   const [imagePosition, setImagePosition] = useState<'left' | 'right'>('right');
 
   useEffect(() => {
-    setImagePosition(location.pathname === '/auth/login' ? 'right' : 'left');
+    setImagePosition(location.pathname === '/auth/register' ? 'left' : 'right');
   }, [location]);
 
   return (

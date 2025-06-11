@@ -29,7 +29,7 @@ export function RegisterForm({
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard')
+      void navigate('/dashboard')
     }
   }, [isAuthenticated, navigate])
 
@@ -39,14 +39,9 @@ export function RegisterForm({
   }, [clearError])
 
   const onSubmit = async (data: RegisterFormData) => {
-    try {
       await registerUser(data)
       toast.success('Registration successful!')
-      navigate('/dashboard')
-    } catch (error) {
-      // Error is already handled by the store, but we can add additional handling here if needed
-      console.error('Registration error:', error)
-    }
+      void navigate('/dashboard')
   }
 
   return (
@@ -55,7 +50,7 @@ export function RegisterForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="hidden md:block" /> {/* Placeholder for image */}
           <form 
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={(e) => void handleSubmit(onSubmit)(e)}
             className="p-6 md:p-8 min-h-[600px] flex flex-col"
           >
             <div className="flex flex-col gap-6 flex-1">
