@@ -59,6 +59,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       await authApi.logout();
       set({
         ...initialState,
+        isInitialized: true,
         isLoading: false,
       });
     } catch (error) {
@@ -88,7 +89,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isLoading: false,
         isInitialized: true,
       });
-      throw error;
     }
   },
 

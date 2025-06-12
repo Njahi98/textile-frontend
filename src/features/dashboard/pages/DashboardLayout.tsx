@@ -9,11 +9,8 @@ import {
 import { Outlet } from "react-router-dom";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import DynamicBreadCrumb from "@/components/DynamicBreadCrumb";
-import { useAuthStore } from "@/stores/auth.store";
 
 export default function DashboardLayout() {
-  const {user}=useAuthStore();
-
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -26,7 +23,7 @@ export default function DashboardLayout() {
           </div>
           <div className="flex items-center gap-2 px-4">
             <ThemeSwitcher />
-            <ProfileSheet user={user}/>
+            <ProfileSheet/>
           </div>
         </header>
         <Outlet />

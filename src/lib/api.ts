@@ -21,6 +21,11 @@ api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error)) {
+      // Don't show errors for auth check endpoint
+      if (error.config?.url?.includes('/auth/me')) {
+        return Promise.reject(new Error(''));
+      }
+
       if (error.response?.status === 401 && !window.location.pathname.includes('/auth/')) {
         window.location.href = '/auth/login';
       }

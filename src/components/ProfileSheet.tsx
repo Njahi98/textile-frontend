@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SidebarMenuButton } from "./ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Bell, Home, LogOut, LucideProps, Settings, User } from "lucide-react";
-import { AuthState } from "@/types/auth";
+import { useAuthStore } from "@/stores/auth.store";
 
 interface NavItem {
   icon: React.ForwardRefExoticComponent<
@@ -21,12 +21,8 @@ interface NavItem {
   href: string;
 }
 
-interface ProfileSheetProps {
-  user: AuthState["user"];
-  onLogout?: () => void;
-}
-
-export function ProfileSheet({ user, onLogout }: ProfileSheetProps) {
+export function ProfileSheet() {
+  const {user,logout} =useAuthStore();
   const navItems: NavItem[] = [
     {
       icon: Home,
@@ -96,8 +92,8 @@ export function ProfileSheet({ user, onLogout }: ProfileSheetProps) {
             <SheetClose asChild>
               <button
                 type="button"
-                onClick={onLogout}
-                className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+                onClick={()=>{void logout()}}
+                className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent cursor-pointer hover:text-accent-foreground"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Log out</span>

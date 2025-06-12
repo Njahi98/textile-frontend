@@ -2,16 +2,13 @@ import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 
 export const useAuthInit = () => {
-  const { getCurrentUser, isAuthenticated } = useAuthStore();
+  const { getCurrentUser, isInitialized } = useAuthStore();
 
   useEffect(() => {
-    // Only try to get current user if we think we're authenticated
-    // (based on persisted state) but don't have user data
-    if (isAuthenticated) {
+    if (!isInitialized) {
       getCurrentUser().catch(() => {
-        // If getCurrentUser fails, it will clear the auth state
-        console.log('Failed to get current user, clearing auth state');
+        // Silently fail - don't show errors for auth check
       });
     }
-  }, [getCurrentUser, isAuthenticated]);
+  }, [getCurrentUser, isInitialized]);
 };
