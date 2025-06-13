@@ -27,7 +27,7 @@ export function ProfileSheet() {
     {
       icon: Home,
       label: "Home",
-      href: "/",
+      href: "/dashboard",
     },
     {
       icon: User,
