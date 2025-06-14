@@ -26,12 +26,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isAuthenticated: !!response.user,
         isLoading: false,
       });
+      return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during login';
       set({
-        error: error instanceof Error ? error.message : 'An error occurred during login',
+        error: errorMessage,
         isLoading: false,
+        user: null,
+        isAuthenticated: false,
       });
-      throw error;
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -44,12 +48,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isAuthenticated: !!response.user,
         isLoading: false,
       });
+      return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during registration';
       set({
-        error: error instanceof Error ? error.message : 'An error occurred during registration',
+        error: errorMessage,
         isLoading: false,
+        user: null,
+        isAuthenticated: false,
       });
-      throw error;
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -62,12 +70,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isInitialized: true,
         isLoading: false,
       });
+      return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during logout';
       set({
-        error: error instanceof Error ? error.message : 'An error occurred during logout',
+        error: errorMessage,
         isLoading: false,
       });
-      throw error;
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -81,14 +91,17 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isLoading: false,
         isInitialized: true,
       });
+      return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to get current user';
       set({
         user: null,
         isAuthenticated: false,
-        error: error instanceof Error ? error.message : 'Failed to get current user',
+        error: errorMessage,
         isLoading: false,
         isInitialized: true,
       });
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -97,12 +110,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoading: true, error: null });
       await authApi.requestPasswordReset(email);
       set({ isLoading: false });
+      return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to request password reset';
       set({
-        error: error instanceof Error ? error.message : 'Failed to request password reset',
+        error: errorMessage,
         isLoading: false,
       });
-      throw error;
+      return { success: false, error: errorMessage };
     }
   },
 
@@ -111,12 +126,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoading: true, error: null });
       await authApi.resetPassword(token, password);
       set({ isLoading: false });
+      return { success: true };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to reset password';
       set({
-        error: error instanceof Error ? error.message : 'Failed to reset password',
+        error: errorMessage,
         isLoading: false,
       });
-      throw error;
+      return { success: false, error: errorMessage };
     }
   },
 })); 

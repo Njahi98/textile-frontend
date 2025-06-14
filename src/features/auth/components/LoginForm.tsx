@@ -40,9 +40,11 @@ export function LoginForm({
   }, [clearError]);
 
   const onSubmit = async (data: LoginFormData) => {
-      await login(data.email, data.password);
+    const result = await login(data.email, data.password);
+    if (result.success) {
       toast.success('Login successful!');
       void navigate('/dashboard');
+    }
   };
 
   const onPasswordReset = async (data: PasswordResetRequestData) => {

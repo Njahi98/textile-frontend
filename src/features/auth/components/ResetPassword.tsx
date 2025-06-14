@@ -45,14 +45,10 @@ export function ResetPassword({
   }, [token, navigate]);
 
   const onSubmit = async (data: PasswordResetData) => {
-    try {
-      await resetPassword(data.token, data.password);
+    const result = await resetPassword(data.token, data.password);
+    if (result.success) {
       toast.success("Password has been reset successfully");
       void navigate("/auth/login");
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
-      toast.error(errorMessage);
     }
   };
 

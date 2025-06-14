@@ -29,16 +29,16 @@ export interface AuthState {
 
 // Auth store actions interface
 export interface AuthActions {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (userData: {
     name: string;
     email: string;
     password: string;
-  }) => Promise<void>;
-  logout: () => Promise<void>;
-  getCurrentUser: () => Promise<void>;
-  requestPasswordReset: (email: string) => Promise<void>;
-  resetPassword: (token: string, password: string) => Promise<void>;
+  }) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<{ success: boolean; error?: string }>;
+  getCurrentUser: () => Promise<{ success: boolean; error?: string }>;
+  requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (token: string, password: string) => Promise<{ success: boolean; error?: string }>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
 }
