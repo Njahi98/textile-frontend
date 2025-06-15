@@ -1,54 +1,49 @@
-import * as React from "react"
+import * as React from "react";
 import {
   AudioWaveform,
   Command,
   Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
+  User,
   Map,
   PieChart,
   Settings,
-} from "lucide-react"
+} from "lucide-react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { useAuthStore } from "@/stores/auth.store"
+} from "@/components/ui/sidebar";
+import { useAuthStore } from "@/stores/auth.store";
 
-// This is sample data.
-const data = {
-  teams: [
-    {
-      name: "Team 1",
-      logo: GalleryVerticalEnd,
-      plan: "production line 1",
-    },
-    {
-      name: "Team 2",
-      logo: AudioWaveform,
-      plan: "production line 2",
-    },
-    {
-      name: "Team 3",
-      logo: Command,
-      plan: "production line 3",
-    },
-  ],
-  navMain: [
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+
+  const navItems = [
     {
       title: "Dashboard",
       url: "/dashboard",
       icon: LayoutDashboard,
-      isActive: true,  // Active by default
+      isActive: true, // Active by default
     },
+    // Only include Users nav item for admin role
+    ...(user?.role === "ADMIN"
+      ? [
+          {
+            title: "Users",
+            url: "/users",
+            icon: User,
+          },
+        ]
+      : []),
     {
       title: "Production Lines",
       url: "/production-lines",
@@ -65,7 +60,7 @@ const data = {
         {
           title: "Line Analytics",
           url: "/production-lines/analytics",
-        }
+        },
       ],
     },
     {
@@ -144,28 +139,46 @@ const data = {
         },
       ],
     },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
+  ].filter(Boolean);
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useAuthStore();
+  const data = {
+    teams: [
+      {
+        name: "Team 1",
+        logo: GalleryVerticalEnd,
+        plan: "production line 1",
+      },
+      {
+        name: "Team 2",
+        logo: AudioWaveform,
+        plan: "production line 2",
+      },
+      {
+        name: "Team 3",
+        logo: Command,
+        plan: "production line 3",
+      },
+    ],
+    navMain: navItems,
+    projects: [
+      {
+        name: "Design Engineering",
+        url: "#",
+        icon: Frame,
+      },
+      {
+        name: "Sales & Marketing",
+        url: "#",
+        icon: PieChart,
+      },
+      {
+        name: "Travel",
+        url: "#",
+        icon: Map,
+      },
+    ],
+  };
+
   return (
     <Sidebar variant="floating" collapsible="icon" {...props}>
       <SidebarHeader>
@@ -180,5 +193,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
