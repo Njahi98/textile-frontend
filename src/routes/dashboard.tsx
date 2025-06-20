@@ -2,7 +2,7 @@ import { RouteObject } from "react-router-dom";
 import DashboardLayout from "@/features/dashboard/pages/DashboardLayout";
 import DashboardHome from "@/features/dashboard/pages/DashboardHome";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import DashboardUsers from "@/features/dashboard/pages/DashboardUsers";
+import Users from "@/features/users";
 
 export const dashboardRoutes: RouteObject = {
  element: (
@@ -16,7 +16,7 @@ export const dashboardRoutes: RouteObject = {
     },
     {
       path: "users",
-      element: <DashboardUsers />,
+      element: <Users />,
     },
     {
       path: "production-lines",

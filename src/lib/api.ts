@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const VITE_API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -10,6 +10,8 @@ export const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export const fetcher = <T,>(url: string):Promise<T> => api.get(url).then((res:AxiosResponse<T> )=> res.data);
 
 api.interceptors.request.use(
   (config) => config,
@@ -29,13 +31,15 @@ api.interceptors.response.use(
       if (error.response?.status === 401 && !window.location.pathname.includes('/auth/')) {
         window.location.href = '/auth/login';
       }
-      
-      const errorMessage = error.response?.data?.message || error.message;
+      //This gives TypeScript confidence that data.message exists safely
+      const data = error.response?.data as { message?: string } | undefined;
+      const errorMessage = data?.message ?? error.message;
       return Promise.reject(new Error(errorMessage));
     }
 
     return Promise.reject(error instanceof Error ? error : new Error(String(error)));
   }
 );
+
 
 export default api;

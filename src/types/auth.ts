@@ -1,7 +1,7 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
+  username: string;
   role: string;
   createdAt: string;
   avatar?:string
@@ -31,7 +31,7 @@ export interface AuthState {
 export interface AuthActions {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (userData: {
-    name: string;
+    username: string;
     email: string;
     password: string;
   }) => Promise<{ success: boolean; error?: string }>;

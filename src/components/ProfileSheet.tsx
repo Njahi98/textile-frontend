@@ -54,8 +54,8 @@ export function ProfileSheet() {
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
         >
           <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage src={user?.avatar} alt={user?.name} />
-            <AvatarFallback>{user?.name.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarImage src={user?.avatar} alt={user?.username} />
+            <AvatarFallback>{user?.username.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </SidebarMenuButton>
       </SheetTrigger>
@@ -65,13 +65,13 @@ export function ProfileSheet() {
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col items-center space-y-2 p-6">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={user?.avatar} alt={user?.name} />
+              <AvatarImage src={user?.avatar} alt={user?.username} />
               <AvatarFallback>
-                {user?.name.charAt(0).toUpperCase()}
+                {user?.username.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-center space-y-1">
-              <h4 className="text-lg font-medium">{user?.name}</h4>
+              <h4 className="text-lg font-medium">{user?.username}</h4>
               <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
           </div>

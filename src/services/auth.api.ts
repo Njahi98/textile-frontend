@@ -28,7 +28,7 @@ export const authApi = {
 
   // Register user
   async register(userData: {
-    name: string;
+    username: string;
     email: string;
     password: string;
   }): Promise<AuthResponse> {

@@ -70,16 +70,16 @@ export function RegisterForm({
               )}
 
               <div className="grid gap-3">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  {...register("name")}
-                  id="name"
+                  {...register("username")}
+                  id="username"
                   type="text"
                   placeholder="John Doe"
                   disabled={isLoading}
                 />
-                {errors.name && (
-                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                {errors.username && (
+                  <p className="text-sm text-destructive">{errors.username.message}</p>
                 )}
               </div>
 
