@@ -1,5 +1,6 @@
 import api from "@/lib/api";
 import { User } from '@/types/auth';
+import { mutate } from "swr";
 
 interface UsersResponse {
   success: boolean;
@@ -12,33 +13,29 @@ interface UserResponse {
   user: User;
 }
 
-interface CreateUserData {
+interface CreateOrUpdateUserData {
   email: string;
-  password: string;
-  username: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  role?: string;
-}
-
-interface UpdateUserData {
-  email?: string;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  role?: string;
   password?: string;
+  username: string;
+  firstName?: string|null;
+  lastName?: string|null;
+  phone?: string;
+  role?: string;
   status?: string;
 }
 
+// interface UpdateUserData {
+//   email?: string;
+//   username?: string;
+//   firstName?: string;
+//   lastName?: string;
+//   phone?: string;
+//   role?: string;
+//   password?: string;
+//   status?: string;
+// }
+
 export const userApi = {
-  // Get all users
-  async getUsers(): Promise<UsersResponse> {
-    const response = await api.get<UsersResponse>('/api/users');
-    return response.data;
-  },
 
   // Get user by ID
   async getUserById(id: string): Promise<UserResponse> {
@@ -47,20 +44,23 @@ export const userApi = {
   },
 
   // Create new user
-  async createUser(userData: CreateUserData): Promise<UserResponse> {
+  async createUser(userData: CreateOrUpdateUserData): Promise<UserResponse> {
     const response = await api.post<UserResponse>('/api/users', userData);
+    await mutate('/api/users');
     return response.data;
   },
 
   // Update user
-  async updateUser(id: string, userData: UpdateUserData): Promise<UserResponse> {
+  async updateUser(id: string, userData: CreateOrUpdateUserData): Promise<UserResponse> {
     const response = await api.put<UserResponse>(`/api/users/${id}`, userData);
+    await mutate('/api/users');
     return response.data;
   },
 
   // Delete user
   async deleteUser(id: string): Promise<{ success: boolean; message: string }> {
     const response = await api.delete<{ success: boolean; message: string }>(`/api/users/${id}`);
+    await mutate('/api/users');
     return response.data;
   }
 }

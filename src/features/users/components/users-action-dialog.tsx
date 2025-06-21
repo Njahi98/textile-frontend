@@ -30,8 +30,8 @@ import { toast } from 'sonner'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'First Name is required.' }),
-    lastName: z.string().min(1, { message: 'Last Name is required.' }),
+    firstName: z.string().min(1, { message: 'First Name is required.' }).nullable().optional(),
+    lastName: z.string().min(1, { message: 'Last Name is required.' }).nullable().optional(),
     username: z.string().min(1, { message: 'Username is required.' }),
     phone: z.string().min(1, { message: 'Phone number is required.' }),
     email: z
@@ -61,7 +61,7 @@ const formSchema = z
         })
       }
 
-      if (!password.match(/[a-z]/)) {
+      if (!(/[a-z]/.exec(password))) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Password must contain at least one lowercase letter.',
@@ -69,7 +69,7 @@ const formSchema = z
         })
       }
 
-      if (!password.match(/\d/)) {
+      if (!(/\d/.exec(password))) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Password must contain at least one number.',
@@ -118,24 +118,36 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         },
   })
 
-  const onSubmit = async(values: UserForm) => {
+  const onSubmit = async (values: UserForm) => {
     try {
-      form.reset()
-      const response = await userApi.createUser(values);
-      if(response.success){
-        toast.success(response.message)
+      form.reset();
+      if (!values.isEdit) {
+        const response = await userApi.createUser(values);
+        if (response.success) {
+          toast.success(response.message);
+        }
+      } else {
+        // Omit password fields if empty
+        const { password,confirmPassword, ...rest } = values;
+        const updatePayload = password
+          ? { ...rest, password,confirmPassword }
+          : rest;
+        const response = await userApi.updateUser(String(currentRow?.id), updatePayload);
+        if (response.success) {
+          toast.success(response.message);
+        }
       }
     } catch (error) {
-      if(error instanceof Error){
-        toast.error(error.message)
-      }else{  
-      toast.error('something went wrong')
+      if (error instanceof Error) {
+        console.log(error);
+        toast.error(error.message);
+      } else {
+        toast.error('something went wrong');
       }
-    }finally{
-      onOpenChange(false)
+    } finally {
+      onOpenChange(false);
     }
-
-  }
+  };
 
   const isPasswordTouched = !!form.formState.dirtyFields.password
 
