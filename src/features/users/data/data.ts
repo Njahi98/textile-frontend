@@ -32,3 +32,22 @@ export const userTypes = [
   },
 
 ] as const
+
+export const userStatus = [
+  {
+    label: 'active',
+    value: 'active',
+    icon: Shield,
+  },
+  {
+    label: 'inactive',
+    value: 'inactive',
+    icon: ShieldUser,
+  },
+  {
+    label: 'suspended',
+    value: 'suspended',
+    icon: Users,
+  },
+
+] as const

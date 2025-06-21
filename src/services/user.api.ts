@@ -2,10 +2,6 @@ import api from "@/lib/api";
 import { User } from '@/types/auth';
 import { mutate } from "swr";
 
-interface UsersResponse {
-  success: boolean;
-  users: User[];
-}
 
 interface UserResponse {
   success: boolean;
@@ -23,17 +19,6 @@ interface CreateOrUpdateUserData {
   role?: string;
   status?: string;
 }
-
-// interface UpdateUserData {
-//   email?: string;
-//   username?: string;
-//   firstName?: string;
-//   lastName?: string;
-//   phone?: string;
-//   role?: string;
-//   password?: string;
-//   status?: string;
-// }
 
 export const userApi = {
 

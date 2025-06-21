@@ -23,7 +23,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { userTypes } from '../data/data'
+import { userStatus, userTypes } from '../data/data'
 import { User } from '../data/schema'
 import { userApi } from '@/services/user.api'
 import { toast } from 'sonner'
@@ -40,6 +40,7 @@ const formSchema = z
       .email({ message: 'Email is invalid.' }),
     password: z.string().transform((pwd) => pwd.trim()),
     role: z.string().min(1, { message: 'Role is required.' }),
+    status: z.string().min(1, { message: 'Status is required.' }),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     isEdit: z.boolean(),
   })
@@ -111,6 +112,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
           username: '',
           email: '',
           role: '',
+          status: '',
           phone: '',
           password: '',
           confirmPassword: '',
@@ -167,7 +169,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
+        <div className='-mr-4 h-[29.25rem] w-full overflow-y-auto py-1 pr-4'>
           <Form {...form}>
             <form
               id='user-form'
@@ -285,6 +287,28 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                       placeholder='Select a role'
                       className='col-span-4'
                       items={userTypes.map(({ label, value }) => ({
+                        label,
+                        value,
+                      }))}
+                    />
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+                <FormField
+                control={form.control}
+                name='status'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-right'>
+                      Status
+                    </FormLabel>
+                    <SelectDropdown
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      placeholder='Select a Status'
+                      className='col-span-4'
+                      items={userStatus.map(({ label, value }) => ({
                         label,
                         value,
                       }))}
