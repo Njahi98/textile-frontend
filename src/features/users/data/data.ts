@@ -1,6 +1,6 @@
 import {
   Shield,
-  Users,
+  User,
   ShieldUser,
 } from 'lucide-react'
 import { UserStatus } from './schema'
@@ -28,7 +28,7 @@ export const userTypes = [
   {
     label: 'User',
     value: 'USER',
-    icon: Users,
+    icon: User,
   },
 
 ] as const
@@ -37,17 +37,14 @@ export const userStatus = [
   {
     label: 'active',
     value: 'active',
-    icon: Shield,
   },
   {
     label: 'inactive',
     value: 'inactive',
-    icon: ShieldUser,
   },
   {
     label: 'suspended',
     value: 'suspended',
-    icon: Users,
   },
 
 ] as const
