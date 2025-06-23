@@ -44,6 +44,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
         ]
       : []),
+      {
+        title: "Workers",
+        url: "/workers",
+        icon: Frame,
+        items: [
+          {
+            title: "All Workers",
+            url: "/workers/list",
+          },
+          {
+            title: "Performance Records",
+            url: "/workers/performance",
+          },
+          {
+            title: "Skill Matrix",
+            url: "/workers/skills",
+          },
+        ],
+      },
     {
       title: "Production Lines",
       url: "/production-lines",
@@ -63,25 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     },
-    {
-      title: "Workers",
-      url: "/workers",
-      icon: Frame,
-      items: [
-        {
-          title: "All Workers",
-          url: "/workers/list",
-        },
-        {
-          title: "Performance Records",
-          url: "/workers/performance",
-        },
-        {
-          title: "Skill Matrix",
-          url: "/workers/skills",
-        },
-      ],
-    },
+ 
     {
       title: "Data Entry",
       url: "/data-entry",

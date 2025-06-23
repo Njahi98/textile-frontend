@@ -5,8 +5,10 @@ import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersTable } from './components/users-table'
 import { User, userListSchema } from './data/schema'
 import UsersProvider from './context/users-context'
-import useSWR from 'swr';
+import useSWR, { SWRResponse } from 'swr';
 import { fetcher } from '@/lib/api'
+import { ErrorState } from '@/components/error-state'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 interface UsersApiResponse  {
   success: boolean;
@@ -15,15 +17,16 @@ interface UsersApiResponse  {
 
 export default function Users() {
 
-  const { data, error, isLoading } = useSWR<UsersApiResponse>('/api/users', fetcher)
+  const { data, error, isLoading, mutate }: SWRResponse<UsersApiResponse, Error> = useSWR<UsersApiResponse, Error>('/api/users', fetcher)
 
-  if (isLoading) return
-    <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-    </div>;
-  if (error) return <div>Failed to load users: {error instanceof Error ? error.message : 'Unknown error occurred'}</div>;
+  if (isLoading) return <LoadingSpinner/>
+  if (error) return <ErrorState 
+    title="Failed to load users" 
+    message={typeof error.message === 'string' ? error.message : 'An unknown error occurred.'}
+    onRetry={() => void mutate()} 
+  />
   if (!data?.success) return <div>No users found.</div>;
-  // Parse user list
+  
   const userList = userListSchema.parse(data.users);
 
   return (
