@@ -33,7 +33,7 @@ const formSchema = z
     firstName: z.string().min(1, { message: 'First Name is required.' }).nullable().optional(),
     lastName: z.string().min(1, { message: 'Last Name is required.' }).nullable().optional(),
     username: z.string().min(1, { message: 'Username is required.' }),
-    phone: z.string().min(1, { message: 'Phone number is required.' }),
+    phone: z.string().min(1, { message: 'Phone number is required.' }).nullable().optional(),
     email: z
       .string()
       .min(1, { message: 'Email is required.' })
@@ -112,7 +112,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
           username: '',
           email: '',
           role: '',
-          status: '',
+          status: 'active',
           phone: '',
           password: '',
           confirmPassword: '',
