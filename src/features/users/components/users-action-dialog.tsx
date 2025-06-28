@@ -30,10 +30,10 @@ import { toast } from 'sonner'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'First Name is required.' }).nullable().optional(),
-    lastName: z.string().min(1, { message: 'Last Name is required.' }).nullable().optional(),
+    firstName: z.string().min(1, { message: 'First Name is required.' }),
+    lastName: z.string().min(1, { message: 'Last Name is required.' }),
     username: z.string().min(1, { message: 'Username is required.' }),
-    phone: z.string().min(1, { message: 'Phone number is required.' }).nullable().optional(),
+    phone: z.string().min(1, { message: 'Phone number is required.' }),
     email: z
       .string()
       .min(1, { message: 'Email is required.' })
