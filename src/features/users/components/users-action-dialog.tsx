@@ -54,22 +54,22 @@ const formSchema = z
         })
       }
 
-      if (password.length < 8) {
+      if (password.length < 6) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Password must be at least 8 characters long.',
+          message: 'Password must be at least 6 characters long.',
           path: ['password'],
         })
       }
 
-      if (!(/[a-z]/.exec(password))) {
+      if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one lowercase letter.',
+          message: 'Password must contain at least one lowercase and one uppercase letter.',
           path: ['password'],
-        })
+        });
       }
-
+      
       if (!(/\d/.exec(password))) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

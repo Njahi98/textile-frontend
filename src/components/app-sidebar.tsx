@@ -51,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
           {
             title: "All Workers",
-            url: "/workers/list",
+            url: "/workers/",
           },
           {
             title: "Performance Records",
