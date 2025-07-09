@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Worker } from '../data/schema'
 
-type WorkersDialogType = 'add' | 'edit' | 'delete'
+type WorkersDialogType = 'add' | 'edit' | 'delete' | 'import'
 
 interface WorkersContextType {
   open: WorkersDialogType | null

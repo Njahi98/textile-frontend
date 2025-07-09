@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { useWorkers } from '../context/workers-context'
-import { Upload, UserPlus } from 'lucide-react'
+import { useProductionLines } from '../context/production-lines-context'
+import { PackagePlus,Upload } from 'lucide-react'
 
-
-export function WorkersPrimaryButtons() {
-  const { setOpen } = useWorkers()
+export function ProductionLinesPrimaryButtons() {
+  const { setOpen } = useProductionLines()
   return (
     <div className='flex gap-2'>
       <Button
@@ -15,7 +14,7 @@ export function WorkersPrimaryButtons() {
         <span>Import</span> <Upload size={18} />
       </Button>
       <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Add Worker</span> <UserPlus size={18} />
+        <span>Add Production line</span> <PackagePlus size={18} />
       </Button>
     </div>
   )

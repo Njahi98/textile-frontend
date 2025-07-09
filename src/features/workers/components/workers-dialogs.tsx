@@ -1,4 +1,5 @@
 import { useWorkers } from '../context/workers-context'
+import { WorkersImportDialog } from './workers-import-dialog'
 import { WorkersActionDialog } from './workers-action-dialog'
 import { WorkersDeleteDialog } from './workers-delete-dialog'
 
@@ -6,6 +7,11 @@ export function WorkersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useWorkers()
   return (
     <>
+      <WorkersImportDialog
+        key='tasks-import'
+        open={open === 'import'}
+        onOpenChange={() => setOpen('import')}
+      />
       <WorkersActionDialog
         key='worker-add'
         open={open === 'add'}
@@ -13,6 +19,7 @@ export function WorkersDialogs() {
       />
       {currentRow && (
         <>
+
           <WorkersActionDialog
             key={`worker-edit-${currentRow.id}`}
             open={open === 'edit'}

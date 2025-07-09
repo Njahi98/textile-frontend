@@ -4,6 +4,7 @@ import DashboardHome from "@/features/dashboard/pages/DashboardHome";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Users from "@/features/users";
 import Workers from "@/features/workers";
+import ProductionLines from "@/features/productionLines";
 export const dashboardRoutes: RouteObject = {
   element: (
     <ProtectedRoute>
@@ -28,7 +29,7 @@ export const dashboardRoutes: RouteObject = {
       children: [
         {
           index: true,
-          element: <p>production main page</p>,
+          element: <ProductionLines />,
         },
         {
           path: "assignment",
