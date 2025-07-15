@@ -8,7 +8,7 @@ export function WorkersDialogs() {
   return (
     <>
       <WorkersImportDialog
-        key='tasks-import'
+        key='workers-import'
         open={open === 'import'}
         onOpenChange={() => setOpen('import')}
       />
@@ -19,7 +19,6 @@ export function WorkersDialogs() {
       />
       {currentRow && (
         <>
-
           <WorkersActionDialog
             key={`worker-edit-${currentRow.id}`}
             open={open === 'edit'}

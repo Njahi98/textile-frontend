@@ -31,6 +31,28 @@ interface CreateOrUpdateUserData {
   status?: string;
 }
 
+export interface ImportRowError {
+  row: number;
+  error: string;
+}
+
+export interface ImportRowSuccess {
+  row: number;
+  [key: string]: unknown;
+}
+
+interface ImportResult {
+  success: ImportRowSuccess[];
+  errors: ImportRowError[];
+  total: number;
+}
+
+interface ImportResponse {
+  success: boolean;
+  message: string;
+  results: ImportResult;
+}
+
 export const workerApi = {
 
   // Get worker by ID
@@ -56,6 +78,21 @@ export const workerApi = {
   // Delete worker
   async deleteWorker(id: string): Promise<{ success: boolean; message: string }> {
     const response = await api.delete<{ success: boolean; message: string }>(`/api/workers/${id}`);
+    await mutate('/api/workers');
+    return response.data;
+  },
+
+  // Import workers from CSV
+  async importWorkers(file: File): Promise<ImportResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await api.post<ImportResponse>('/api/workers/import', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
     await mutate('/api/workers');
     return response.data;
   }
