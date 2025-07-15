@@ -32,16 +32,24 @@ A modern React (Vite) dashboard for managing textile production, workers, users,
 
 ## 🛠️ Getting Started
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
-2. **Start the dev server:**
+
+2. **Configure API URL:**
+
+   Add this to your `.env` file:
+   ```env
+   VITE_API_URL=<your-backend-api-url>
+   ```
+
+3. **Start the dev server:**
+
    ```bash
    npm run dev
    ```
-3. **Configure API URL:**
-   Add these to your `.env` file:
-- `VITE_API_URL` – backend API URL
+
 
 ## 📦 Folder Structure
 - `src/features/` – Feature modules (auth, workers, users, production lines)
