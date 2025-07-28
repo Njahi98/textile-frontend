@@ -5,6 +5,8 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Users from "@/features/users";
 import Workers from "@/features/workers";
 import ProductionLines from "@/features/productionLines";
+import Assignments from "@/features/assignements";
+import AssignmentsCalendar from "@/features/assignements/assignment-calendar";
 export const dashboardRoutes: RouteObject = {
   element: (
     <ProtectedRoute>
@@ -22,24 +24,24 @@ export const dashboardRoutes: RouteObject = {
     },
     {
       path: "workers",
-      children: [{ index: true, element: <Workers /> }],
+      element: <Workers />,
     },
-    {
-      path: "production-lines",
-      children: [
-        {
-          index: true,
-          element: <ProductionLines />,
-        },
-        {
-          path: "assignment",
-          element: <p>production assignment page</p>,
-        },
-        {
-          path: "analytics",
-          element: <p>production analytics page</p>,
-        },
-      ],
-    },
+      {
+        path: "production-lines",
+        element: <ProductionLines />,
+      },
+      {
+        path: "assignments",
+        children: [
+          {
+            path: "overview",
+            element: <Assignments />,
+          },
+          {
+            path: "calendar",
+            element: <AssignmentsCalendar />,
+          },
+        ],
+      },
   ],
 };

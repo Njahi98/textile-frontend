@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
 import {
@@ -48,41 +47,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Workers",
         url: "/workers",
         icon: Frame,
-        items: [
-          {
-            title: "All Workers",
-            url: "/workers/",
-          },
-          {
-            title: "Performance Records",
-            url: "/workers/performance",
-          },
-          {
-            title: "Skill Matrix",
-            url: "/workers/skills",
-          },
-        ],
       },
     {
       title: "Production Lines",
       url: "/production-lines",
       icon: Command,
+    },
+    {
+      title: "Assignments",
+      url: "/assignments",
+      icon: AudioWaveform,
       items: [
         {
-          title: "Line Overview",
-          url: "/production-lines",
+          title: "Overview",
+          url: "/assignments/overview",
         },
         {
-          title: "Worker Assignment",
-          url: "/production-lines/assignment",
-        },
-        {
-          title: "Line Analytics",
-          url: "/production-lines/analytics",
+          title: "Calendar",
+          url: "/assignments/calendar",
         },
       ],
     },
- 
     {
       title: "Data Entry",
       url: "/data-entry",
@@ -187,7 +172,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />
