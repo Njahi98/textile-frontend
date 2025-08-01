@@ -63,8 +63,8 @@ export const columns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => {
       const { firstName, lastName } = row.original
-      const fullName = `${firstName} ${lastName}`
-      return <LongText className='max-w-36'>{fullName}</LongText>
+      const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim()
+      return <LongText className='max-w-36'>{fullName || '-'}</LongText>
     },
     meta: { className: 'w-36' },
   },
@@ -82,7 +82,7 @@ export const columns: ColumnDef<User>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Phone Number' />
     ),
-    cell: ({ row }) => <div>{row.getValue('phone')}</div>,
+    cell: ({ row }) => <div>{row.getValue('phone') ?? '-'}</div>,
     enableSorting: false,
   },
   {
