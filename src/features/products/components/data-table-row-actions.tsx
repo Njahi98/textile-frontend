@@ -1,6 +1,6 @@
 import { Ellipsis } from 'lucide-react'
 import { Row } from '@tanstack/react-table'
-import { SquarePen, Trash2 } from 'lucide-react'
+import { SquarePen, Trash2, Image as ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'  
 import {
   DropdownMenu,
@@ -39,14 +39,21 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   },
 ]
 
-
-
   const handleToggleStatus = async () => {
     try {
-      await productApi.update(product.id, { isActive: !product.isActive })
-        toast.success('Product updated successfully')
+      await productApi.toggleStatus(product.id)
+      toast.success('Product status updated successfully')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to toggle product status')
+    }
+  }
+
+  const handleDeleteImage = async () => {
+    try {
+      await productApi.deleteImage(product.id)
+      toast.success('Product image deleted successfully')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete product image')
     }
   }
 
@@ -74,6 +81,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <SquarePen size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
+          
+          {product.imageUrl && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => void handleDeleteImage()}
+                className='text-orange-600'
+              >
+                Delete Image
+                <DropdownMenuShortcut>
+                  <ImageIcon size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
+          
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
