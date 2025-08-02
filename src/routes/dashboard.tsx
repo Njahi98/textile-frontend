@@ -7,6 +7,8 @@ import Workers from "@/features/workers";
 import ProductionLines from "@/features/productionLines";
 import Assignments from "@/features/assignements";
 import AssignmentsCalendar from "@/features/assignements/assignment-calendar";
+import Products from "@/features/products";
+
 export const dashboardRoutes: RouteObject = {
   element: (
     <ProtectedRoute>
@@ -42,6 +44,10 @@ export const dashboardRoutes: RouteObject = {
             element: <AssignmentsCalendar />,
           },
         ],
+      },
+      {
+        path: "products",
+        element: <Products />,
       },
   ],
 };

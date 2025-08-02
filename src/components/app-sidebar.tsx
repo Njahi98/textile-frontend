@@ -9,6 +9,7 @@ import {
   Map,
   PieChart,
   Settings,
+  Box,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -67,6 +68,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: "/assignments/calendar",
         },
       ],
+    },
+    {
+      title: "Products",
+      url: "/products",
+      icon: Box,
     },
     {
       title: "Data Entry",
