@@ -44,11 +44,6 @@ export const updateAssignmentSchema = z.object({
   shift: z.string().min(1).max(50).optional(),
 }).refine((data) => Object.keys(data).length > 0, 'At least one field must be provided for update');
 
-// Bulk assignment input schema
-export const bulkAssignmentSchema = z.object({
-  assignments: z.array(createAssignmentSchema).min(1, 'At least one assignment is required'),
-  overrideConflicts: z.boolean().optional().default(false),
-});
 
 // Query parameters for getting assignments
 export const assignmentQuerySchema = z.object({
@@ -73,7 +68,6 @@ export const calendarQuerySchema = z.object({
 // Type exports
 export type CreateAssignmentInput = z.infer<typeof createAssignmentSchema>;
 export type UpdateAssignmentInput = z.infer<typeof updateAssignmentSchema>;
-export type BulkAssignmentInput = z.infer<typeof bulkAssignmentSchema>;
 export type AssignmentQueryInput = z.infer<typeof assignmentQuerySchema>;
 export type CalendarQueryInput = z.infer<typeof calendarQuerySchema>;
 export type Assignment = z.infer<typeof assignmentSchema>;
@@ -89,18 +83,6 @@ export const validateAssignmentForm = (data: unknown) => {
     return { success: false, errors: [{ message: 'Validation failed' }] };
   }
 };
-
-export const validateBulkAssignmentForm = (data: unknown) => {
-  try {
-    return { success: true, data: bulkAssignmentSchema.parse(data) };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, errors: error.errors };
-    }
-    return { success: false, errors: [{ message: 'Validation failed' }] };
-  }
-};
-
 // Common shift options
 export const SHIFT_OPTIONS = [
   { value: 'morning', label: 'Morning' },

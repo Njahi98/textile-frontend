@@ -8,6 +8,7 @@ import ProductionLines from "@/features/productionLines";
 import Assignments from "@/features/assignements";
 import AssignmentsCalendar from "@/features/assignements/assignment-calendar";
 import Products from "@/features/products";
+import Performance from "@/features/performanceRecords";
 
 export const dashboardRoutes: RouteObject = {
   element: (
@@ -49,5 +50,8 @@ export const dashboardRoutes: RouteObject = {
         path: "products",
         element: <Products />,
       },
+      {path: "performance",
+        element: <Performance />,
+      }
   ],
 };

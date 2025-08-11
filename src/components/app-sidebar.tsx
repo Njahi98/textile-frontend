@@ -74,6 +74,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "/products",
       icon: Box,
     },
+    {title: "Performance",
+      url: "/performance",
+      icon: GalleryVerticalEnd,
+    },
     {
       title: "Data Entry",
       url: "/data-entry",

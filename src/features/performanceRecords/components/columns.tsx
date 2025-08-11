@@ -1,12 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { shifts } from '../data/data'
-import { Assignment } from '../data/schema'
+import { PerformanceRecord } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
 import { format } from 'date-fns'
 
-export const columns: ColumnDef<Assignment>[] = [
+export const columns: ColumnDef<PerformanceRecord>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -48,6 +48,22 @@ export const columns: ColumnDef<Assignment>[] = [
     },
   },
   {
+    accessorKey: 'productName',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Product' />
+    ),
+    accessorFn: row => row.product?.name,
+    cell: ({ row }) => {
+      const product = row.original.product
+      return (
+        <div className='flex flex-col'>
+          <span className='font-medium'>{product.name}</span>
+          <span className='text-sm text-muted-foreground'>Code: {product.code}</span>
+        </div>
+      )
+    },
+  },
+  {
     accessorKey: 'productionLineName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Production Line' />
@@ -64,18 +80,39 @@ export const columns: ColumnDef<Assignment>[] = [
     },
   },
   {
-    accessorKey: 'position',
+    accessorKey: 'piecesMade',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Position' />
+      <DataTableColumnHeader column={column} title='Pieces Made' />
     ),
     cell: ({ row }) => (
       <div className='flex items-center'>
-        <span>{row.getValue('position')}</span>
+        <span className='font-medium'>{row.getValue('piecesMade')}</span>
       </div>
     ),
-    filterFn: (row, id, value: number[]) => {
-      return value.includes(row.getValue(id));
-    },
+  },
+  {
+    accessorKey: 'timeTaken',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Time Taken (hrs)' />
+    ),
+    cell: ({ row }) => (
+      <div className='flex items-center'>
+        <span>{Number(row.getValue('timeTaken')).toFixed(2)}</span>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'errorRate',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Error Rate (%)' />
+    ),
+    cell: ({ row }) => (
+      <div className='flex items-center'>
+        <span className={Number(row.getValue('errorRate')) > 5 ? 'text-red-600 font-medium' : ''}>
+          {Number(row.getValue('errorRate')).toFixed(2)}%
+        </span>
+      </div>
+    ),
   },
   {
     accessorKey: 'shift',
