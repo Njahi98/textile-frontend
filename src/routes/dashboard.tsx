@@ -9,6 +9,7 @@ import Assignments from "@/features/assignements";
 import AssignmentsCalendar from "@/features/assignements/assignment-calendar";
 import Products from "@/features/products";
 import Performance from "@/features/performanceRecords";
+import PerformanceAnalytics from "@/features/performanceRecords/performance-analytics-dashboard";
 
 export const dashboardRoutes: RouteObject = {
   element: (
@@ -51,7 +52,15 @@ export const dashboardRoutes: RouteObject = {
         element: <Products />,
       },
       {path: "performance",
-        element: <Performance />,
+           children: [
+            {
+              path:"overview",
+              element: <Performance />,
+            },
+          {
+            path: "analytics",
+            element: <PerformanceAnalytics />,
+          },]
       }
   ],
 };

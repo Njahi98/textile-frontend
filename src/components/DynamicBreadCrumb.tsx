@@ -2,12 +2,11 @@ import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
-import { Link, useLocation } from "react-router-dom";
+import {useLocation } from "react-router-dom";
 
 //Show BreadCrumb texts properly
 function toTitleCase(str: string) {
@@ -24,16 +23,15 @@ function DynamicBreadCrumb() {
       <BreadcrumbList>
         {paths.map((segment, index) => {
           // join all the previous segments with a "/"
-          const href = "/" + paths.slice(0, index + 1).join("/");
           return (
             <React.Fragment key={segment}>
               <BreadcrumbItem className="hidden md:block">
                 {index === paths.length - 1 ? (
                   <BreadcrumbPage>{toTitleCase(segment)}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink asChild>
-                    <Link to={href}>{toTitleCase(segment)}</Link>
-                  </BreadcrumbLink>
+                  <p className="cursor-pointer hover:text-accent-foreground">
+                    {toTitleCase(segment)}
+                  </p>
                 )}
               </BreadcrumbItem>
               {index !== paths.length - 1 && (
