@@ -5,6 +5,10 @@ export interface User {
   role: string;
   createdAt: string;
   avatar?:string
+  firstName?:string;
+  lastName?:string;
+  phone?:string;
+  status:string;
 }
 
 export interface AuthResponse {
