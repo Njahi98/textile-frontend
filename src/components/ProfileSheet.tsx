@@ -54,7 +54,7 @@ export function ProfileSheet() {
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer border border-border/50 hover:border-border transition-colors"
         >
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.avatar} alt={user?.username} />
+            <AvatarImage src={user?.avatarUrl} alt={user?.username} />
             <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-medium">
               {user?.username.charAt(0).toUpperCase()}
             </AvatarFallback>
@@ -67,7 +67,7 @@ export function ProfileSheet() {
         <div className="flex flex-col h-full">
           <div className="flex flex-col items-center space-y-3 py-8 px-6 border-b bg-gradient-to-b from-muted/50 to-transparent">
             <Avatar className="h-20 w-20 ring-2 ring-border/50 ring-offset-2 ring-offset-background">
-              <AvatarImage src={user?.avatar} alt={user?.username} />
+              <AvatarImage src={user?.avatarUrl} alt={user?.username} />
               <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary text-xl font-semibold">
                 {user?.username.charAt(0).toUpperCase()}
               </AvatarFallback>

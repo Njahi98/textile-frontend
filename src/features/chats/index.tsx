@@ -225,7 +225,7 @@ export default function Chats() {
                   const conversationName = getConversationName(conversation)
                   const lastMessage = conversation.lastMessage
                   const hasUnread = conversation.unreadCount > 0
-                  
+                  const messagerAvatarUrl = conversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl                  
                   let lastMessageText = ''
                   if (lastMessage) {
                     const isOwnMessage = lastMessage.senderId === currentUserId
@@ -250,6 +250,7 @@ export default function Chats() {
                         <div className='flex gap-2 flex-1'>
                           <div className="relative">
                             <Avatar>
+                              <AvatarImage src={messagerAvatarUrl} alt="{user?.username}" />
                               <AvatarFallback>{getInitials(conversationName)}</AvatarFallback>
                             </Avatar>
                             {hasUnread && (

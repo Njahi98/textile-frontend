@@ -7,6 +7,7 @@ export interface User {
   firstName: string | null;
   lastName: string | null;
   email?: string;
+  avatarUrl?: string | null;
 }
 
 export interface Conversation {

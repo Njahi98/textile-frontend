@@ -1,14 +1,16 @@
 export interface User {
-  id: string;
+  id: number;
   email: string;
   username: string;
-  role: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  status: 'active' | 'inactive' | 'suspended';
+  role: 'USER' | 'ADMIN' | 'SUPERADMIN';
+  avatarUrl?: string;     
+  avatarPublicId?: string;  
   createdAt: string;
-  avatar?:string
-  firstName?:string;
-  lastName?:string;
-  phone?:string;
-  status:string;
+  updatedAt: string;
 }
 
 export interface AuthResponse {

@@ -10,10 +10,12 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { accountApi } from "@/services/account.api";
-import { Trash2, Save } from "lucide-react";
+import { Trash2, Save, Upload, User, X } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import useSWR from "swr";
+import React from "react";
 
 const updateAccountSchema = z.object({
   email: z.string().email('Invalid email format').trim().toLowerCase().optional().or(z.literal('')),
@@ -27,9 +29,20 @@ const updateAccountSchema = z.object({
 type UpdateAccountFormData = z.infer<typeof updateAccountSchema>;
 
 export default function AccountSettings() {
-  const { user,logout } = useAuthStore();
+  const { logout } = useAuthStore();
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isDeletingAvatar, setIsDeletingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch account settings using SWR
+  const { data: accountData, error, isLoading, mutate: mutateAccount } = useSWR(
+    '/api/settings/account',
+    () => accountApi.getAccountSettings()
+  );
+
+  const user = accountData?.user;
 
   const {
     register,
@@ -48,10 +61,23 @@ export default function AccountSettings() {
     },
   });
 
+  // Reset form when user data loads
+  React.useEffect(() => {
+    if (user) {
+      reset({
+        email: user.email ?? '',
+        username: user.username ?? '',
+        firstName: user.firstName ?? '',
+        lastName: user.lastName ?? '',
+        phone: user.phone ?? '',
+        password: '',
+      });
+    }
+  }, [user, reset]);
+
   const onSubmit = async (data: UpdateAccountFormData) => {
     if (!isDirty) {
-      toast.info("Please make some changes before saving.", {
-      });
+      toast.info("Please make some changes before saving.");
       return;
     }
 
@@ -66,22 +92,65 @@ export default function AccountSettings() {
       if (data.password) updateData.password = data.password;
 
       if (Object.keys(updateData).length === 0) {
-        toast.info("Please make some changes before saving.", {
-        });
+        toast.info("Please make some changes before saving.");
         return;
       }
 
       await accountApi.updateAccount(updateData);
+      await mutateAccount(); // Refresh the account data
       
-      toast.success("Account updated successfully", {
-      });
+      toast.success("Account updated successfully");
 
       reset({ ...data, password: '' });
     } catch (error: any) {
-      toast.error("Error updating account", {
-      });
+      toast.error("Error updating account");
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must be less than 10MB");
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      await accountApi.updateAvatar(file);
+      await mutateAccount(); // Refresh the account data
+      toast.success("Avatar updated successfully");
+    } catch (error: any) {
+      toast.error("Error uploading avatar");
+    } finally {
+      setIsUploadingAvatar(false);
+      // Clear the input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    setIsDeletingAvatar(true);
+    try {
+      await accountApi.deleteAvatar();
+      await mutateAccount(); // Refresh the account data
+      toast.success("Avatar deleted successfully");
+    } catch (error: any) {
+      toast.error("Error deleting avatar");
+    } finally {
+      setIsDeletingAvatar(false);
     }
   };
 
@@ -90,17 +159,89 @@ export default function AccountSettings() {
     try {
       await accountApi.deleteAccount();
       
-      toast.success("Account deleted successfully", {
-      });
+      toast.success("Account deleted successfully");
 
       logout();
     } catch (error: any) {
-      toast.error("Error deleting account", {
-      });
+      toast.error("Error deleting account");
     } finally {
       setIsDeleting(false);
     }
   };
+
+  const getAvatarDisplay = () => {
+    if (user?.avatarUrl) {
+      return (
+        <img 
+          src={user.avatarUrl} 
+          alt="Avatar" 
+          className="w-20 h-20 rounded-full object-cover"
+        />
+      );
+    }
+    
+    // Default avatar with user initials or icon
+    const initials = user ? 
+      `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase() || 
+      user.username?.[0]?.toUpperCase() || 'U' 
+      : 'U';
+    
+    return (
+      <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
+        {initials.trim() ? (
+          <span className="text-xl font-semibold text-gray-600">{initials}</span>
+        ) : (
+          <User className="w-8 h-8 text-gray-400" />
+        )}
+      </div>
+    );
+  };
+
+  // Handle loading and error states
+  if (isLoading) {
+    return (
+      <Main>
+        <div className="flex items-center justify-center h-64">
+          <LoadingSpinner />
+        </div>
+      </Main>
+    );
+  }
+
+  if (error) {
+    return (
+      <Main>
+        <div className="flex items-center justify-center h-64">
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-destructive">Error loading account settings</p>
+              <Button 
+                onClick={() => mutateAccount()} 
+                variant="outline" 
+                className="mt-4"
+              >
+                Try Again
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </Main>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Main>
+        <div className="flex items-center justify-center h-64">
+          <Card>
+            <CardContent className="p-6">
+              <p>No account data available</p>
+            </CardContent>
+          </Card>
+        </div>
+      </Main>
+    );
+  }
 
   return (
     <Main>
@@ -114,6 +255,72 @@ export default function AccountSettings() {
       </div>
 
       <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Profile Picture</CardTitle>
+            <CardDescription>
+              Upload or update your profile picture.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center space-x-4">
+              {getAvatarDisplay()}
+              <div className="flex flex-col space-y-2">
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingAvatar}
+                  >
+                    {isUploadingAvatar ? (
+                      <>
+                        <LoadingSpinner />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload Avatar
+                      </>
+                    )}
+                  </Button>
+                  {user?.avatarUrl && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDeleteAvatar}
+                      disabled={isDeletingAvatar}
+                    >
+                      {isDeletingAvatar ? (
+                        <>
+                          <LoadingSpinner />
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <X className="mr-2 h-4 w-4" />
+                          Remove
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  JPG, PNG or GIF. Max size 10MB.
+                </p>
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Current Account Information</CardTitle>
