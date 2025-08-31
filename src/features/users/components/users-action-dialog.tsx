@@ -141,7 +141,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error);
         toast.error(error.message);
       } else {
         toast.error('something went wrong');

@@ -8,6 +8,7 @@ import {
   User,
   Settings,
   Box,
+  MessagesSquare,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -40,6 +41,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
         ]
       : []),
+      {
+        title: "Chats",
+        url: "/chat",
+        icon: MessagesSquare,
+      },
       {
         title: "Workers",
         url: "/workers",

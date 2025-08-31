@@ -4,6 +4,7 @@ import { LoginForm } from "@/features/auth/components/LoginForm";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 import { ResetPassword } from "@/features/auth/components/ResetPassword";
 import AppLayout from "@/layouts/AppLayout";
+import Home from "@/features/main";
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -11,7 +12,7 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         path: "/",
-        element: <div>hello root</div>,
+        element: <Home/>,
       },
       {
         path: "auth",

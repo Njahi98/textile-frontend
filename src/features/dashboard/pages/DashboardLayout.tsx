@@ -9,6 +9,7 @@ import {
 import { Outlet } from "react-router-dom";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import DynamicBreadCrumb from "@/components/DynamicBreadCrumb";
+import { NotificationsDropdown } from "@/features/chats/components/Notification";
 
 export default function DashboardLayout() {
   return (
@@ -22,6 +23,7 @@ export default function DashboardLayout() {
             <DynamicBreadCrumb/>          
           </div>
           <div className="flex items-center gap-2 px-4">
+            <NotificationsDropdown/>
             <ThemeSwitcher />
             <ProfileSheet/>
           </div>

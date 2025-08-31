@@ -11,6 +11,7 @@ import Products from "@/features/products";
 import Performance from "@/features/performanceRecords";
 import PerformanceAnalytics from "@/features/performanceRecords/performance-analytics-dashboard";
 import AccountSettings from "../features/settings/account/AccountSettings";
+import Chats from "@/features/chats";
 
 export const dashboardRoutes: RouteObject = {
   element: (
@@ -26,6 +27,10 @@ export const dashboardRoutes: RouteObject = {
     {
       path: "users",
       element: <Users />,
+    },
+    {
+      path:"chat",
+      element:<Chats/>
     },
     {
       path: "workers",
