@@ -25,12 +25,17 @@ import { Input } from '@/components/ui/input'
 import { NewChat } from './components/new-chat'
 import { useChat } from './hooks/use-chat'
 import { Message, Conversation } from '@/services/chat.api'
+import { toast } from 'sonner'
 
 export default function Chats() {
   const [search, setSearch] = useState('')
   const [mobileSelectedUser, setMobileSelectedUser] = useState<Conversation | null>(null)
   const [createConversationDialogOpened, setCreateConversationDialog] = useState(false)
   const [messageInput, setMessageInput] = useState('')
+
+  const [dragOver, setDragOver] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   
   const messageInputRef = useRef<HTMLInputElement>(null)
   const typingTimeoutRef = useRef<NodeJS.Timeout>()
@@ -51,6 +56,7 @@ export default function Chats() {
     getCurrentUserId,
     startTyping,
     stopTyping,
+    uploadFile,
     hasUserReadMessage,
   } = useChat()
 
@@ -163,6 +169,112 @@ export default function Chats() {
   }
 
   const currentUserId = getCurrentUserId()
+
+const handleFileSelect = async (files: FileList | null) => {
+  if (!files || !selectedConversation || !connected) return
+  
+  setUploading(true)
+  try {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`File ${file.name} is too large. Maximum size is 10MB.`)
+        continue
+      }
+      await uploadFile(selectedConversation.id, file)
+    }
+  } catch (error) {
+    console.error('File upload failed:', error)
+    const errorMessage = error instanceof Error ? error.message : 'File upload failed. Please try again.'
+    toast.error(`File upload failed: ${errorMessage}`)
+  } finally {
+    setUploading(false)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+}
+
+const handleDrop = (e: React.DragEvent) => {
+  e.preventDefault()
+  setDragOver(false)
+  handleFileSelect(e.dataTransfer.files)
+}
+
+const handleDragOver = (e: React.DragEvent) => {
+  e.preventDefault()
+  setDragOver(true)
+}
+
+const handleDragLeave = (e: React.DragEvent) => {
+  e.preventDefault()
+  setDragOver(false)
+}
+
+const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return '0 Bytes'
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+const renderMessageContent = (message: Message) => {
+  switch (message.messageType) {
+    case 'IMAGE':
+      return (
+        <div className="space-y-2">
+          <img 
+            src={message.fileUrl || ''} 
+            alt={message.fileName || 'Image'}
+            className="max-w-full h-auto rounded-md cursor-pointer"
+            onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
+          />
+          {message.fileName && (
+            <p className="text-xs opacity-75">{message.fileName}</p>
+          )}
+        </div>
+      )
+    
+    case 'VIDEO':
+      return (
+        <div className="space-y-2">
+          <video 
+            src={message.fileUrl || ''} 
+            controls
+            className="max-w-full h-auto rounded-md"
+            style={{ maxHeight: '300px' }}
+          />
+          {message.fileName && (
+            <p className="text-xs opacity-75">{message.fileName}</p>
+          )}
+        </div>
+      )
+    
+    case 'FILE':
+      return (
+        <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-md">
+          <Paperclip size={20} />
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-sm truncate">{message.fileName || 'Unknown file'}</p>
+            {message.fileSize && (
+              <p className="text-xs text-muted-foreground">{formatFileSize(message.fileSize)}</p>
+            )}
+          </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
+          >
+            Download
+          </Button>
+        </div>
+      )
+    
+    default:
+      return <div className="text-sm">{message.content}</div>
+  }
+}
 
   return (
     <>
@@ -387,7 +499,7 @@ export default function Chats() {
                                       </div>
                                     )}
                                     <div className="text-sm">
-                                      {message.content}
+                                      {renderMessageContent(message)}
                                     </div>
                                     <div className="flex items-center justify-between mt-2">
                                       <span
@@ -420,60 +532,77 @@ export default function Chats() {
                 </div>
 
                 {/* Message Input */}
-                <form onSubmit={handleSendMessage} className='flex w-full flex-none gap-2'>
-                  <div className='border-input focus-within:ring-ring flex flex-1 items-center gap-2 rounded-md border px-2 py-1 focus-within:ring-1 focus-within:outline-hidden lg:gap-4'>
-                    <div className='space-x-1'>
-                      <Button
-                        size='icon'
-                        type='button'
-                        variant='ghost'
-                        className='h-8 rounded-md'
-                      >
-                        <Plus size={20} className='stroke-muted-foreground' />
-                      </Button>
-                      <Button
-                        size='icon'
-                        type='button'
-                        variant='ghost'
-                        className='hidden h-8 rounded-md lg:inline-flex'
-                      >
-                        <Image size={20} className='stroke-muted-foreground' />
-                      </Button>
-                      <Button
-                        size='icon'
-                        type='button'
-                        variant='ghost'
-                        className='hidden h-8 rounded-md lg:inline-flex'
-                      >
-                        <Paperclip size={20} className='stroke-muted-foreground' />
-                      </Button>
-                    </div>
-                    <Input
-                      ref={messageInputRef}
-                      value={messageInput}
-                      onChange={handleInputChange}
-                      placeholder='Type your message...'
-                      className='flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
-                      disabled={!connected}
-                    />
-                    <Button
-                      type="submit"
-                      variant='ghost'
-                      size='icon'
-                      className='hidden sm:inline-flex'
-                      disabled={!messageInput.trim() || !connected}
-                    >
-                      <Send size={20} />
-                    </Button>
-                  </div>
-                  <Button 
-                    type="submit"
-                    className='h-full sm:hidden'
-                    disabled={!messageInput.trim() || !connected}
-                  >
-                    <Send size={18} /> Send
-                  </Button>
-                </form>
+            <form onSubmit={handleSendMessage} className='flex w-full flex-none gap-2'>
+  <input
+    ref={fileInputRef}
+    type="file"
+    multiple
+    accept="image/*,video/*,.xlsx,.xls,.csv,.pdf,.doc,.docx"
+    onChange={(e) => handleFileSelect(e.target.files)}
+    className="hidden"
+  />
+  
+  <div 
+    className={cn(
+      'border-input focus-within:ring-ring flex flex-1 items-center gap-2 rounded-md border px-2 py-1 focus-within:ring-1 focus-within:outline-hidden lg:gap-4',
+      dragOver && 'border-primary bg-primary/5'
+    )}
+    onDrop={handleDrop}
+    onDragOver={handleDragOver}
+    onDragLeave={handleDragLeave}
+  >
+    <div className='space-x-1'>            
+      <Button
+        size='icon'
+        type='button'
+        variant='ghost'
+        className='hidden h-8 rounded-md lg:inline-flex'
+        onClick={() => fileInputRef.current?.click()}
+        disabled={!connected || uploading}
+      >
+        <Image size={20} className='stroke-muted-foreground' />
+      </Button>
+      <Button
+        size='icon'
+        type='button'
+        variant='ghost'
+        className='hidden h-8 rounded-md lg:inline-flex'
+        onClick={() => fileInputRef.current?.click()}
+        disabled={!connected || uploading}
+      >
+        <Paperclip size={20} className='stroke-muted-foreground' />
+      </Button>
+    </div>
+    <Input
+      ref={messageInputRef}
+      value={messageInput}
+      onChange={handleInputChange}
+      placeholder={uploading ? 'Uploading file...' : 'Type your message...'}
+      className='flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
+      disabled={!connected || uploading}
+    />
+    {uploading ? (
+      <Loader2 className="h-5 w-5 animate-spin" />
+    ) : (
+      <Button
+        type="submit"
+        variant='ghost'
+        size='icon'
+        className='hidden sm:inline-flex'
+        disabled={!messageInput.trim() || !connected}
+      >
+        <Send size={20} />
+      </Button>
+    )}
+  </div>
+  <Button 
+    type="submit"
+    className='h-full sm:hidden'
+    disabled={!messageInput.trim() || !connected || uploading}
+  >
+    <Send size={18} /> Send
+  </Button>
+</form>
               </div>
             </div>
           ) : (

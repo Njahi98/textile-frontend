@@ -21,7 +21,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { User } from '@/services/chat.api'
 
-type Props = {
+interface Props  {
   open: boolean
   onOpenChange: (open: boolean) => void
   onCreateConversation: (participantIds: number[], name?: string, isGroup?: boolean) => Promise<void>

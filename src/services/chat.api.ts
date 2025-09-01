@@ -32,9 +32,14 @@ export interface Message {
   conversationId: number;
   senderId: number;
   content: string;
-  messageType: 'TEXT' | 'IMAGE' | 'FILE';
+  messageType: 'TEXT' | 'IMAGE' | 'FILE' | 'VIDEO';
   isEdited: boolean;
   isDeleted: boolean;
+  // Add these fields
+  fileUrl?: string | null;
+  fileName?: string | null;
+  fileSize?: number | null;
+  filePublicId?: string | null;
   createdAt: string;
   updatedAt: string;
   sender: User;
@@ -179,6 +184,18 @@ class ChatService {
     return response.data;
   }
 
+  async uploadFile(conversationId: number, file: File): Promise<{ success: boolean; message: Message }> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await api.post(`/api/chat/conversations/${conversationId}/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+}
+
   // Socket event handlers
   joinConversations(conversationIds: number[]) {
     if (this.socket) {
@@ -281,3 +298,4 @@ class ChatService {
 }
 
 export const chatService = new ChatService();
+

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 import { chatService, Conversation, Message, User } from '@/services/chat.api';
+import type { Notification } from '@/services/chat.api';
 
 interface TypingUser {
   userId: number;
@@ -439,6 +440,22 @@ const markNotificationsAsRead = async (notificationIds?: number[], markAll = fal
     );
   };
 
+  const uploadFile = async (conversationId: number, file: File) => {
+  try {
+    const response = await chatService.uploadFile(conversationId, file);
+    if (response.success) {
+      // File upload success is handled by socket event (new_message)
+      return response.message;
+    } else {
+      console.error('File upload failed with response:', response);
+      throw new Error('Upload failed: Invalid response from server');
+    }
+  } catch (error) {
+    console.error('Failed to upload file:', error);
+    throw error;
+  }
+};
+
   return {
     // State
     conversations,
@@ -468,6 +485,7 @@ const markNotificationsAsRead = async (notificationIds?: number[], markAll = fal
     startTyping,
     stopTyping,
     selectConversation,
+    uploadFile,
     
     // Helpers
     getCurrentUserId,
