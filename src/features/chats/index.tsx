@@ -333,18 +333,32 @@ const renderMessageContent = (message: Message) => {
                 </div>
               ) : (
                 filteredConversations.map((conversation) => {
-                  const conversationName = getConversationName(conversation)
-                  const lastMessage = conversation.lastMessage
-                  const hasUnread = conversation.unreadCount > 0
-                  const messagerAvatarUrl = conversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl                  
-                  let lastMessageText = ''
-                  if (lastMessage) {
+                    const conversationName = getConversationName(conversation)
+                    const lastMessage = conversation.lastMessage
+                    const hasUnread = conversation.unreadCount > 0
+                    const messagerAvatarUrl = conversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl                  
+                    let lastMessageText = ''
+                    if (lastMessage) {
                     const isOwnMessage = lastMessage.senderId === currentUserId
-                    lastMessageText = isOwnMessage 
-                      ? `You: ${lastMessage.content}`
-                      : lastMessage.content
-                  }
+                    const prefix = isOwnMessage ? 'You: ' : ''
 
+                    switch(lastMessage.messageType) {
+                      case 'TEXT':
+                      lastMessageText = `${prefix}${lastMessage.content}`
+                      break
+                      case 'IMAGE':
+                      lastMessageText = `${prefix}sent an image`
+                      break
+                      case 'VIDEO':
+                      lastMessageText = `${prefix}sent a video`
+                      break
+                      case 'FILE':
+                      lastMessageText = `${prefix}sent a file`
+                      break
+                      default:
+                      lastMessageText = `${prefix}${lastMessage.content}`
+                    }
+                  }
                   return (
                     <Fragment key={conversation.id}>
                       <button
