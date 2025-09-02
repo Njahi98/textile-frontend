@@ -8,7 +8,6 @@ import {
   MessagesSquare,
   Paperclip,
   Image,
-  Plus,
   Search,
   Send,
   Loader2,
@@ -362,7 +361,7 @@ const renderMessageContent = (message: Message) => {
                         <div className='flex gap-2 flex-1'>
                           <div className="relative">
                             <Avatar>
-                              <AvatarImage src={messagerAvatarUrl} alt="{user?.username}" />
+                              <AvatarImage src={messagerAvatarUrl} alt="userAvatar" />
                               <AvatarFallback>{getInitials(conversationName)}</AvatarFallback>
                             </Avatar>
                             {hasUnread && (
@@ -428,6 +427,7 @@ const renderMessageContent = (message: Message) => {
                   </Button>
                   <div className='flex items-center gap-2 lg:gap-4'>
                     <Avatar className='size-9 lg:size-11'>
+                    <AvatarImage src={selectedConversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl} alt="userAvatar" />
                       <AvatarFallback>{getInitials(getConversationName(selectedConversation))}</AvatarFallback>
                     </Avatar>
                     <div>

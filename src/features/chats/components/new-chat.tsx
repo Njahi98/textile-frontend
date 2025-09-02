@@ -20,6 +20,7 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { User } from '@/services/chat.api'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface Props  {
   open: boolean
@@ -210,7 +211,6 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                   {searchResults.map((user) => {
                     const isSelected = selectedUsers.find((u) => u.id === user.id)
                     const displayName = getUserDisplayName(user)
-                    
                     return (
                       <CommandItem
                         key={user.id}
@@ -219,11 +219,10 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                         className='flex items-center justify-between gap-2 cursor-pointer'
                       >
                         <div className='flex items-center gap-2'>
-                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                            <span className="text-xs font-medium">
-                              {displayName.split(' ').map(n => n[0]).join('').toUpperCase()}
-                            </span>
-                          </div>
+                            <Avatar>
+                              <AvatarImage src={user?.avatarUrl} alt="userAvatar" />
+                              <AvatarFallback>{displayName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                            </Avatar>               
                           <div className='flex flex-col'>
                             <span className='text-sm font-medium'>
                               {displayName}

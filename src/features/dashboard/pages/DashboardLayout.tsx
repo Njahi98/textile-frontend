@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
+import { ColorThemeSwitcher } from "@/components/theme/ColorThemeSwitcher";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -24,6 +25,7 @@ export default function DashboardLayout() {
           </div>
           <div className="flex items-center gap-2 px-4">
             <NotificationsDropdown/>
+            <ColorThemeSwitcher />
             <ThemeSwitcher />
             <ProfileSheet/>
           </div>

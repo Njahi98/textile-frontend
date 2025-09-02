@@ -198,7 +198,7 @@ export function AssignmentsMutateDrawer({
                 <FormItem className='space-y-1'>
                   <FormLabel>Date</FormLabel>
                   <FormControl>
-                    <Popover>
+                    <Popover modal={true}>
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
@@ -211,12 +211,11 @@ export function AssignmentsMutateDrawer({
                           {field.value ? format(new Date(String(field.value)), 'PPP') : 'Pick a date'}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      <PopoverContent className="w-auto p-0" align="start" side="bottom">
                         <Calendar
                           mode="single"
                           selected={field.value ? new Date(String(field.value)) : undefined}
                           onSelect={(date: Date | undefined) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                          disabled={(date: Date) => date < new Date('1900-01-01')}
                           initialFocus
                         />
                       </PopoverContent>

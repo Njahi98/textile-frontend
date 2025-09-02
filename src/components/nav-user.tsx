@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuthStore } from "@/stores/auth.store"
 import { AuthState } from "@/types/auth"
+import { Link } from "react-router-dom"
 
 
 
@@ -81,9 +82,11 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup className="*:hover:cursor-pointer">
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild>
+              <Link to="/dashboard" className="flex items-center gap-2">
                 <House />
                 Home
+              </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <SquareUser />
@@ -93,10 +96,12 @@ export function NavUser({
                 <Bell />
                 Notifications
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings />
-                Settings
-              </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                <Link to="/settings/account" className="flex items-center gap-2">
+                  <Settings />
+                  Settings
+                </Link>
+                </DropdownMenuItem>
             </DropdownMenuGroup>
             
             <DropdownMenuSeparator />
