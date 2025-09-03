@@ -450,7 +450,9 @@ const renderMessageContent = (message: Message) => {
                       </span>
                       <div className="flex items-center gap-2">
                         <span className='text-muted-foreground col-start-2 row-span-2 row-start-2 line-clamp-1 block max-w-32 text-xs text-nowrap text-ellipsis lg:max-w-none lg:text-sm'>
-                          {selectedConversation.participants.length} participant{selectedConversation.participants.length !== 1 ? 's' : ''}
+                          {selectedConversation.participants.map(p => 
+                            `${p.user.firstName ?? ''} ${p.user.lastName ?? ''}`.trim() || p.user.username
+                          ).join(', ')}
                         </span>
                         {/* Typing indicator */}
                         {getTypingUsersInConversation(selectedConversation.id).length > 0 && (
