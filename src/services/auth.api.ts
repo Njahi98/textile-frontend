@@ -1,4 +1,4 @@
-import api from '@/lib/api';
+import api from '@/lib/api'; // Use your existing api instance
 import { AuthResponse, User } from '@/types/auth';
 
 interface LogoutResponse {
@@ -14,6 +14,12 @@ interface UserResponse {
 interface ResetResponse {
   success: boolean;
   message: string;
+}
+
+interface RefreshResponse {
+  success: boolean;
+  message: string;
+  user: User;
 }
 
 export const authApi = {
@@ -33,6 +39,12 @@ export const authApi = {
     password: string;
   }): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/api/auth/register', userData);
+    return response.data;
+  },
+
+  // Refresh access token using refresh token
+  async refreshToken(): Promise<RefreshResponse> {
+    const response = await api.post<RefreshResponse>('/api/auth/refresh');
     return response.data;
   },
 

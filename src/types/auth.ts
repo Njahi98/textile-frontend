@@ -41,12 +41,15 @@ export interface AuthActions {
     email: string;
     password: string;
   }) => Promise<{ success: boolean; error?: string }>;
+  refreshToken: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<{ success: boolean; error?: string }>;
   getCurrentUser: () => Promise<{ success: boolean; error?: string }>;
   requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (token: string, password: string) => Promise<{ success: boolean; error?: string }>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
+  setupAutoRefresh: () => void;
+  clearAutoRefresh: () => void;
 }
 
 export type AuthStore = AuthState & AuthActions;
