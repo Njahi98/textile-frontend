@@ -298,16 +298,16 @@ export default function Home() {
               Experience how TextilePro can transform your textile production. 
               Sign up now for our demo version and explore all features.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">         
-              <Link to="/auth/login" className="w-full sm:w-auto">
-              <button type="button" className="px-8 py-3 bg-foreground text-background hover:bg-foreground/90 rounded-md font-semibold transition-colors flex items-center justify-center shadow-lg">
-              Sign In
-              <CheckCircle className="ml-2 h-5 w-5" />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 w-full max-w-md mx-auto">         
+              <Link to="/auth/login" className="w-full">
+              <button type="button" className="w-full px-8 py-3 bg-foreground text-background hover:bg-foreground/90 rounded-md font-semibold transition-colors flex items-center justify-center shadow-lg">
+                Sign In
+                <CheckCircle className="ml-2 h-5 w-5" />
               </button>
               </Link>
-              <Link to="/auth/register" className="w-full sm:w-auto">
-              <button type="button" className="px-8 py-3 border border-border text-foreground hover:bg-secondary rounded-md font-semibold transition-colors backdrop-blur-sm">
-              Get Started
+              <Link to="/auth/register" className="w-full">
+              <button type="button" className="w-full px-8 py-3 border border-border text-foreground hover:bg-secondary rounded-md font-semibold transition-colors backdrop-blur-sm flex items-center justify-center">
+                Get Started
               </button>
               </Link>
             </div>
