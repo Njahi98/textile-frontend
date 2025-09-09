@@ -55,27 +55,23 @@ interface ImportResponse {
 
 export const workerApi = {
 
-  // Get worker by ID
   async getWorkerById(id: string): Promise<WorkerResponse> {
     const response = await api.get<WorkerResponse>(`/api/workers/${id}`);
     return response.data;
   },
 
-  // Create new worker
   async createWorker(userData: CreateOrUpdateUserData): Promise<WorkerResponse> {
     const response = await api.post<WorkerResponse>('/api/workers', userData);
     await mutate('/api/workers');
     return response.data;
   },
 
-  // Update worker
   async updateWorker(id: string, userData: CreateOrUpdateUserData): Promise<WorkerResponse> {
     const response = await api.put<WorkerResponse>(`/api/workers/${id}`, userData);
     await mutate('/api/workers');
     return response.data;
   },
 
-  // Delete worker
   async deleteWorker(id: string): Promise<{ success: boolean; message: string }> {
     const response = await api.delete<{ success: boolean; message: string }>(`/api/workers/${id}`);
     await mutate('/api/workers');

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Base assignment schema for API responses
 export const assignmentSchema = z.object({
   id: z.number(),
   date: z.string().transform((val) => new Date(val)),
@@ -26,7 +25,6 @@ export const assignmentSchema = z.object({
   }),
 });
 
-// Create assignment input schema
 export const createAssignmentSchema = z.object({
   workerId: z.number().int().positive('Worker ID must be a positive integer'),
   productionLineId: z.number().int().positive('Production line ID must be a positive integer'),
@@ -35,7 +33,6 @@ export const createAssignmentSchema = z.object({
   shift: z.string().min(1, 'Shift is required').max(50, 'Shift must be less than 50 characters'),
 });
 
-// Update assignment input schema (all fields optional)
 export const updateAssignmentSchema = z.object({
   workerId: z.number().int().positive().optional(),
   productionLineId: z.number().int().positive().optional(),
@@ -45,7 +42,6 @@ export const updateAssignmentSchema = z.object({
 }).refine((data) => Object.keys(data).length > 0, 'At least one field must be provided for update');
 
 
-// Query parameters for getting assignments
 export const assignmentQuerySchema = z.object({
   page: z.number().int().min(1).optional().default(1),
   limit: z.number().int().min(1).max(100).optional().default(20),
@@ -57,7 +53,6 @@ export const assignmentQuerySchema = z.object({
   position: z.string().optional(),
 });
 
-// Calendar query parameters
 export const calendarQuerySchema = z.object({
   year: z.number().int().min(1900).max(2100),
   month: z.number().int().min(1).max(12),
@@ -65,14 +60,12 @@ export const calendarQuerySchema = z.object({
   productionLineId: z.number().int().positive().optional(),
 });
 
-// Type exports
 export type CreateAssignmentInput = z.infer<typeof createAssignmentSchema>;
 export type UpdateAssignmentInput = z.infer<typeof updateAssignmentSchema>;
 export type AssignmentQueryInput = z.infer<typeof assignmentQuerySchema>;
 export type CalendarQueryInput = z.infer<typeof calendarQuerySchema>;
 export type Assignment = z.infer<typeof assignmentSchema>;
 
-// Form validation helpers
 export const validateAssignmentForm = (data: unknown) => {
   try {
     return { success: true, data: createAssignmentSchema.parse(data) };
@@ -83,7 +76,6 @@ export const validateAssignmentForm = (data: unknown) => {
     return { success: false, errors: [{ message: 'Validation failed' }] };
   }
 };
-// Common shift options
 export const SHIFT_OPTIONS = [
   { value: 'morning', label: 'Morning' },
   { value: 'afternoon', label: 'Afternoon' },

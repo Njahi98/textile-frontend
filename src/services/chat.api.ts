@@ -35,7 +35,6 @@ export interface Message {
   messageType: 'TEXT' | 'IMAGE' | 'FILE' | 'VIDEO';
   isEdited: boolean;
   isDeleted: boolean;
-  // Add these fields
   fileUrl?: string | null;
   fileName?: string | null;
   fileSize?: number | null;
@@ -121,7 +120,7 @@ class ChatService {
     return this.socket;
   }
 
-  // API calls using your existing api instance
+ 
   async getConversations(page = 1, limit = 20): Promise<{ success: boolean; conversations: Conversation[] }> {
     const response = await api.get('/api/chat/conversations', {
       params: { page, limit }

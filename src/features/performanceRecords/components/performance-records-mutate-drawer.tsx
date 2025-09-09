@@ -50,15 +50,15 @@ export function PerformanceRecordsMutateDrawer({
   const [isLoading, setIsLoading] = useState(false)
   const isUpdate = !!currentRow
 
-  // Fetch workers data
+  
   const { data: workersData } = useSWR<WorkersApiResponse>('/api/workers', fetcher)
   const workers = workersData?.success ? workerListSchema.parse(workersData.workers) : []
 
-  // Fetch production lines data
+  
   const { data: productionLinesData } = useSWR<ProductionLinesApiResponse>('/api/production-lines', fetcher)
   const productionLines = productionLinesData?.success ? productionLineListSchema.parse(productionLinesData.productionLines) : []
 
-  // Fetch products data
+  
   const { data: productsData } = useSWR<ProductsApiResponse>('/api/products', fetcher)
   const products = productsData?.success ? productsData.products : []
 
@@ -89,7 +89,7 @@ export function PerformanceRecordsMutateDrawer({
     try {
       setIsLoading(true)
       
-      // Prepare the data, ensuring all required fields are present
+      
       if (!data.shift) {
         toast.error('Shift is required')
         return

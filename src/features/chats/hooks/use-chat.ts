@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 import { chatService, Conversation, Message, User } from '@/services/chat.api';
 import type { Notification } from '@/services/chat.api';
+import { toast } from 'sonner';
 
 interface TypingUser {
   userId: number;
@@ -41,7 +42,7 @@ export const useChat = () => {
 
     const initializeChat = async () => {
       try {
-        // Connect to socket (synchronous now since we're using cookies)
+        // Connect to socket 
         const socket = chatService.connect();
         
         // Connection event handlers
@@ -69,7 +70,6 @@ export const useChat = () => {
 
         chatService.onMessageError((error) => {
           console.error('Message error:', error);
-          // You might want to show a toast notification here
         });
         
       } catch (error) {
@@ -237,7 +237,7 @@ const handleNewNotification = useCallback((notification: Notification) => {
   if (Notification.permission === 'granted' && notification.type === 'NEW_MESSAGE') {
     new Notification(notification.title, {
       body: notification.content,
-      icon: '/favicon.ico', // Update with your app icon
+      icon: '/logo.webp',
     });
   }
 }, [notifications]);

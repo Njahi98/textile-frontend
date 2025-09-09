@@ -1,16 +1,34 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 function AuthLayout() {
   const location = useLocation();
   const [imagePosition, setImagePosition] = useState<'left' | 'right'>('right');
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
 
   useEffect(() => {
     setImagePosition(location.pathname === '/auth/register' ? 'left' : 'right');
   }, [location]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 md:p-5">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+      className="flex flex-col items-center justify-center p-6 md:p-5"
+    >
       <div className="w-full max-w-sm md:max-w-3xl">
         <div className="relative">
           <div className={`absolute inset-y-0 transition-all duration-500 ease-in-out hidden md:block w-1/2
@@ -26,7 +44,7 @@ function AuthLayout() {
           <Outlet />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

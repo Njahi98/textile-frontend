@@ -85,12 +85,13 @@ api.interceptors.response.use(
           processQueue(refreshError, null);
           isRefreshing = false;
           
-          // Clear any auth state and redirect
+          // Clear any auth state and redirect only if not on public pages
           if (typeof window !== 'undefined') {
             localStorage.removeItem('auth-storage');
             
             const currentPath = window.location.pathname;
-            if (!currentPath.startsWith('/auth/')) {
+            // Only redirect if not on public pages (home, auth pages)
+            if (!currentPath.startsWith('/auth/') && currentPath !== '/') {
               window.location.href = '/auth/login';
             }
           }
@@ -104,7 +105,7 @@ api.interceptors.response.use(
         return Promise.reject(new Error(''));
       }
 
-      if (error.response?.status === 401 && !window.location.pathname.includes('/auth/')) {
+      if (error.response?.status === 401 && !window.location.pathname.includes('/auth/') && window.location.pathname !== '/') {
         window.location.href = '/auth/login';
       }
 

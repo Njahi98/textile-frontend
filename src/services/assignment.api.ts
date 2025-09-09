@@ -121,34 +121,29 @@ export interface ConflictsResponse {
 
 export const assignmentApi = {
 
-  // Get assignment by ID
   async getAssignmentById(id: number): Promise<AssignmentResponse> {
     const response = await api.get<AssignmentResponse>(`/api/assignments/${id}`);
     return response.data;
   },
 
-  // Create single assignment
   async createAssignment(data: CreateAssignmentData): Promise<AssignmentResponse> {
     const response = await api.post<AssignmentResponse>('/api/assignments', data);
     await mutate('/api/assignments');
     return response.data;
   },
 
-  // Update assignment
   async updateAssignment(id: number, data: UpdateAssignmentData): Promise<AssignmentResponse> {
     const response = await api.put<AssignmentResponse>(`/api/assignments/${id}`, data);
     await mutate('/api/assignments');
     return response.data;
   },
 
-  // Delete assignment
   async deleteAssignment(id: number): Promise<{ success: boolean; message: string }> {
     const response = await api.delete<{ success: boolean; message: string }>(`/api/assignments/${id}`);
     await mutate('/api/assignments');
     return response.data;
   },
 
-  // Get calendar view
   async getAssignmentsCalendar(params: CalendarQueryParams): Promise<CalendarResponse> {
     const searchParams = new URLSearchParams();
     searchParams.append('year', params.year.toString());
@@ -163,7 +158,6 @@ export const assignmentApi = {
     return response.data;
   },
 
-  // Get assignment conflicts
   async getAssignmentConflicts(params?: { startDate?: string; endDate?: string }): Promise<ConflictsResponse> {
     const searchParams = new URLSearchParams();
     if (params?.startDate) {

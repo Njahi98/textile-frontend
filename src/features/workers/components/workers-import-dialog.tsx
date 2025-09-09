@@ -76,7 +76,6 @@ export function WorkersImportDialog({ open, onOpenChange }: Props) {
       setImportResult(result)
       
       if (result.success) {
-        // Reset form after successful import
         form.reset()
       }
     } catch (error: unknown) {

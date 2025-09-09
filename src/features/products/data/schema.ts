@@ -17,7 +17,7 @@ export const updateProductSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-// Product schema for API responses
+
 export const productSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -32,9 +32,8 @@ export const productSchema = z.object({
   updatedAt: z.string(),
 });
 
-// Product list schema
-export const productListSchema = z.array(productSchema);
 
+export const productListSchema = z.array(productSchema);
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
 export type Product = z.infer<typeof productSchema>;

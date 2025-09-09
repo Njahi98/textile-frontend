@@ -22,7 +22,7 @@ export const shifts = [
   },
 ]
 
-// Performance metrics options for filtering
+
 export const performanceMetrics = [
   {
     value: 'piecesMade',

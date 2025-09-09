@@ -97,7 +97,7 @@ export default function AccountSettings() {
       }
 
       await accountApi.updateAccount(updateData);
-      await mutateAccount(); // Refresh the account data
+      await mutateAccount();
       
       toast.success("Account updated successfully");
 

@@ -4,7 +4,7 @@ const shiftSchema = z.enum(['morning', 'afternoon', 'night'], {
   errorMap: () => ({ message: 'Shift must be morning, afternoon, or night' })
 });
 
-// Base performance record schema for API responses
+
 export const performanceRecordSchema = z.object({
   id: z.number(),
   workerId: z.number(),
@@ -36,7 +36,7 @@ export const performanceRecordSchema = z.object({
   }),
 });
 
-// Create performance record input schema
+
 export const createPerformanceRecordSchema = z.object({
   workerId: z.number().int().positive('Worker ID must be a positive integer'),
   productId: z.number().int().positive('Product ID must be a positive integer'),
@@ -50,7 +50,7 @@ export const createPerformanceRecordSchema = z.object({
   errorRate: z.number().min(0, 'Error rate must be non-negative').max(100, 'Error rate cannot exceed 100%'),
 });
 
-// Update performance record input schema (all fields optional)
+
 export const updatePerformanceRecordSchema = z.object({
   workerId: z.number().int().positive('Worker ID must be a positive integer').optional(),
   productId: z.number().int().positive('Product ID must be a positive integer').optional(),
@@ -64,7 +64,7 @@ export const updatePerformanceRecordSchema = z.object({
   errorRate: z.number().min(0, 'Error rate must be non-negative').max(100, 'Error rate cannot exceed 100%').optional(),
 });
 
-// Query parameters for getting performance records
+
 export const performanceRecordQuerySchema = z.object({
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
@@ -76,13 +76,13 @@ export const performanceRecordQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
-// Type exports
+
 export type CreatePerformanceRecordInput = z.infer<typeof createPerformanceRecordSchema>;
 export type UpdatePerformanceRecordInput = z.infer<typeof updatePerformanceRecordSchema>;
 export type PerformanceRecordQueryInput = z.infer<typeof performanceRecordQuerySchema>;
 export type PerformanceRecord = z.infer<typeof performanceRecordSchema>;
 
-// Form validation helpers
+
 export const validatePerformanceRecordForm = (data: unknown) => {
   try {
     return { success: true, data: createPerformanceRecordSchema.parse(data) };
@@ -94,7 +94,7 @@ export const validatePerformanceRecordForm = (data: unknown) => {
   }
 };
 
-// Common shift options
+
 export const SHIFT_OPTIONS = [
   { value: 'morning', label: 'Morning' },
   { value: 'afternoon', label: 'Afternoon' },

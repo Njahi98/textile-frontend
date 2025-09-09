@@ -29,10 +29,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Dashboard",
       url: "/dashboard",
       icon: LayoutDashboard,
-      isActive: true, // Active by default
+      isActive: true,
     },
-    // Only include Users nav item for admin role
-    ...(user?.role === "ADMIN"
+    // Only include Users nav item for admin/superAdmin role
+    ...(user?.role === "ADMIN" || user?.role === "SUPERADMIN"
       ? [
           {
             title: "Users",

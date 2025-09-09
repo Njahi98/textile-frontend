@@ -4,14 +4,15 @@ import { LoginForm } from "@/features/auth/components/LoginForm";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 import { ResetPassword } from "@/features/auth/components/ResetPassword";
 import AppLayout from "@/layouts/AppLayout";
-import Home from "@/features/main";
+import Home from "@/features/main/Home";
 
 export const publicRoutes: RouteObject[] = [
   {
+    path: "/",
     element: <AppLayout />,
     children: [
       {
-        path: "/",
+        index: true,
         element: <Home/>,
       },
       {
