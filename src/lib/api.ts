@@ -109,6 +109,11 @@ api.interceptors.response.use(
         window.location.href = '/auth/login';
       }
 
+      // Preserve 429 rate limit errors with their original structure
+      if (error.response?.status === 429) {
+        return Promise.reject(error);
+      }
+
       // This gives TypeScript confidence that data.message exists safely
       const data = error.response?.data as { message?: string } | undefined;
       const errorMessage = data?.message ?? error.message;

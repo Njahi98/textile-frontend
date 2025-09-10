@@ -31,26 +31,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: LayoutDashboard,
       isActive: true,
     },
-    // Only include Users nav item for admin/superAdmin role
-    ...(user?.role === "ADMIN" || user?.role === "SUPERADMIN"
-      ? [
-          {
-            title: "Users",
-            url: "/users",
-            icon: User,
-          },
-        ]
-      : []),
-      {
-        title: "Chats",
-        url: "/chat",
-        icon: MessagesSquare,
-      },
-      {
-        title: "Workers",
-        url: "/workers",
-        icon: Frame,
-      },
+    {
+      title: "Users",
+      url: "/users",
+      icon: User,
+    },
+    {
+      title: "Chats",
+      url: "/chat",
+      icon: MessagesSquare,
+    },
+    {
+      title: "Workers",
+      url: "/workers",
+      icon: Frame,
+    },
     {
       title: "Production Lines",
       url: "/production-lines",
@@ -76,17 +71,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "/products",
       icon: Box,
     },
-    {title: "Performance",
+    {
+      title: "Performance",
       url: "/performance",
       icon: GalleryVerticalEnd,
       items: [
         {
           title: "Overview",
-          url: "/performance/overview",},
+          url: "/performance/overview",
+        },
         {
           title: "Analytics",
-          url: "/performance/analytics",},
-        ]},
+          url: "/performance/analytics",
+        },
+        {
+          title: "AI Insights",
+          url: "/performance/ai-insights",
+        },
+      ],
+    },
     {
       title: "Settings",
       url: "/settings",

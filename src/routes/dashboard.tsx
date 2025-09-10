@@ -12,6 +12,7 @@ import Performance from "@/features/performanceRecords";
 import PerformanceAnalytics from "@/features/performanceRecords/performance-analytics-dashboard";
 import AccountSettings from "../features/settings/account/AccountSettings";
 import Chats from "@/features/chats";
+import AIInsightsDashboard from "@/features/performanceRecords/AIInsightsDashboard";
 
 export const dashboardRoutes: RouteObject = {
   element: (
@@ -66,7 +67,12 @@ export const dashboardRoutes: RouteObject = {
           {
             path: "analytics",
             element: <PerformanceAnalytics />,
-          },]
+          },
+          {
+            path: "ai-insights",
+            element: <AIInsightsDashboard />,
+          }
+        ]
       },{
         path: "settings",
         children:[

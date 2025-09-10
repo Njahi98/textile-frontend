@@ -131,6 +131,7 @@ export function RegisterForm({
                     className="w-full hover:cursor-pointer"
                     type="button"
                     disabled={isLoading}
+                    onClick={() => toast('Google login not implemented yet.', { type: 'info' })}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <path
