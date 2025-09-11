@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { ArrowUpRight, ArrowDownRight, Minus, TrendingUp, ShieldAlert, Info, Download, RefreshCw, Clock, FileX, PlayCircle, CalendarIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -491,7 +490,8 @@ export const AIInsightsDashboard: React.FC = () => {
                 <h3 className="font-semibold text-amber-800">Rate Limit Active</h3>
                 <p className="text-sm text-amber-700">
                   AI insights can only be generated once every 30 minutes. Please wait {formatTime(cooldownTimer)} before generating a new report.
-                  Your current report will remain available until the timer expires.
+                  Your current report will remain available until the timer expires. To keep these insights permanently, 
+                  please use the Export button to download them as a CSV file, as AI generated reports are not saved long-term.
                 </p>
               </div>
             </div>

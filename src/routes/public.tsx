@@ -1,35 +1,50 @@
 import { RouteObject } from "react-router-dom";
-import AuthLayout from "@/features/auth/pages/AuthLayout";
-import { LoginForm } from "@/features/auth/components/LoginForm";
-import { RegisterForm } from "@/features/auth/components/RegisterForm";
-import { ResetPassword } from "@/features/auth/components/ResetPassword";
-import AppLayout from "@/layouts/AppLayout";
-import Home from "@/features/landingPage/Home";
+import { lazy, Suspense } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
+const createLazyComponent = (factory: () => Promise<{ default: any }>) => {
+  const LazyComponent = lazy(factory);
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LazyComponent />
+    </Suspense>
+  );
+};
+
+const AppLayout = lazy(() => import("@/layouts/AppLayout"));
+const AuthLayout = lazy(() => import("@/features/auth/pages/AuthLayout"));
 
 export const publicRoutes: RouteObject[] = [
   {
-    path: "/",
-    element: <AppLayout />,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <AppLayout />
+      </Suspense>
+    ),
     children: [
       {
-        index: true,
-        element: <Home/>,
+        path: "/",
+        element: createLazyComponent(() => import("@/features/landingPage/Home")),
       },
       {
         path: "auth",
-        element: <AuthLayout />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <AuthLayout />
+          </Suspense>
+        ),
         children: [
           {
             path: "login",
-            element: <LoginForm />,
+            element: createLazyComponent(() => import("@/features/auth/components/LoginForm")),
           },
           {
             path: "register",
-            element: <RegisterForm />,
+            element: createLazyComponent(() => import("@/features/auth/components/RegisterForm")),
           },
           {
             path: "reset-password",
-            element: <ResetPassword />,
+            element: createLazyComponent(() => import("@/features/auth/components/ResetPassword")),
           },
         ],
       },

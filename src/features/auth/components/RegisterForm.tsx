@@ -11,7 +11,7 @@ import { useAuthStore } from "@/stores/auth.store"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
-export function RegisterForm({
+export default function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {

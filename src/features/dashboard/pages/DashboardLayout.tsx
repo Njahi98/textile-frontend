@@ -11,9 +11,12 @@ import { Outlet } from "react-router-dom";
 import { ProfileSheet } from "@/components/ProfileSheet";
 import DynamicBreadCrumb from "@/components/DynamicBreadCrumb";
 import { NotificationsDropdown } from "@/features/chats/components/Notification";
+import { NavigationProgress } from "@/components/navigation-progress";
 
 export default function DashboardLayout() {
   return (
+    <>
+    <NavigationProgress/>
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -33,5 +36,6 @@ export default function DashboardLayout() {
         <Outlet />
       </SidebarInset>
     </SidebarProvider>
+    </>
   );
 }

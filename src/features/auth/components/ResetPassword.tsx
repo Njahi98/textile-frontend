@@ -11,7 +11,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-export function ResetPassword({
+export default function ResetPassword({
   className,
   ...props
 }: React.ComponentProps<"div">) {
