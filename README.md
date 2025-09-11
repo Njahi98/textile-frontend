@@ -1,34 +1,75 @@
 # Textile Facility Admin Dashboard – Frontend
 
-A modern React (Vite) dashboard for managing textile production, workers, users, and performance data. Built for speed, usability, and seamless integration with the backend API.
+A modern React-based frontend for textile manufacturing management, built with TypeScript, Vite, and Tailwind CSS and seamless integration with the backend API.
 
-## 🚀 Tech Stack
-- **React 19** + **Vite** – Lightning-fast, modern frontend
-- **TypeScript** – Type-safe codebase
-- **Tailwind CSS** – Utility-first, beautiful UI
-- **@tanstack/react-table** – Powerful, flexible tables
-- **react-hook-form** + **zod** – Effortless forms & validation
-- **SWR** – Blazing fast data fetching & caching
-- **Lucide React** – Crisp, open-source icons
-- **shadcn/ui** – Beautiful, accessible UI components
-- **Sonner** – Toast notifications
-- **zustand** – Minimal, scalable state management
+## Features
 
-## ✨ Features
-- **Authentication** (login, register, password reset with Zustand Auth store)
-- **User & Worker Management** (CRUD, CSV import)
-- **Production Line Oversight** (CRUD, toggle active/inactive, live metrics)
-- **Performance Data Entry & Visualization**
-- **Role-based Access Control**
-- **Responsive, accessible UI**
+### Authentication & User Management
+- Login/register with JWT authentication and role-based access
+- Profile management with avatar upload
+- Password reset functionality
+- Session management with automatic logout
 
-## 🔗 API Integration
-- Connects to the [Textile Backend API](https://github.com/Njahi98/textile-backend) for all data operations
-- Endpoints used:
-  - `/api/auth` – Auth flows
-  - `/api/users` – User CRUD
-  - `/api/workers` – Worker CRUD, CSV import
-  - `/api/production-lines` – Production line CRUD, metrics, toggle status
+### Dashboard & Analytics
+- Comprehensive dashboard with real-time metrics and charts
+- Performance analytics with Recharts integration
+- Production insights and KPI tracking
+- Interactive data visualizations
+
+### Worker Management
+- Worker CRUD operations with search and filtering
+- CSV import/export for bulk worker management
+- Worker profile management and role assignment
+- Performance tracking and analytics per worker
+
+### Production Management
+- Production line management with status controls
+- Assignment scheduling with calendar view
+- Shift management and conflict detection
+- Product catalog with image management
+
+### Real-Time Communication
+- Live chat system with Socket.IO integration
+- Group and direct messaging capabilities
+- File sharing (images, documents, videos)
+- Real-time notifications
+- Message read receipts
+
+### UI/UX Features
+- Dark/light theme support with system preference detection
+- Responsive design for all screen sizes
+- Modern component library with Radix UI primitives
+- Smooth animations with Framer Motion
+- Form validation with React Hook Form and Zod
+- Loading states with React Top Loading Bar
+- Toast notifications with Sonner
+
+### Data Management
+- SWR for efficient data fetching and caching
+- Zustand for global state management
+- Axios for HTTP requests with interceptors
+- Real-time data updates via WebSocket
+- Optimistic updates for better UX
+
+### Tables & Data Display
+- Advanced data tables with TanStack React Table
+- Sorting, filtering, and pagination
+- Export functionality for reports
+- Search capabilities across all data
+
+
+## Tech Stack
+
+- **Frontend**: React 19, TypeScript, Vite
+- **Styling**: Tailwind CSS with custom components
+- **UI Components**: shadcn/ui
+- **State Management**: Zustand, SWR
+- **Forms**: React Hook Form with Zod validation  
+- **Charts**: Recharts for data visualization
+- **Real-time**: Socket.IO Client
+- **Routing**: React Router DOM
+- **Animations**: Framer Motion
+
 
 ## 🛠️ Getting Started
 1. **Install dependencies:**
@@ -51,14 +92,7 @@ A modern React (Vite) dashboard for managing textile production, workers, users,
    ```
 
 
-## 📦 Folder Structure
-- `src/features/` – Feature modules (auth, workers, users, production lines)
-- `src/services/` – API clients
-- `src/components/` – UI building blocks
 
-## 🤝 Backend
-See [`Textile Backend`](https://github.com/Njahi98/textile-backend) for backend setup and API details.
+## Backend Integration
 
----
-
-
+This frontend connects to the [Textile Backend](https://github.com/Njahi98/textile-backend) for complete functionality including authentication, data management, and real-time features.
