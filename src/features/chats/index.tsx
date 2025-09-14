@@ -464,18 +464,7 @@ const renderMessageContent = (message: Message) => {
                     </div>
                   </div>
                 </div>
-
-                <div className='-mr-1 flex items-center gap-1 lg:gap-2'>
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    className='h-10 rounded-md sm:h-8 sm:w-4 lg:h-10 lg:w-6'
-                  >
-                    <EllipsisVertical className='stroke-muted-foreground sm:size-5' />
-                  </Button>
-                </div>
               </div>
-
               {/* Messages Area */}
               <div className='flex flex-1 flex-col gap-2 rounded-md px-4 pt-0 pb-4'>
                 <div className='flex size-full flex-1'>
@@ -569,24 +558,24 @@ const renderMessageContent = (message: Message) => {
   >
     <div className='space-x-1'>            
       <Button
-        size='icon'
-        type='button'
-        variant='ghost'
-        className='hidden h-8 rounded-md lg:inline-flex'
-        onClick={() => fileInputRef.current?.click()}
-        disabled={!connected || uploading}
+      size='icon'
+      type='button'
+      variant='ghost'
+      className='h-8 rounded-md inline-flex'
+      onClick={() => fileInputRef.current?.click()}
+      disabled={!connected || uploading}
       >
-        <Image size={20} className='stroke-muted-foreground' />
+      <Image size={20} className='stroke-muted-foreground' />
       </Button>
       <Button
-        size='icon'
-        type='button'
-        variant='ghost'
-        className='hidden h-8 rounded-md lg:inline-flex'
-        onClick={() => fileInputRef.current?.click()}
-        disabled={!connected || uploading}
+      size='icon'
+      type='button'
+      variant='ghost'
+      className='h-8 rounded-md inline-flex'
+      onClick={() => fileInputRef.current?.click()}
+      disabled={!connected || uploading}
       >
-        <Paperclip size={20} className='stroke-muted-foreground' />
+      <Paperclip size={20} className='stroke-muted-foreground' />
       </Button>
     </div>
     <Input

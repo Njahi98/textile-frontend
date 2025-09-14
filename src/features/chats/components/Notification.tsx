@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useChat } from '../hooks/use-chat'
 import { cn } from '@/lib/utils'
+import { useNavigate } from 'react-router-dom'
 
 const NotificationTypeIcon = ({ type }: { type: string }) => {
   switch (type) {
@@ -33,6 +34,8 @@ const NotificationTypeIcon = ({ type }: { type: string }) => {
 export function NotificationsDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [markingRead, setMarkingRead] = useState(false)
+
+  const navigate = useNavigate();
   
   const {
     notifications,
@@ -165,6 +168,7 @@ export function NotificationsDropdown() {
                   if (!notification.isRead) {
                     handleMarkSingleRead(notification.id)
                   }
+                  navigate("/chat");
                 }}
               >
                 <div className="flex-shrink-0 mt-1">
