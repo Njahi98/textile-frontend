@@ -109,7 +109,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       
       return { success: true };
     } catch (error) {
-      // Refresh failed - clear auth state and redirect to login
+      // Check if this is a silent error (from our interceptor)
+      const isSilentError = error instanceof Error && error.name === 'SilentError';
+      
+      // Refresh failed - clear auth state
       get().clearAutoRefresh();
       set({
         user: null,
@@ -117,6 +120,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         error: null, // Don't show error for failed refresh
         isInitialized: true,
       });
+      
+      // Only redirect if it's not a silent error and not on auth pages
+      if (!isSilentError && typeof window !== 'undefined') {
+        const currentPath = window.location.pathname;
+        if (!currentPath.startsWith('/auth/') && currentPath !== '/') {
+          window.location.href = '/auth/login';
+        }
+      }
+      
       return { success: false };
     }
   },
@@ -160,21 +172,26 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       
       return { success: true };
     } catch (error) {
-      // If getCurrentUser fails, try to refresh token
-      const refreshResult = await get().refreshToken();
-      if (refreshResult.success) {
-        return { success: true };
+      // Check if this is a silent error (from our interceptor)
+      const isSilentError = error instanceof Error && error.name === 'SilentError';
+      
+      // If getCurrentUser fails and it's not a silent error, try to refresh token
+      if (!isSilentError) {
+        const refreshResult = await get().refreshToken();
+        if (refreshResult.success) {
+          return { success: true };
+        }
       }
       
-      const errorMessage = error instanceof Error ? error.message : 'Failed to get current user';
+      // Mark as initialized without showing errors
       set({
         user: null,
         isAuthenticated: false,
-        error: null, // Don't show error, just mark as unauthenticated
+        error: null,
         isLoading: false,
         isInitialized: true,
       });
-      return { success: false, error: errorMessage };
+      return { success: false };
     }
   },
 

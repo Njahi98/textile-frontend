@@ -100,9 +100,12 @@ api.interceptors.response.use(
         }
       }
 
-      // Don't show errors for auth check endpoint
-      if (error.config?.url?.includes('/auth/me')) {
-        return Promise.reject(new Error(''));
+      // Don't show errors for auth check endpoints
+      if (error.config?.url?.includes('/auth/me') || error.config?.url?.includes('/auth/refresh')) {
+        // Create a silent error that won't show in console
+        const silentError = new Error('');
+        silentError.name = 'SilentError';
+        return Promise.reject(silentError);
       }
 
       if (error.response?.status === 401 && !window.location.pathname.includes('/auth/') && window.location.pathname !== '/') {

@@ -1,17 +1,27 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
+import { useLocation } from 'react-router-dom';
 
 
 export const useAuthInit = () => {
   const { getCurrentUser, isInitialized, setupAutoRefresh, clearAutoRefresh, isAuthenticated } = useAuthStore();
+  const location = useLocation();
 
   useEffect(() => {
-    if (!isInitialized) {
+    // Skip auth check if on auth pages (login, register, reset password)
+    const isOnAuthPage = location.pathname.startsWith('/auth/') || 
+                        location.pathname === '/login' || 
+                        location.pathname === '/register';
+    
+    if (!isInitialized && !isOnAuthPage) {
       getCurrentUser().catch(() => {
         // Silently fail - don't show errors for auth check
       });
+    } else if (isOnAuthPage && !isInitialized) {
+      // If on auth page and not initialized, mark as initialized without checking auth
+      useAuthStore.setState({ isInitialized: true });
     }
-  }, [getCurrentUser, isInitialized]);
+  }, [getCurrentUser, isInitialized, location.pathname]);
 
   // Setup auto-refresh when user becomes authenticated
   useEffect(() => {

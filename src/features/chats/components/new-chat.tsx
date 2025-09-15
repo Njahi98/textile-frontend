@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Check, X, Loader2, Users } from 'lucide-react'
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
+import { Check, X, Loader2, Users, AlertCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,44 +21,170 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { User } from '@/services/chat.api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import useSWR from 'swr'
+import { toast } from 'sonner'
 
-interface Props  {
+interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
   onCreateConversation: (participantIds: number[], name?: string, isGroup?: boolean) => Promise<void>
   searchUsers: (query: string) => Promise<User[]>
 }
 
+interface SearchError {
+  message: string
+  retry: () => void
+}
+
+// Custom hook for debounced search with SWR integration
+function useUserSearch(query: string, searchUsers: (query: string) => Promise<User[]>) {
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const timeoutRef = useRef<NodeJS.Timeout>()
+
+  useEffect(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setDebouncedQuery(query.trim())
+    }, 300)
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [query])
+
+  const shouldFetch = debouncedQuery.length >= 2
+
+  const { data: searchResults = [], error, isLoading, mutate } = useSWR(
+    shouldFetch ? `user-search-${debouncedQuery}` : null,
+    () => searchUsers(debouncedQuery),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 30000, // Cache for 30 seconds
+      errorRetryCount: 2,
+      errorRetryInterval: 1000,
+    }
+  )
+
+  const retrySearch = useCallback(() => {
+    mutate()
+  }, [mutate])
+
+  return {
+    searchResults,
+    isSearching: isLoading,
+    searchError: error ? { message: error.message || 'Search failed', retry: retrySearch } : null,
+    hasSearchQuery: shouldFetch
+  }
+}
+
+// Memoized user item component to prevent unnecessary re-renders
+const UserItem = ({ 
+  user, 
+  isSelected, 
+  onSelect 
+}: { 
+  user: User
+  isSelected: boolean
+  onSelect: (user: User) => void
+}) => {
+  const displayName = useMemo(() => {
+    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim()
+    return fullName || user.username
+  }, [user.firstName, user.lastName, user.username])
+
+  const handleSelect = useCallback(() => {
+    onSelect(user)
+  }, [user, onSelect])
+
+  const avatarFallback = useMemo(() => {
+    return displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+  }, [displayName])
+
+  return (
+    <CommandItem
+      key={user.id}
+      onSelect={handleSelect}
+      value={`${displayName} @${user.username}`}
+      className='flex items-center justify-between gap-2 cursor-pointer hover:bg-muted/50 transition-colors'
+    >
+      <div className='flex items-center gap-3'>
+        <Avatar className="w-8 h-8">
+          <AvatarImage src={user.avatarUrl || undefined} alt={`${displayName}'s avatar`} />
+          <AvatarFallback className="text-xs">{avatarFallback}</AvatarFallback>
+        </Avatar>
+        <div className='flex flex-col'>
+          <span className='text-sm font-medium'>
+            {displayName}
+          </span>
+          <span className='text-muted-foreground text-xs'>
+            @{user.username}
+          </span>
+        </div>
+      </div>
+
+      {isSelected && (
+        <Check className='h-4 w-4 text-primary flex-shrink-0' />
+      )}
+    </CommandItem>
+  )
+}
+
+// Memoized selected user badge
+const SelectedUserBadge = ({ 
+  user, 
+  onRemove 
+}: { 
+  user: User
+  onRemove: (userId: number) => void 
+}) => {
+  const displayName = useMemo(() => {
+    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim()
+    return fullName || user.username
+  }, [user.firstName, user.lastName, user.username])
+
+  const handleRemove = useCallback(() => {
+    onRemove(user.id)
+  }, [user.id, onRemove])
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleRemove()
+    }
+  }, [handleRemove])
+
+  return (
+    <Badge key={user.id} variant='default' className="flex items-center gap-1 pr-1">
+      {displayName}
+      <button
+        className='ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 hover:bg-black/10 p-0.5 transition-colors'
+        onKeyDown={handleKeyDown}
+        onClick={handleRemove}
+        type="button"
+        aria-label={`Remove ${displayName}`}
+      >
+        <X className='text-muted-foreground hover:text-foreground h-3 w-3' />
+      </button>
+    </Badge>
+  )
+}
+
 export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers }: Props) {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-  const [searchResults, setSearchResults] = useState<User[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
   const [isGroup, setIsGroup] = useState(false)
   const [groupName, setGroupName] = useState('')
   const [isCreating, setIsCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
 
-  // Handle user search
-  useEffect(() => {
-    const searchTimeout = setTimeout(async () => {
-      if (searchQuery.trim().length >= 2) {
-        setIsSearching(true)
-        try {
-          const users = await searchUsers(searchQuery.trim())
-          setSearchResults(users)
-        } catch (error) {
-          console.error('Search failed:', error)
-          setSearchResults([])
-        } finally {
-          setIsSearching(false)
-        }
-      } else {
-        setSearchResults([])
-      }
-    }, 300) // Debounce search
-
-    return () => clearTimeout(searchTimeout)
-  }, [searchQuery, searchUsers])
+  const { searchResults, isSearching, searchError, hasSearchQuery } = useUserSearch(searchQuery, searchUsers)
 
   // Auto-enable group mode when multiple users are selected
   useEffect(() => {
@@ -67,89 +193,102 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
     }
   }, [selectedUsers.length, isGroup])
 
-  const handleSelectUser = (user: User) => {
-    if (!selectedUsers.find((u) => u.id === user.id)) {
-      setSelectedUsers([...selectedUsers, user])
-    } else {
-      handleRemoveUser(user.id)
-    }
-  }
+  // Memoized handlers to prevent unnecessary re-renders
+  const handleSelectUser = useCallback((user: User) => {
+    setSelectedUsers(prev => {
+      const isAlreadySelected = prev.find((u) => u.id === user.id)
+      if (isAlreadySelected) {
+        return prev.filter((u) => u.id !== user.id)
+      } else {
+        return [...prev, user]
+      }
+    })
+  }, [])
 
-  const handleRemoveUser = (userId: number) => {
-    setSelectedUsers(selectedUsers.filter((user) => user.id !== userId))
-  }
+  const handleRemoveUser = useCallback((userId: number) => {
+    setSelectedUsers(prev => prev.filter((user) => user.id !== userId))
+  }, [])
 
-  const handleCreateConversation = async () => {
+  const handleCreateConversation = useCallback(async () => {
     if (selectedUsers.length === 0) return
 
     setIsCreating(true)
+    setCreateError(null)
+    
     try {
       const participantIds = selectedUsers.map(user => user.id)
       const conversationName = isGroup ? groupName.trim() || undefined : undefined
       
       await onCreateConversation(participantIds, conversationName, isGroup)
+            
+      onOpenChange(false)
       
-      // Reset form
-      setSelectedUsers([])
-      setSearchResults([])
-      setSearchQuery('')
-      setIsGroup(false)
-      setGroupName('')
     } catch (error) {
-      console.error('Failed to create conversation:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create conversation'
+      setCreateError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsCreating(false)
     }
-  }
+  }, [selectedUsers, isGroup, groupName, onCreateConversation, onOpenChange])
 
-  // Reset form when dialog closes
+  // Reset form when dialog opens/closes
   useEffect(() => {
-    if (!open) {
+    if (open) {
+      setCreateError(null)
+    } else {
       setSelectedUsers([])
-      setSearchResults([])
       setSearchQuery('')
       setIsGroup(false)
       setGroupName('')
       setIsCreating(false)
+      setCreateError(null)
     }
   }, [open])
 
-  const getUserDisplayName = (user: User) => {
-    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim()
-    return fullName || user.username
-  }
+  // Memoized validation
+  const canCreateConversation = useMemo(() => {
+    if (selectedUsers.length === 0) return false
+    if (isGroup && selectedUsers.length > 1) {
+      return groupName.trim().length > 0
+    }
+    return true
+  }, [selectedUsers.length, isGroup, groupName])
 
-  const canCreateConversation = selectedUsers.length > 0 && (!isGroup || groupName.trim().length > 0 || selectedUsers.length === 1)
+  // Memoized selected user map for performance
+  const selectedUserIds = useMemo(() => 
+    new Set(selectedUsers.map(u => u.id)), 
+    [selectedUsers]
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[600px]'>
+      <DialogContent className='sm:max-w-[600px] max-h-[80vh] overflow-hidden flex flex-col'>
         <DialogHeader>
           <DialogTitle>New message</DialogTitle>
         </DialogHeader>
         
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-4 flex-1 overflow-hidden'>
+          {/* Create Error Alert */}
+          {createError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{createError}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Selected Users */}
-          <div className='flex flex-wrap items-center gap-2'>
-            <span className='text-muted-foreground text-sm'>To:</span>
-            {selectedUsers.map((user) => (
-              <Badge key={user.id} variant='default' className="flex items-center gap-1">
-                {getUserDisplayName(user)}
-                <button
-                  className='ring-offset-background focus:ring-ring ml-1 rounded-full outline-hidden focus:ring-2 focus:ring-offset-2'
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleRemoveUser(user.id)
-                    }
-                  }}
-                  onClick={() => handleRemoveUser(user.id)}
-                  type="button"
-                >
-                  <X className='text-muted-foreground hover:text-foreground h-3 w-3' />
-                </button>
-              </Badge>
-            ))}
-            {selectedUsers.length === 0 && (
+          <div className='flex flex-wrap items-center gap-2 min-h-[2rem]'>
+            <span className='text-muted-foreground text-sm flex-shrink-0'>To:</span>
+            {selectedUsers.length > 0 ? (
+              selectedUsers.map((user) => (
+                <SelectedUserBadge
+                  key={user.id}
+                  user={user}
+                  onRemove={handleRemoveUser}
+                />
+              ))
+            ) : (
               <span className="text-muted-foreground text-sm italic">
                 Search for users to start a conversation
               </span>
@@ -166,9 +305,12 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                   onCheckedChange={setIsGroup}
                   disabled={selectedUsers.length > 1} // Force group mode for multiple users
                 />
-                <Label htmlFor="group-mode" className="flex items-center gap-2">
+                <Label htmlFor="group-mode" className="flex items-center gap-2 cursor-pointer">
                   <Users size={16} />
                   Group conversation
+                  {selectedUsers.length > 1 && (
+                    <Badge variant="secondary" className="text-xs">Required</Badge>
+                  )}
                 </Label>
               </div>
               
@@ -183,72 +325,71 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                     onChange={(e) => setGroupName(e.target.value)}
                     placeholder="Enter group name..."
                     className="h-9"
+                    maxLength={50}
                   />
+                  {groupName.length > 40 && (
+                    <p className="text-xs text-muted-foreground">
+                      {50 - groupName.length} characters remaining
+                    </p>
+                  )}
                 </div>
               )}
             </div>
           )}
 
           {/* User Search */}
-          <Command className='rounded-lg border'>
-            <CommandInput
-              placeholder='Search people...'
-              className='text-foreground'
-              value={searchQuery}
-              onValueChange={setSearchQuery}
-            />
-            <CommandList>
-              {isSearching ? (
-                <div className="flex items-center justify-center p-6">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-              ) : searchQuery.length < 2 ? (
-                <CommandEmpty>Type at least 2 characters to search</CommandEmpty>
-              ) : searchResults.length === 0 ? (
-                <CommandEmpty>No users found</CommandEmpty>
-              ) : (
-                <CommandGroup>
-                  {searchResults.map((user) => {
-                    const isSelected = selectedUsers.find((u) => u.id === user.id)
-                    const displayName = getUserDisplayName(user)
-                    return (
-                      <CommandItem
+          <div className="flex-1 overflow-hidden">
+            <Command className='rounded-lg border h-full flex flex-col'>
+              <CommandInput
+                placeholder='Search people...'
+                className='text-foreground'
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+              />
+              <CommandList className="flex-1 overflow-auto">
+                {isSearching ? (
+                  <div className="flex items-center justify-center p-6">
+                    <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                    <span className="text-sm text-muted-foreground">Searching...</span>
+                  </div>
+                ) : searchError ? (
+                  <div className="p-4">
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="flex items-center justify-between">
+                        {searchError.message}
+                        <Button variant="outline" size="sm" onClick={searchError.retry}>
+                          Retry
+                        </Button>
+                      </AlertDescription>
+                    </Alert>
+                  </div>
+                ) : !hasSearchQuery ? (
+                  <CommandEmpty>Type at least 2 characters to search</CommandEmpty>
+                ) : searchResults.length === 0 ? (
+                  <CommandEmpty>No users found</CommandEmpty>
+                ) : (
+                  <CommandGroup>
+                    {searchResults.map((user) => (
+                      <UserItem
                         key={user.id}
-                        onSelect={() => handleSelectUser(user)}
-                        value={`${displayName} @${user.username}`}
-                        className='flex items-center justify-between gap-2 cursor-pointer'
-                      >
-                        <div className='flex items-center gap-2'>
-                            <Avatar>
-                              <AvatarImage src={user?.avatarUrl} alt="userAvatar" />
-                              <AvatarFallback>{displayName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
-                            </Avatar>               
-                          <div className='flex flex-col'>
-                            <span className='text-sm font-medium'>
-                              {displayName}
-                            </span>
-                            <span className='text-muted-foreground text-xs'>
-                              @{user.username}
-                            </span>
-                          </div>
-                        </div>
-
-                        {isSelected && (
-                          <Check className='h-4 w-4 text-primary' />
-                        )}
-                      </CommandItem>
-                    )
-                  })}
-                </CommandGroup>
-              )}
-            </CommandList>
-          </Command>
+                        user={user}
+                        isSelected={selectedUserIds.has(user.id)}
+                        onSelect={handleSelectUser}
+                      />
+                    ))}
+                  </CommandGroup>
+                )}
+              </CommandList>
+            </Command>
+          </div>
 
           {/* Create Button */}
           <Button
             onClick={handleCreateConversation}
             disabled={!canCreateConversation || isCreating}
             className="w-full"
+            size="lg"
           >
             {isCreating ? (
               <>
@@ -258,6 +399,11 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
             ) : (
               <>
                 {isGroup ? 'Create Group' : 'Start Chat'}
+                {selectedUsers.length > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {selectedUsers.length} {selectedUsers.length === 1 ? 'person' : 'people'}
+                  </Badge>
+                )}
               </>
             )}
           </Button>
