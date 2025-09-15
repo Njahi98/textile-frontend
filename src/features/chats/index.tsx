@@ -3,7 +3,6 @@ import { Fragment } from 'react/jsx-runtime'
 import { format, isToday, isYesterday } from 'date-fns'
 import {
   ArrowLeft,
-  EllipsisVertical,
   SquarePen,
   MessagesSquare,
   Paperclip,
@@ -11,6 +10,8 @@ import {
   Search,
   Send,
   Loader2,
+  RefreshCw,
+  WifiOff,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -20,6 +21,7 @@ import { Separator } from '@/components/ui/separator'
 import { Main } from '@/components/layout/main'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 import { NewChat } from './components/new-chat'
 import { useChat } from './hooks/use-chat'
@@ -46,6 +48,7 @@ export default function Chats() {
     connected,
     selectedConversation,
     messagesEndRef,
+    connectionError,
     selectConversation,
     sendMessage,
     searchUsers,
@@ -57,6 +60,8 @@ export default function Chats() {
     stopTyping,
     uploadFile,
     hasUserReadMessage,
+    refreshConversations,
+    refreshNotifications,
   } = useChat()
 
   // Filtered conversations based on search
@@ -130,11 +135,12 @@ export default function Chats() {
     }
   }, [])
 
-// Handle conversation creation
+  // Handle conversation creation
   const handleCreateConversation = async (participantIds: number[], name?: string, isGroup = false) => {
     // Before creating, check if a direct conversation already exists locally
     if (!isGroup && participantIds.length === 1) {
       const otherUserId = participantIds[0];
+      const currentUserId = getCurrentUserId();
       const existingConversation = conversations.find(conv => 
         !conv.isGroup && 
         conv.participants.length === 2 &&
@@ -159,6 +165,19 @@ export default function Chats() {
     }
   };
 
+  // Handle manual refresh
+  const handleRefresh = async () => {
+    try {
+      await Promise.all([
+        refreshConversations(),
+        refreshNotifications()
+      ]);
+      toast.success('Chat data refreshed');
+    } catch (error) {
+      toast.error('Failed to refresh data');
+    }
+  };
+
   const formatMessageTime = (timestamp: string) => {
     return format(new Date(timestamp), 'h:mm a')
   }
@@ -169,115 +188,134 @@ export default function Chats() {
 
   const currentUserId = getCurrentUserId()
 
-const handleFileSelect = async (files: FileList | null) => {
-  if (!files || !selectedConversation || !connected) return
-  
-  setUploading(true)
-  try {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error(`File ${file.name} is too large. Maximum size is 10MB.`)
-        continue
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files || !selectedConversation || !connected) return
+    
+    setUploading(true)
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error(`File ${file.name} is too large. Maximum size is 10MB.`)
+          continue
+        }
+        await uploadFile(selectedConversation.id, file)
       }
-      await uploadFile(selectedConversation.id, file)
-    }
-  } catch (error) {
-    console.error('File upload failed:', error)
-    const errorMessage = error instanceof Error ? error.message : 'File upload failed. Please try again.'
-    toast.error(`File upload failed: ${errorMessage}`)
-  } finally {
-    setUploading(false)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+    } catch (error) {
+      console.error('File upload failed:', error)
+      const errorMessage = error instanceof Error ? error.message : 'File upload failed. Please try again.'
+      toast.error(`File upload failed: ${errorMessage}`)
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
     }
   }
-}
 
-const handleDrop = (e: React.DragEvent) => {
-  e.preventDefault()
-  setDragOver(false)
-  handleFileSelect(e.dataTransfer.files)
-}
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragOver(false)
+    handleFileSelect(e.dataTransfer.files)
+  }
 
-const handleDragOver = (e: React.DragEvent) => {
-  e.preventDefault()
-  setDragOver(true)
-}
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragOver(true)
+  }
 
-const handleDragLeave = (e: React.DragEvent) => {
-  e.preventDefault()
-  setDragOver(false)
-}
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragOver(false)
+  }
 
-const formatFileSize = (bytes: number) => {
-  if (bytes === 0) return '0 Bytes'
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
 
-const renderMessageContent = (message: Message) => {
-  switch (message.messageType) {
-    case 'IMAGE':
-      return (
-        <div className="space-y-2">
-          <img 
-            src={message.fileUrl || ''} 
-            alt={message.fileName || 'Image'}
-            className="max-w-full h-auto rounded-md cursor-pointer"
-            onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
-          />
-          {message.fileName && (
-            <p className="text-xs opacity-75">{message.fileName}</p>
-          )}
-        </div>
-      )
-    
-    case 'VIDEO':
-      return (
-        <div className="space-y-2">
-          <video 
-            src={message.fileUrl || ''} 
-            controls
-            className="max-w-full h-auto rounded-md"
-            style={{ maxHeight: '300px' }}
-          />
-          {message.fileName && (
-            <p className="text-xs opacity-75">{message.fileName}</p>
-          )}
-        </div>
-      )
-    
-    case 'FILE':
-      return (
-        <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-md">
-          <Paperclip size={20} />
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-sm truncate">{message.fileName || 'Unknown file'}</p>
-            {message.fileSize && (
-              <p className="text-xs text-muted-foreground">{formatFileSize(message.fileSize)}</p>
+  const renderMessageContent = (message: Message) => {
+    switch (message.messageType) {
+      case 'IMAGE':
+        return (
+          <div className="space-y-2">
+            <img 
+              src={message.fileUrl || ''} 
+              alt={message.fileName || 'Image'}
+              className="max-w-full h-auto rounded-md cursor-pointer"
+              onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
+            />
+            {message.fileName && (
+              <p className="text-xs opacity-75">{message.fileName}</p>
             )}
           </div>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
-          >
-            Download
-          </Button>
-        </div>
-      )
-    
-    default:
-      return <div className="text-sm">{message.content}</div>
+        )
+      
+      case 'VIDEO':
+        return (
+          <div className="space-y-2">
+            <video 
+              src={message.fileUrl || ''} 
+              controls
+              className="max-w-full h-auto rounded-md"
+              style={{ maxHeight: '300px' }}
+            />
+            {message.fileName && (
+              <p className="text-xs opacity-75">{message.fileName}</p>
+            )}
+          </div>
+        )
+      
+      case 'FILE':
+        return (
+          <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-md">
+            <Paperclip size={20} />
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-sm truncate">{message.fileName || 'Unknown file'}</p>
+              {message.fileSize && (
+                <p className="text-xs text-muted-foreground">{formatFileSize(message.fileSize)}</p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
+            >
+              Download
+            </Button>
+          </div>
+        )
+      
+      default:
+        return <div className="text-sm">{message.content}</div>
+    }
   }
-}
 
   return (
     <>
       <Main fixed>
+        {/* Connection Error Alert */}
+        {connectionError && (
+          <Alert variant="destructive" className="mb-4">
+            <WifiOff className="h-4 w-4" />
+            <AlertDescription>
+              Connection failed: {connectionError}
+              <Button
+                variant="outline"
+                size="sm"
+                className="ml-2"
+                onClick={handleRefresh}
+              >
+                <RefreshCw className="h-4 w-4 mr-1" />
+                Retry
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <section className='flex h-full gap-6'>
           {/* Left Side - Conversation List */}
           <div className='flex w-full flex-col gap-2 sm:w-56 lg:w-72 2xl:w-80'>
@@ -288,7 +326,8 @@ const renderMessageContent = (message: Message) => {
                   <MessagesSquare size={20} />
                   {!connected && (
                     <Badge variant="destructive" className="text-xs">
-                      Disconnected
+                      <WifiOff className="h-3 w-3 mr-1" />
+                      Offline
                     </Badge>
                   )}
                   {connected && (
@@ -298,15 +337,26 @@ const renderMessageContent = (message: Message) => {
                   )}
                 </div>
 
-                <Button
-                  size='icon'
-                  variant='ghost'
-                  onClick={() => setCreateConversationDialog(true)}
-                  className='rounded-lg'
-                  disabled={!connected}
-                >
-                  <SquarePen size={24} className='stroke-muted-foreground' />
-                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={handleRefresh}
+                    className='rounded-lg'
+                    disabled={loading}
+                  >
+                    <RefreshCw size={18} className={cn('stroke-muted-foreground', loading && 'animate-spin')} />
+                  </Button>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={() => setCreateConversationDialog(true)}
+                    className='rounded-lg'
+                    disabled={!connected}
+                  >
+                    <SquarePen size={20} className='stroke-muted-foreground' />
+                  </Button>
+                </div>
               </div>
 
               <label className='border-input focus-within:ring-ring flex h-12 w-full items-center space-x-0 rounded-md border pl-2 focus-within:ring-1 focus-within:outline-hidden'>
@@ -333,30 +383,30 @@ const renderMessageContent = (message: Message) => {
                 </div>
               ) : (
                 filteredConversations.map((conversation) => {
-                    const conversationName = getConversationName(conversation)
-                    const lastMessage = conversation.lastMessage
-                    const hasUnread = conversation.unreadCount > 0
-                    const messagerAvatarUrl = conversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl                  
-                    let lastMessageText = ''
-                    if (lastMessage) {
+                  const conversationName = getConversationName(conversation)
+                  const lastMessage = conversation.lastMessage
+                  const hasUnread = conversation.unreadCount > 0
+                  const messagerAvatarUrl = conversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl                  
+                  let lastMessageText = ''
+                  if (lastMessage) {
                     const isOwnMessage = lastMessage.senderId === currentUserId
                     const prefix = isOwnMessage ? 'You: ' : ''
 
                     switch(lastMessage.messageType) {
                       case 'TEXT':
-                      lastMessageText = `${prefix}${lastMessage.content}`
-                      break
+                        lastMessageText = `${prefix}${lastMessage.content}`
+                        break
                       case 'IMAGE':
-                      lastMessageText = `${prefix}sent an image`
-                      break
+                        lastMessageText = `${prefix}sent an image`
+                        break
                       case 'VIDEO':
-                      lastMessageText = `${prefix}sent a video`
-                      break
+                        lastMessageText = `${prefix}sent a video`
+                        break
                       case 'FILE':
-                      lastMessageText = `${prefix}sent a file`
-                      break
+                        lastMessageText = `${prefix}sent a file`
+                        break
                       default:
-                      lastMessageText = `${prefix}${lastMessage.content}`
+                        lastMessageText = `${prefix}${lastMessage.content}`
                     }
                   }
                   return (
@@ -441,7 +491,7 @@ const renderMessageContent = (message: Message) => {
                   </Button>
                   <div className='flex items-center gap-2 lg:gap-4'>
                     <Avatar className='size-9 lg:size-11'>
-                    <AvatarImage src={selectedConversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl} alt="userAvatar" />
+                      <AvatarImage src={selectedConversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl} alt="userAvatar" />
                       <AvatarFallback>{getInitials(getConversationName(selectedConversation))}</AvatarFallback>
                     </Avatar>
                     <div>
@@ -465,6 +515,7 @@ const renderMessageContent = (message: Message) => {
                   </div>
                 </div>
               </div>
+
               {/* Messages Area */}
               <div className='flex flex-1 flex-col gap-2 rounded-md px-4 pt-0 pb-4'>
                 <div className='flex size-full flex-1'>
@@ -479,7 +530,7 @@ const renderMessageContent = (message: Message) => {
                           No messages yet. Start the conversation!
                         </div>
                       ) : (
-                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4">
                           {Object.entries(groupedMessages).map(([dateKey, messages]) => (
                             <Fragment key={`date-${dateKey}`}>
                               {messages.map((message) => {
@@ -537,77 +588,77 @@ const renderMessageContent = (message: Message) => {
                 </div>
 
                 {/* Message Input */}
-            <form onSubmit={handleSendMessage} className='flex w-full flex-none gap-2'>
-  <input
-    ref={fileInputRef}
-    type="file"
-    multiple
-    accept="image/*,video/*,.xlsx,.xls,.csv,.pdf,.doc,.docx"
-    onChange={(e) => handleFileSelect(e.target.files)}
-    className="hidden"
-  />
-  
-  <div 
-    className={cn(
-      'border-input focus-within:ring-ring flex flex-1 items-center gap-2 rounded-md border px-2 py-1 focus-within:ring-1 focus-within:outline-hidden lg:gap-4',
-      dragOver && 'border-primary bg-primary/5'
-    )}
-    onDrop={handleDrop}
-    onDragOver={handleDragOver}
-    onDragLeave={handleDragLeave}
-  >
-    <div className='space-x-1'>            
-      <Button
-      size='icon'
-      type='button'
-      variant='ghost'
-      className='h-8 rounded-md inline-flex'
-      onClick={() => fileInputRef.current?.click()}
-      disabled={!connected || uploading}
-      >
-      <Image size={20} className='stroke-muted-foreground' />
-      </Button>
-      <Button
-      size='icon'
-      type='button'
-      variant='ghost'
-      className='h-8 rounded-md inline-flex'
-      onClick={() => fileInputRef.current?.click()}
-      disabled={!connected || uploading}
-      >
-      <Paperclip size={20} className='stroke-muted-foreground' />
-      </Button>
-    </div>
-    <Input
-      ref={messageInputRef}
-      value={messageInput}
-      onChange={handleInputChange}
-      placeholder={uploading ? 'Uploading file...' : 'Type your message...'}
-      className='flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
-      disabled={!connected || uploading}
-    />
-    {uploading ? (
-      <Loader2 className="h-5 w-5 animate-spin" />
-    ) : (
-      <Button
-        type="submit"
-        variant='ghost'
-        size='icon'
-        className='hidden sm:inline-flex'
-        disabled={!messageInput.trim() || !connected}
-      >
-        <Send size={20} />
-      </Button>
-    )}
-  </div>
-  <Button 
-    type="submit"
-    className='h-full sm:hidden'
-    disabled={!messageInput.trim() || !connected || uploading}
-  >
-    <Send size={18} /> Send
-  </Button>
-</form>
+                <form onSubmit={handleSendMessage} className='flex w-full flex-none gap-2'>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*,video/*,.xlsx,.xls,.csv,.pdf,.doc,.docx"
+                    onChange={(e) => handleFileSelect(e.target.files)}
+                    className="hidden"
+                  />
+                  
+                  <div 
+                    className={cn(
+                      'border-input focus-within:ring-ring flex flex-1 items-center gap-2 rounded-md border px-2 py-1 focus-within:ring-1 focus-within:outline-hidden lg:gap-4',
+                      dragOver && 'border-primary bg-primary/5'
+                    )}
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                  >
+                    <div className='space-x-1'>            
+                      <Button
+                        size='icon'
+                        type='button'
+                        variant='ghost'
+                        className='h-8 rounded-md inline-flex'
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={!connected || uploading}
+                      >
+                        <Image size={20} className='stroke-muted-foreground' />
+                      </Button>
+                      <Button
+                        size='icon'
+                        type='button'
+                        variant='ghost'
+                        className='h-8 rounded-md inline-flex'
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={!connected || uploading}
+                      >
+                        <Paperclip size={20} className='stroke-muted-foreground' />
+                      </Button>
+                    </div>
+                    <Input
+                      ref={messageInputRef}
+                      value={messageInput}
+                      onChange={handleInputChange}
+                      placeholder={uploading ? 'Uploading file...' : !connected ? 'Connecting...' : 'Type your message...'}
+                      className='flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
+                      disabled={!connected || uploading}
+                    />
+                    {uploading ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <Button
+                        type="submit"
+                        variant='ghost'
+                        size='icon'
+                        className='hidden sm:inline-flex'
+                        disabled={!messageInput.trim() || !connected}
+                      >
+                        <Send size={20} />
+                      </Button>
+                    )}
+                  </div>
+                  <Button 
+                    type="submit"
+                    className='h-full sm:hidden'
+                    disabled={!messageInput.trim() || !connected || uploading}
+                  >
+                    <Send size={18} /> Send
+                  </Button>
+                </form>
               </div>
             </div>
           ) : (

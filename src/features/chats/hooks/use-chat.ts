@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 import { chatService, Conversation, Message, User } from '@/services/chat.api';
 import type { Notification } from '@/services/chat.api';
-import { toast } from 'sonner';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/api';
 
 interface TypingUser {
   userId: number;
@@ -10,14 +11,47 @@ interface TypingUser {
   conversationId: number;
 }
 
+interface ConversationsResponse {
+  success: boolean;
+  conversations: Conversation[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
+interface NotificationsResponse {
+  success: boolean;
+  notifications: Notification[];
+  unreadCount: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
+interface MessagesResponse {
+  success: boolean;
+  messages: Message[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
 export const useChat = () => {
   const { user, isAuthenticated } = useAuthStore();
   
-  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentMessages, setCurrentMessages] = useState<{ [conversationId: number]: Message[] }>({});
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
@@ -25,18 +59,63 @@ export const useChat = () => {
   
   const typingTimeouts = useRef<{ [key: string]: NodeJS.Timeout }>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<ReturnType<typeof chatService.connect> | null>(null);
   
-  // Initialize socket connection only when authenticated
+  // SWR for conversations with caching
+  const {
+    data: conversationsData,
+    error: conversationsError,
+    mutate: mutateConversations,
+    isLoading: conversationsLoading,
+  } = useSWR<ConversationsResponse>(
+    isAuthenticated ? '/api/chat/conversations?page=1&limit=20' : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+      dedupingInterval: 30000, // Cache for 30 seconds
+    }
+  );
+
+  // SWR for notifications with caching
+  const {
+    data: notificationsData,
+    error: notificationsError,
+    mutate: mutateNotifications,
+    isLoading: notificationsLoading,
+  } = useSWR<NotificationsResponse>(
+    isAuthenticated ? '/api/chat/notifications?page=1&limit=20' : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+      dedupingInterval: 10000, // Cache for 10 seconds (more frequent for notifications)
+    }
+  );
+
+  // Memoized derived state
+  const conversations = useMemo(() => conversationsData?.conversations || [], [conversationsData]);
+  const notifications = useMemo(() => notificationsData?.notifications || [], [notificationsData]);
+  const unreadNotificationCount = useMemo(() => notificationsData?.unreadCount || 0, [notificationsData]);
+  const loading = conversationsLoading || notificationsLoading;
+
+  // Initialize socket connection only once when authenticated
   useEffect(() => {
     if (!isAuthenticated || !user) {
       // Clean up if not authenticated
-      chatService.removeAllListeners();
-      chatService.disconnect();
+      if (socketRef.current) {
+        chatService.removeAllListeners();
+        chatService.disconnect();
+        socketRef.current = null;
+      }
       setConnected(false);
-      setConversations([]);
       setCurrentMessages({});
-      setNotifications([]);
       setSelectedConversation(null);
+      return;
+    }
+
+    // Prevent multiple connections
+    if (socketRef.current) {
       return;
     }
 
@@ -44,6 +123,7 @@ export const useChat = () => {
       try {
         // Connect to socket 
         const socket = chatService.connect();
+        socketRef.current = socket;
         
         // Connection event handlers
         chatService.onConnect(() => {
@@ -80,19 +160,15 @@ export const useChat = () => {
 
     initializeChat();
 
+    // Cleanup function
     return () => {
-      chatService.removeAllListeners();
-      chatService.disconnect();
+      if (socketRef.current) {
+        chatService.removeAllListeners();
+        chatService.disconnect();
+        socketRef.current = null;
+      }
     };
-  }, [isAuthenticated, user?.id]);
-
-  // Load initial data when connected and authenticated
-  useEffect(() => {
-    if (connected && isAuthenticated) {
-      loadConversations();
-      loadNotifications();
-    }
-  }, [connected, isAuthenticated]);
+  }, [isAuthenticated, user?.id]); // Stable dependencies
 
   // Join conversation rooms when conversations change
   useEffect(() => {
@@ -117,9 +193,11 @@ export const useChat = () => {
       [message.conversationId]: [...(prev[message.conversationId] || []), message]
     }));
     
-    // Update conversation's last message and move to top
-    setConversations(prev => {
-      const updatedConversations = prev.map(conv => 
+    // Optimistically update conversations cache
+    mutateConversations((current) => {
+      if (!current) return current;
+      
+      const updatedConversations = current.conversations.map(conv => 
         conv.id === message.conversationId 
           ? { 
               ...conv, 
@@ -131,12 +209,18 @@ export const useChat = () => {
             }
           : conv
       );
+      
       // Sort by updatedAt descending
-      return updatedConversations.sort((a, b) => 
+      updatedConversations.sort((a, b) => 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       );
-    });
-  }, []);
+      
+      return {
+        ...current,
+        conversations: updatedConversations
+      };
+    }, false); // Don't revalidate immediately
+  }, [mutateConversations]);
 
   const handleMessagesRead = useCallback((data: { userId: number; messageIds: number[]; conversationId: number }) => {
     // Update read receipts in current messages
@@ -167,15 +251,20 @@ export const useChat = () => {
 
     // Update unread count if current user read messages
     if (data.userId === getCurrentUserId()) {
-      setConversations(prev => 
-        prev.map(conv => 
-          conv.id === data.conversationId 
-            ? { ...conv, unreadCount: Math.max(0, conv.unreadCount - data.messageIds.length) }
-            : conv
-        )
-      );
+      mutateConversations((current) => {
+        if (!current) return current;
+        
+        return {
+          ...current,
+          conversations: current.conversations.map(conv => 
+            conv.id === data.conversationId 
+              ? { ...conv, unreadCount: Math.max(0, conv.unreadCount - data.messageIds.length) }
+              : conv
+          )
+        };
+      }, false);
     }
-  }, []);
+  }, [mutateConversations]);
 
   const handleUserTyping = useCallback((data: TypingUser) => {
     setTypingUsers(prev => {
@@ -208,57 +297,47 @@ export const useChat = () => {
     }
   }, []);
 
-const handleNewNotification = useCallback((notification: Notification) => {
-  setNotifications(prev => {
-    // Check if this notification already exists
-    const existingIndex = prev.findIndex(n => n.id === notification.id);
-    if (existingIndex !== -1) {
-      // Update existing notification (in case it was modified)
-      const updated = [...prev];
-      updated[existingIndex] = notification;
-      return updated;
-    }
-    // Add new notification at the beginning
-    return [notification, ...prev];
-  });
-  
-  if (!notification.isRead) {
-    setUnreadNotificationCount(prev => {
-      // Make sure we don't double-count if notification already existed
-      const existingNotification = notifications.find(n => n.id === notification.id);
-      if (existingNotification && !existingNotification.isRead) {
-        return prev; // Don't increment if we're just updating an existing unread notification
+  const handleNewNotification = useCallback((notification: Notification) => {
+    // Optimistically update notifications cache
+    mutateNotifications((current) => {
+      if (!current) return current;
+      
+      // Check if this notification already exists
+      const existingIndex = current.notifications.findIndex(n => n.id === notification.id);
+      let updatedNotifications;
+      let updatedUnreadCount = current.unreadCount;
+      
+      if (existingIndex !== -1) {
+        // Update existing notification
+        updatedNotifications = [...current.notifications];
+        updatedNotifications[existingIndex] = notification;
+      } else {
+        // Add new notification at the beginning
+        updatedNotifications = [notification, ...current.notifications];
+        if (!notification.isRead) {
+          updatedUnreadCount += 1;
+        }
       }
-      return prev + 1;
-    });
-  }
+      
+      return {
+        ...current,
+        notifications: updatedNotifications,
+        unreadCount: updatedUnreadCount
+      };
+    }, false);
 
-  // Show browser notification if permission granted
-  if (Notification.permission === 'granted' && notification.type === 'NEW_MESSAGE') {
-    new Notification(notification.title, {
-      body: notification.content,
-      icon: '/logo.webp',
-    });
-  }
-}, [notifications]);
-
-  const loadConversations = async () => {
-    try {
-      setLoading(true);
-      const response = await chatService.getConversations(1, 20);
-      if (response.success) {
-        setConversations(response.conversations);
-      }
-    } catch (error) {
-      console.error('Failed to load conversations:', error);
-    } finally {
-      setLoading(false);
+    // Show browser notification if permission granted
+    if (Notification.permission === 'granted' && notification.type === 'NEW_MESSAGE') {
+      new Notification(notification.title, {
+        body: notification.content,
+        icon: '/logo.webp',
+      });
     }
-  };
+  }, [mutateNotifications]);
 
+  // Load messages for a specific conversation
   const loadMessages = async (conversationId: number, page = 1) => {
     try {
-      setLoading(true);
       const response = await chatService.getConversationMessages(conversationId, page);
       
       if (response.success) {
@@ -281,24 +360,10 @@ const handleNewNotification = useCallback((notification: Notification) => {
     } catch (error) {
       console.error('Failed to load messages:', error);
       return null;
-    } finally {
-      setLoading(false);
     }
   };
 
-  const loadNotifications = async () => {
-    try {
-      const response = await chatService.getNotifications(1, 20);
-      if (response.success) {
-        setNotifications(response.notifications);
-        setUnreadNotificationCount(response.unreadCount);
-      }
-    } catch (error) {
-      console.error('Failed to load notifications:', error);
-    }
-  };
-
-const createConversation = async (participantIds: number[], name?: string, isGroup = false) => {
+  const createConversation = async (participantIds: number[], name?: string, isGroup = false) => {
     try {
       const response = await chatService.createConversation({
         name,
@@ -314,14 +379,20 @@ const createConversation = async (participantIds: number[], name?: string, isGro
           // If conversation already exists, don't add it again, just return the existing one
           return conversations[existingConvIndex];
         } else {
-          // Only add to state if it's truly new
-          setConversations(prev => {
+          // Optimistically update conversations cache
+          mutateConversations((current) => {
+            if (!current) return current;
+            
             // Double check to avoid race conditions
-            if (prev.some(conv => conv.id === response.conversation.id)) {
-              return prev;
+            if (current.conversations.some(conv => conv.id === response.conversation.id)) {
+              return current;
             }
-            return [response.conversation, ...prev];
-          });
+            return {
+              ...current,
+              conversations: [response.conversation, ...current.conversations]
+            };
+          }, false);
+          
           return response.conversation;
         }
       }
@@ -344,31 +415,43 @@ const createConversation = async (participantIds: number[], name?: string, isGro
     chatService.markMessagesRead({ conversationId, messageIds });
   };
 
-const markNotificationsAsRead = async (notificationIds?: number[], markAll = false) => {
-  try {
-    const response = await chatService.markNotificationsRead(notificationIds, markAll);
-    
-    if (response.success) {
-      if (markAll) {
-        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-        setUnreadNotificationCount(0);
-      } else if (notificationIds) {
-        setNotifications(prev => 
-          prev.map(n => 
-            notificationIds.includes(n.id) ? { ...n, isRead: true } : n
-          )
-        );
-        // Only decrement count for notifications that were actually unread
-        const actuallyMarked = notifications.filter(n => 
-          notificationIds.includes(n.id) && !n.isRead
-        ).length;
-        setUnreadNotificationCount(prev => Math.max(0, prev - actuallyMarked));
+  const markNotificationsAsRead = async (notificationIds?: number[], markAll = false) => {
+    try {
+      const response = await chatService.markNotificationsRead(notificationIds, markAll);
+      
+      if (response.success) {
+        // Optimistically update notifications cache
+        mutateNotifications((current) => {
+          if (!current) return current;
+          
+          let updatedNotifications = current.notifications;
+          let updatedUnreadCount = current.unreadCount;
+          
+          if (markAll) {
+            updatedNotifications = updatedNotifications.map(n => ({ ...n, isRead: true }));
+            updatedUnreadCount = 0;
+          } else if (notificationIds) {
+            const actuallyMarked = updatedNotifications.filter(n => 
+              notificationIds.includes(n.id) && !n.isRead
+            ).length;
+            
+            updatedNotifications = updatedNotifications.map(n => 
+              notificationIds.includes(n.id) ? { ...n, isRead: true } : n
+            );
+            updatedUnreadCount = Math.max(0, updatedUnreadCount - actuallyMarked);
+          }
+          
+          return {
+            ...current,
+            notifications: updatedNotifications,
+            unreadCount: updatedUnreadCount
+          };
+        }, false);
       }
+    } catch (error) {
+      console.error('Failed to mark notifications as read:', error);
     }
-  } catch (error) {
-    console.error('Failed to mark notifications as read:', error);
-  }
-};
+  };
 
   const searchUsers = async (query: string): Promise<User[]> => {
     try {
@@ -441,20 +524,24 @@ const markNotificationsAsRead = async (notificationIds?: number[], markAll = fal
   };
 
   const uploadFile = async (conversationId: number, file: File) => {
-  try {
-    const response = await chatService.uploadFile(conversationId, file);
-    if (response.success) {
-      // File upload success is handled by socket event (new_message)
-      return response.message;
-    } else {
-      console.error('File upload failed with response:', response);
-      throw new Error('Upload failed: Invalid response from server');
+    try {
+      const response = await chatService.uploadFile(conversationId, file);
+      if (response.success) {
+        // File upload success is handled by socket event (new_message)
+        return response.message;
+      } else {
+        console.error('File upload failed with response:', response);
+        throw new Error('Upload failed: Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Failed to upload file:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Failed to upload file:', error);
-    throw error;
-  }
-};
+  };
+
+  // Manual refresh functions for when needed
+  const refreshConversations = () => mutateConversations();
+  const refreshNotifications = () => mutateNotifications();
 
   return {
     // State
@@ -474,9 +561,7 @@ const markNotificationsAsRead = async (notificationIds?: number[], markAll = fal
     currentUser: user,
     
     // Actions
-    loadConversations,
     loadMessages,
-    loadNotifications,
     createConversation,
     sendMessage,
     markMessagesAsRead,
@@ -486,6 +571,8 @@ const markNotificationsAsRead = async (notificationIds?: number[], markAll = fal
     stopTyping,
     selectConversation,
     uploadFile,
+    refreshConversations,
+    refreshNotifications,
     
     // Helpers
     getCurrentUserId,
