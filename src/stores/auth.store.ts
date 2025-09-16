@@ -226,4 +226,51 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       return { success: false, error: errorMessage };
     }
   },
+  googleLogin: async (credential: string) => {
+  set({ isLoading: true, error: null });
+  
+  try {
+    const response = await authApi.googleLogin(credential);
+    
+    if (response.success) {
+      set({ 
+        user: response.user, 
+        isAuthenticated: true, 
+        isLoading: false, 
+        error: null,
+        isInitialized: true
+      });
+      return response;
+    } else {
+      const errorMessage = response.message || 'Google login failed';
+      set({ 
+        isLoading: false, 
+        error: errorMessage 
+      });
+      return response;
+    }
+  } catch (error) {
+    let errorMessage = 'Google login failed';
+    
+    if (error instanceof Error) {
+      if (error.message.includes('Invalid token')) {
+        errorMessage = 'Invalid Google token. Please try signing in again.';
+      } else if (error.message.includes('Account')) {
+        errorMessage = error.message;
+      } else if (error.message.includes('network') || error.message.includes('fetch')) {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Request timed out. Please try again.';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    
+    set({ 
+      isLoading: false, 
+      error: errorMessage 
+    });
+    throw new Error(errorMessage);
+  }
+},
 }));

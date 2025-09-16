@@ -53,3 +53,9 @@ export interface AuthActions {
 }
 
 export type AuthStore = AuthState & AuthActions;
+
+export interface GoogleLoginResponse {
+  success: boolean;
+  message: string;
+  user: User;
+}
