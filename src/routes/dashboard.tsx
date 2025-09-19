@@ -100,6 +100,18 @@ export const dashboardRoutes: RouteObject = {
             () => import("@/features/settings/account/AccountSettings")
           ),
         },
+         {
+          path: "audit-logs",
+          element: createLazyComponent(
+            () => import("@/features/settings/auditLogs")
+          ),
+        },
+        {
+          path: "audit-stats",
+          element: createLazyComponent(
+            () => import("@/features/settings/auditStats")
+          ),
+        }
       ],
     },
   ],

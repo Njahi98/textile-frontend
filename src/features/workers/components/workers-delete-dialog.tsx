@@ -58,7 +58,11 @@ export function WorkersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             Are you sure you want to delete{' '}
             <span className='font-bold'>{currentRow.name}</span>?
             <br />
-            This action will permanently remove the worker with the role of{' '}
+            This action will permanently remove the worker with the cin number of{' '}
+            <span className='font-bold'>
+             {currentRow?.cin}
+            </span>{' '}
+              and role of{' '}
             <span className='font-bold'>
               {currentRow?.role?.toUpperCase()}
             </span>{' '}

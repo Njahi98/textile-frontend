@@ -470,7 +470,7 @@ export default function AccountSettings() {
           <CardHeader>
             <CardTitle className="text-destructive">Danger Zone</CardTitle>
             <CardDescription>
-              Irreversible and destructive actions.
+              Permanently delete your account and all associated data.
             </CardDescription>
           </CardHeader>
           <CardContent>

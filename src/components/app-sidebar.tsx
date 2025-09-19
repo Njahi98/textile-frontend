@@ -9,6 +9,7 @@ import {
   Settings,
   Box,
   MessagesSquare,
+  Logs,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -90,17 +91,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     },
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
-      items: [
-        {
-          title: "Account Settings",
-          url: "/settings/account",
-        },
-      ],
-    },
+...(user?.role === "ADMIN" || user?.role === "SUPERADMIN"
+  ? [
+      {
+        title: "Audit Logs",
+        url: "/settings/audit-logs",
+        icon: Logs,
+        items: [
+          {
+            title: "Overview",
+            url: "/settings/audit-logs",
+          },
+          {
+            title: "Stats",
+            url: "/settings/audit-stats",
+          },
+        ],
+      },
+      {
+  title: "Account Settings",
+  url: "/settings/account",
+  icon: Settings,
+},
+    ]
+  : []),
+
   ].filter(Boolean);
 
   const data = {
