@@ -5,7 +5,7 @@ A modern React-based frontend for textile manufacturing management, built with T
 ## Features
 
 ### Authentication & User Management
-- Login/register with JWT authentication and role-based access
+- Login/register with JWT authentication/via Google and role-based access
 - Profile management with avatar upload
 - Password reset functionality
 - Session management with automatic logout
@@ -83,6 +83,7 @@ A modern React-based frontend for textile manufacturing management, built with T
    Add this to your `.env` file:
    ```env
    VITE_API_URL=<your-backend-api-url>
+   VITE_GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
    ```
 
 3. **Start the dev server:**
