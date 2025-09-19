@@ -108,13 +108,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
         ],
       },
-      {
+   
+    ]
+  : []),
+     {
   title: "Account Settings",
   url: "/settings/account",
   icon: Settings,
 },
-    ]
-  : []),
 
   ].filter(Boolean);
 
