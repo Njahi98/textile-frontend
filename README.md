@@ -2,6 +2,9 @@
 
 A modern React-based frontend for textile manufacturing management, built with TypeScript, Vite, and Tailwind CSS and seamless integration with the backend API.
 
+![Dashboard Preview](./docs/dashboard.png)
+
+
 ## Features
 
 ### Authentication & User Management
