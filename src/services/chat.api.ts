@@ -67,20 +67,6 @@ export interface CreateConversationData {
   isGroup: boolean;
 }
 
-interface AuthenticatedSocket {
-  userId: number;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    role: string;
-  };
-}
-
-interface SocketWithAuth extends Socket {
-  userId?: number;
-  user?: AuthenticatedSocket['user'];
-}
 
 class ChatService {
   private socket: Socket | null = null;
@@ -148,11 +134,6 @@ class ChatService {
         console.error('Socket connection error:', error);
         this.isConnecting = false;
         this.handleReconnect();
-      });
-
-      this.socket.on('reconnect', (attemptNumber) => {
-        this.reconnectAttempts = 0;
-        this.reconnectDelay = 1000;
       });
 
       this.socket.on('reconnect_error', (error) => {

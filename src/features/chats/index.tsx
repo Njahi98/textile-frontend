@@ -39,7 +39,7 @@ export default function Chats() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   const messageInputRef = useRef<HTMLInputElement>(null)
-  const typingTimeoutRef = useRef<NodeJS.Timeout>()
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const {
     conversations,
@@ -59,7 +59,6 @@ export default function Chats() {
     startTyping,
     stopTyping,
     uploadFile,
-    hasUserReadMessage,
     refreshConversations,
     refreshNotifications,
   } = useChat()
@@ -425,7 +424,7 @@ export default function Chats() {
                         <div className='flex gap-2 flex-1'>
                           <div className="relative">
                             <Avatar>
-                              <AvatarImage src={messagerAvatarUrl} alt="userAvatar" />
+                              <AvatarImage src={messagerAvatarUrl ?? undefined} alt="userAvatar" />
                               <AvatarFallback>{getInitials(conversationName)}</AvatarFallback>
                             </Avatar>
                             {hasUnread && (
@@ -491,7 +490,7 @@ export default function Chats() {
                   </Button>
                   <div className='flex items-center gap-2 lg:gap-4'>
                     <Avatar className='size-9 lg:size-11'>
-                      <AvatarImage src={selectedConversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl} alt="userAvatar" />
+                      <AvatarImage src={selectedConversation.participants.find(p => p.userId !== currentUserId)?.user.avatarUrl ?? undefined} alt="userAvatar" />
                       <AvatarFallback>{getInitials(getConversationName(selectedConversation))}</AvatarFallback>
                     </Avatar>
                     <div>

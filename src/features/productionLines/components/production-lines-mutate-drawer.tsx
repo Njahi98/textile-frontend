@@ -44,7 +44,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-export function TasksMutateDrawer({ open, onOpenChange, currentRow, onSuccess }: Props) {
+export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, onSuccess }: Props) {
   const isUpdate = !!currentRow
 
   const defaultValues: FormData = useMemo(() => ({

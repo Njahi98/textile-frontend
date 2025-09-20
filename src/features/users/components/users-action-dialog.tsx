@@ -39,8 +39,12 @@ const formSchema = z
       .min(1, { message: 'Email is required.' })
       .email({ message: 'Email is invalid.' }),
     password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, { message: 'Role is required.' }),
-    status: z.string().min(1, { message: 'Status is required.' }),
+    role: z.enum(['SUPERADMIN', 'ADMIN', 'USER'], { 
+      errorMap: () => ({ message: 'Role is required.' }) 
+    }),
+    status: z.enum(['active', 'inactive', 'suspended'], { 
+      errorMap: () => ({ message: 'Status is required.' }) 
+    }),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     isEdit: z.boolean(),
   })
@@ -87,6 +91,7 @@ const formSchema = z
       }
     }
   })
+
 type UserForm = z.infer<typeof formSchema>
 
 interface Props {
@@ -101,7 +106,13 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
+          firstName: currentRow.firstName || '',
+          lastName: currentRow.lastName || '',
+          username: currentRow.username,
+          email: currentRow.email,
+          phone: currentRow.phone || '',
+          role: currentRow.role,
+          status: currentRow.status,
           password: '',
           confirmPassword: '',
           isEdit,
@@ -111,8 +122,8 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
           lastName: '',
           username: '',
           email: '',
-          role: '',
-          status: 'active',
+          role: 'USER' as const,
+          status: 'active' as const,
           phone: '',
           password: '',
           confirmPassword: '',
@@ -120,7 +131,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         },
   })
 
-  const onSubmit = async (values: UserForm) => {
+  const onSubmit = async (values: UserForm): Promise<void> => {
     try {
       form.reset();
       if (!values.isEdit) {
@@ -130,9 +141,9 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         }
       } else {
         // Omit password fields if empty
-        const { password,confirmPassword, ...rest } = values;
+        const { password, confirmPassword, ...rest } = values;
         const updatePayload = password
-          ? { ...rest, password,confirmPassword }
+          ? { ...rest, password, confirmPassword }
           : rest;
         const response = await userApi.updateUser(String(currentRow?.id), updatePayload);
         if (response.success) {
@@ -151,6 +162,8 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
   };
 
   const isPasswordTouched = !!form.formState.dirtyFields.password
+
+  const handleFormSubmit = form.handleSubmit(onSubmit);
 
   return (
     <Dialog
@@ -172,7 +185,10 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
           <Form {...form}>
             <form
               id='user-form'
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={(e) => {
+                e.preventDefault();
+                void handleFormSubmit(e);
+              }}
               className='space-y-4 p-0.5'
             >
               <FormField
@@ -294,28 +310,30 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                   </FormItem>
                 )}
               />
-                {isEdit ?<FormField
-                control={form.control}
-                name='status'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Status
-                    </FormLabel>
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder='Select a Status'
-                      className='col-span-4'
-                      items={userStatus.map(({ label, value }) => ({
-                        label,
-                        value,
-                      }))}
-                    />
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />:null}
+              {isEdit ? (
+                <FormField
+                  control={form.control}
+                  name='status'
+                  render={({ field }) => (
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                      <FormLabel className='col-span-2 text-right'>
+                        Status
+                      </FormLabel>
+                      <SelectDropdown
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        placeholder='Select a Status'
+                        className='col-span-4'
+                        items={userStatus.map(({ label, value }) => ({
+                          label,
+                          value,
+                        }))}
+                      />
+                      <FormMessage className='col-span-4 col-start-3' />
+                    </FormItem>
+                  )}
+                />
+              ) : null}
               <FormField
                 control={form.control}
                 name='password'
@@ -345,7 +363,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                     <FormControl>
                       <PasswordInput
                         disabled={!isPasswordTouched}
-                        
                         className='col-span-4'
                         {...field}
                       />

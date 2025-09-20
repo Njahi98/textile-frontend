@@ -14,7 +14,7 @@ interface GoogleLoginButtonProps {
 declare global {
   interface Window {
     google: any;
-    handleCredentialResponse: (response: any) => void;
+    handleCredentialResponse?: (response: any) => void;
   }
 }
 

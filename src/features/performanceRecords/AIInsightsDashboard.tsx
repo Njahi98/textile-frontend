@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAIInsights } from './hooks/useAIInsights';
 import { InsightsFilters, insightsAPI, AIInsightResponse } from '@/services/insights.api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -166,8 +165,6 @@ export const AIInsightsDashboard: React.FC = () => {
   const [cooldownTimer, setCooldownTimer] = useState<number>(rateLimitInfo.remainingTime);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Don't use the hook for automatic fetching - we'll manage this manually
-  const { refresh } = useAIInsights(filters);
 
   // Save filters to storage whenever they change
   useEffect(() => {
@@ -523,8 +520,12 @@ export const AIInsightsDashboard: React.FC = () => {
                 <Calendar
                   mode="single"
                   selected={filters.startDate ? new Date(filters.startDate) : undefined}
-                  onSelect={(date) => handleDateRangeChange(date ? date.toISOString().split('T')[0] : filters.startDate, filters.endDate ?? '')}
-                  initialFocus
+              onSelect={(date) =>
+                handleDateRangeChange(
+                  date ? date.toISOString().split('T')[0] : filters.startDate ?? '',
+                  filters.endDate ?? ''
+                )
+              }                  initialFocus
                 />
               </PopoverContent>
             </Popover>
@@ -549,8 +550,13 @@ export const AIInsightsDashboard: React.FC = () => {
                 <Calendar
                   mode="single"
                   selected={filters.endDate ? new Date(filters.endDate) : undefined}
-                  onSelect={(date) => handleDateRangeChange(filters.startDate ?? '', date ? date.toISOString().split('T')[0] : filters.endDate)}
-                  initialFocus
+                onSelect={(date) =>
+                  handleDateRangeChange(
+                    filters.startDate ?? '',
+                    date ? date.toISOString().split('T')[0] : filters.endDate ?? ''
+                  )
+                }                  
+      initialFocus
                 />
               </PopoverContent>
             </Popover>

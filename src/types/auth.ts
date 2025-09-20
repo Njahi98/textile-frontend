@@ -50,6 +50,7 @@ export interface AuthActions {
   setLoading: (loading: boolean) => void;
   setupAutoRefresh: () => void;
   clearAutoRefresh: () => void;
+  googleLogin: (credential: string) => Promise<{ success: boolean; message?: string; user?: User }>;
 }
 
 export type AuthStore = AuthState & AuthActions;

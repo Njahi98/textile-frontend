@@ -32,15 +32,10 @@ interface Props {
   searchUsers: (query: string) => Promise<User[]>
 }
 
-interface SearchError {
-  message: string
-  retry: () => void
-}
-
 // Custom hook for debounced search with SWR integration
 function useUserSearch(query: string, searchUsers: (query: string) => Promise<User[]>) {
   const [debouncedQuery, setDebouncedQuery] = useState('')
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (timeoutRef.current) {

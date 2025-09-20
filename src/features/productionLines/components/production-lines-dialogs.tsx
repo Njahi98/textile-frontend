@@ -1,7 +1,6 @@
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useProductionLines } from '../context/production-lines-context'
-import { TasksImportDialog } from './production-lines-import-dialog'
-import { TasksMutateDrawer } from './production-lines-mutate-drawer'
+import { ProductionLinesMutateDrawer } from './production-lines-mutate-drawer'
 import { productionLineApi } from '@/services/productionLine.api'
 import { toast } from 'sonner'
 
@@ -32,22 +31,16 @@ export function ProductionLinesDialogs() {
 
   return (
     <>
-      <TasksMutateDrawer
-        key='task-create'
+      <ProductionLinesMutateDrawer
+        key='production-line-create'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
       />
 
-      <TasksImportDialog
-        key='tasks-import'
-        open={open === 'import'}
-        onOpenChange={() => setOpen('import')}
-      />
-
       {currentRow && (
         <>
-          <TasksMutateDrawer
-            key={`task-update-${currentRow.id}`}
+          <ProductionLinesMutateDrawer
+            key={`production-line-update-${currentRow.id}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -59,7 +52,7 @@ export function ProductionLinesDialogs() {
           />
 
           <ConfirmDialog
-            key='task-delete'
+            key='production-line-delete'
             destructive
             open={open === 'delete'}
             onOpenChange={() => {
@@ -70,10 +63,10 @@ export function ProductionLinesDialogs() {
             }}
             handleConfirm={()=> void handleDelete()}
             className='max-w-md'
-            title={`Delete this task: ${currentRow.id} ?`}
+            title={`Delete this production line: ${currentRow.id} ?`}
             desc={
               <>
-                You are about to delete a task with the ID{' '}
+                You are about to delete a production line with the ID{' '}
                 <strong>{currentRow.id}</strong>. <br />
                 This action cannot be undone.
               </>

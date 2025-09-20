@@ -36,17 +36,6 @@ interface NotificationsResponse {
   };
 }
 
-interface MessagesResponse {
-  success: boolean;
-  messages: Message[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasMore: boolean;
-  };
-}
 
 export const useChat = () => {
   const { user, isAuthenticated } = useAuthStore();
@@ -64,7 +53,6 @@ export const useChat = () => {
   // SWR for conversations with caching
   const {
     data: conversationsData,
-    error: conversationsError,
     mutate: mutateConversations,
     isLoading: conversationsLoading,
   } = useSWR<ConversationsResponse>(
@@ -80,7 +68,6 @@ export const useChat = () => {
   // SWR for notifications with caching
   const {
     data: notificationsData,
-    error: notificationsError,
     mutate: mutateNotifications,
     isLoading: notificationsLoading,
   } = useSWR<NotificationsResponse>(

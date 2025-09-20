@@ -42,6 +42,14 @@ interface Props {
   onOpenChange: (open: boolean) => void
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export function WorkersImportDialog({ open, onOpenChange }: Props) {
   const [isLoading, setIsLoading] = useState(false)
   const [importResult, setImportResult] = useState<{
@@ -81,9 +89,9 @@ export function WorkersImportDialog({ open, onOpenChange }: Props) {
     } catch (error: unknown) {
       let message = 'Import failed. Please try again.';
       if (typeof error === 'object' && error !== null && 'response' in error) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        message = error.response?.data?.message ?? message;
-      }
+      const apiError = error as ApiError;
+      message = apiError.response?.data?.message ?? message;
+    }
       setImportResult({
         success: false,
         message,

@@ -114,10 +114,10 @@ export default function DashboardHome() {
   const { data: performanceData, error: performanceError, isLoading: performanceLoading } = 
     useSWR<PerformanceResponse>('/api/dashboard/worker-performance', fetcher, { refreshInterval: 30000 });
 
-  const { data: activitiesData, error: activitiesError, isLoading: activitiesLoading } = 
+  const { data: activitiesData } = 
     useSWR<ActivitiesResponse>('/api/dashboard/recent-activities', fetcher, { refreshInterval: 60000 });
 
-  const { data: trendsData, error: trendsError, isLoading: trendsLoading } = 
+  const { data: trendsData, } = 
     useSWR<TrendsResponse>('/api/dashboard/production-trends', fetcher, { refreshInterval: 60000 });
 
   if (statsLoading || metricsLoading || performanceLoading) {
@@ -163,7 +163,7 @@ export default function DashboardHome() {
           value={stats?.workers.total || 0}
           description={`${stats?.workers.activeToday || 0} active today`}
           icon={Users}
-          trend={stats?.workers.activeToday > 0 ? 'up' : 'neutral'}
+          trend={(stats?.workers.activeToday ?? 0) > 0 ? 'up' : 'neutral'}
           trendValue={`${stats?.workers.activeToday || 0} working`}
         />
         <StatCard
@@ -177,7 +177,7 @@ export default function DashboardHome() {
           value={(stats?.production.today.pieces || 0).toLocaleString()}
           description={`${stats?.production.today.avgErrorRate?.toFixed(2) || 0}% error rate`}
           icon={Package}
-          trend={stats?.production.today.pieces > 0 ? 'up' : 'neutral'}
+          trend={(stats?.production.today.pieces ?? 0) > 0 ? 'up' : 'neutral'}
           trendValue={`${stats?.production.today.records || 0} records`}
         />
         <StatCard

@@ -1,7 +1,7 @@
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { usePerformanceRecords } from '../context/performance-records-context'
 import { PerformanceRecordsMutateDrawer } from './performance-records-mutate-drawer'
-import { performanceApi } from '@/services/performance.api'
+import { performanceApi, PerformanceRecord } from '@/services/performance.api'
 import { toast } from 'sonner'
 
 export function PerformanceRecordsDialogs() {
@@ -46,7 +46,7 @@ export function PerformanceRecordsDialogs() {
                 setCurrentRow(null)
               }, 500)
             }}
-            currentRow={currentRow}
+            currentRow={currentRow as PerformanceRecord}
           />
 
           <ConfirmDialog

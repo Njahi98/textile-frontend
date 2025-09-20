@@ -316,7 +316,7 @@ const exportToCSV = () => {
   const sortedData = [...chartData]
     .sort((a, b) => b.pieces - a.pieces)
     .map((item, index) => {
-      const row = [index + 1]; // Rank
+      const row: (string | number)[] = [index + 1]; // Rank
       
       if (groupBy === 'date') {
         row.push(item.date || 'Unknown');
@@ -351,7 +351,7 @@ const exportToCSV = () => {
         row.push(item.utilization.toFixed(1));
       }
       
-      return row.map(escapeCSV).join(',');
+      return row.map(item => escapeCSV(item)).join(',');
     });
   
   csvContent.push(...sortedData);
@@ -446,7 +446,6 @@ const exportToCSV = () => {
   insights.push(`Production Analysis: ${highPerformers} high performers (>20% above average), ${lowPerformers} underperformers (<20% below average)`);
   
   // Quality insights
-  const avgError = errorRates.reduce((a, b) => a + b, 0) / errorRates.length;
   const qualityIssues = errorRates.filter(e => e > 5).length;
   insights.push(`Quality Analysis: ${qualityIssues} entities exceed 5% error rate threshold (${((qualityIssues/errorRates.length)*100).toFixed(1)}% of total)`);
   

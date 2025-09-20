@@ -24,7 +24,7 @@ export function DataTableToolbar<TData>({
                      queryParams.startDate || queryParams.endDate || queryParams.search
   
   // Debounced search
-  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const handleSearchChange = (value: string) => {
     // Clear existing timeout
