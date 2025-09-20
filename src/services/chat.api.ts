@@ -117,7 +117,7 @@ class ChatService {
     try {
       // For HTTP-only cookies, let socket.io use cookies automatically
       // The server will read the HTTP-only cookie from headers
-      this.socket = io(import.meta.env.VITE_API_URL || 'http://localhost:3001', {
+      this.socket = io(import.meta.env.VITE_API_URL, {
         withCredentials: true, // This ensures cookies are sent with the connection
         transports: ['websocket', 'polling'],
         autoConnect: true,
