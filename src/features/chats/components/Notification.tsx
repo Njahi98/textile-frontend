@@ -129,10 +129,12 @@ export function NotificationsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [markingAllRead, setMarkingAllRead] = useState(false);
   const [markingIndividual, setMarkingIndividual] = useState<Set<number>>(new Set());
+  const [clearingAll, setClearingAll] = useState(false);
+
 
   const navigate = useNavigate();
 
-  const { notifications, unreadNotificationCount, markNotificationsAsRead, loading, connected } =
+  const { notifications, unreadNotificationCount, markNotificationsAsRead,clearAllNotifications, loading, connected } =
     useChat();
 
   // Memoized unique recent notifications to prevent unnecessary re-renders
@@ -192,6 +194,19 @@ export function NotificationsDropdown() {
   const hasNotifications = recentNotifications.length > 0;
   const showOfflineBadge = !connected;
 
+      const handleClearAll = useCallback(async () => {
+  if (!hasNotifications || clearingAll) return;
+
+  setClearingAll(true);
+  try {
+    await clearAllNotifications();
+  } catch (error) {
+    console.error('Failed to clear all notifications:', error);
+  } finally {
+    setClearingAll(false);
+  }
+}, [hasNotifications, clearingAll, clearAllNotifications]);
+
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
@@ -215,34 +230,50 @@ export function NotificationsDropdown() {
 
       <DropdownMenuContent align="end" className="w-80 max-h-[400px] flex flex-col">
         <DropdownMenuLabel className="flex items-center justify-between py-3 shrink-0">
-          <span className="font-semibold">Notifications</span>
-          <div className="flex items-center gap-2">
-            {showOfflineBadge && (
-              <Badge variant="outline" className="text-xs px-2 py-1">
-                Offline
-              </Badge>
-            )}
-            {hasUnreadNotifications && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleMarkAllRead}
-                disabled={markingAllRead}
-                className="h-6 px-2 text-xs hover:bg-muted transition-colors"
-                aria-label="Mark all notifications as read"
-              >
-                {markingAllRead ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                ) : (
-                  <>
-                    <CheckCheck className="h-3 w-3 mr-1" />
-                    Mark all read
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
-        </DropdownMenuLabel>
+        <span className="font-semibold">Notifications</span>
+        <div className="flex items-center gap-2">
+          {showOfflineBadge && (
+            <Badge variant="outline" className="text-xs px-2 py-1">
+              Offline
+            </Badge>
+          )}
+          {hasUnreadNotifications && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleMarkAllRead}
+              disabled={markingAllRead}
+              className="h-6 px-2 text-xs hover:bg-muted transition-colors"
+              aria-label="Mark all notifications as read"
+            >
+              {markingAllRead ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <>
+                  <CheckCheck className="h-3 w-3 mr-1" />
+                  Mark all read
+                </>
+              )}
+            </Button>
+          )}
+          {hasNotifications && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearAll}
+              disabled={clearingAll}
+              className="h-6 px-2 text-xs hover:bg-destructive/10 hover:text-destructive transition-colors"
+              aria-label="Clear all notifications"
+            >
+              {clearingAll ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                "Clear all"
+              )}
+            </Button>
+          )}
+        </div>
+      </DropdownMenuLabel>
 
         <DropdownMenuSeparator className="shrink-0" />
 

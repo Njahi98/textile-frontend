@@ -7,7 +7,7 @@ import {
   Shield, 
   CheckCircle,
   Factory,
-  Award,
+  Star,
   LogIn,
   Rocket
 } from "lucide-react";
@@ -152,6 +152,29 @@ export default function Home() {
         </motion.div>
       </section>
 
+       {/* Dashboard Preview */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+          className="max-w-5xl mx-auto mt-16"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 blur-3xl transform rotate-1 scale-105"></div>
+            <motion.img
+              whileHover={{ scale: 1.02, rotateY: 2 }}
+              transition={{ duration: 0.3 }}
+              src="/dashboard.webp"
+              alt="TextilePro Dashboard Preview"
+              className="relative z-10 w-full rounded-xl shadow-2xl border border-border/30 transform -rotate-1 hover:rotate-0 transition-all duration-500"
+              style={{
+                filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.25))'
+              }}
+            />
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-secondary/10 blur-xl opacity-60 transform rotate-2"></div>
+          </div>
+        </motion.div>
+
       {/* Features Section */}
       <section className="relative z-10 px-6 lg:px-12 py-20">
         <motion.div
@@ -265,7 +288,7 @@ export default function Home() {
               >
                 <div className="flex mb-4">
                   {['one','two','three','four','five'].map((id) => (
-                    <Award key={`star-${testimonial.author}-${id}`} className="h-4 w-4 text-amber-500 fill-current" />
+                    <Star key={`star-${testimonial.author}-${id}`} className="h-4 w-4 text-amber-500 fill-current" />
                   ))}
                 </div>
                 <p className="text-muted-foreground mb-4 italic">"{testimonial.quote}"</p>

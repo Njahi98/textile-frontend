@@ -207,6 +207,11 @@ class ChatService {
     return response.data;
   }
 
+  async clearAllNotifications(): Promise<{ success: boolean; message: string }> {
+  const response = await api.delete('/api/chat/notifications');
+  return response.data;
+}
+
   async getConversationMessages(conversationId: number, page = 1, limit = 50): Promise<{
     success: boolean;
     messages: Message[];

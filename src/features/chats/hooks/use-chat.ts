@@ -390,6 +390,27 @@ export const useChat = () => {
     }
   };
 
+  const clearAllNotifications = async () => {
+  try {
+    const response = await chatService.clearAllNotifications();
+    
+    if (response.success) {
+      // Optimistically update notifications cache
+      mutateNotifications((current) => {
+        if (!current) return current;
+        
+        return {
+          ...current,
+          notifications: [],
+          unreadCount: 0
+        };
+      }, false);
+    }
+  } catch (error) {
+    console.error('Failed to clear all notifications:', error);
+  }
+};
+
   const sendMessage = async (conversationId: number, content: string, messageType: 'TEXT' | 'IMAGE' | 'FILE' = 'TEXT') => {
     if (!content.trim() || !connected) return;
     
@@ -560,7 +581,7 @@ export const useChat = () => {
     uploadFile,
     refreshConversations,
     refreshNotifications,
-    
+    clearAllNotifications,
     // Helpers
     getCurrentUserId,
     hasUserReadMessage,
