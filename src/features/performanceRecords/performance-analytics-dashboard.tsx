@@ -508,113 +508,132 @@ const exportToCSV = () => {
   });
 };
 
-  return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Performance Analytics</h2>
-          <p className="text-muted-foreground">
-            Real-time insights into production line performance and efficiency
+ return (
+  <div className="flex-1 space-y-3 md:space-y-4 p-3 md:p-4 lg:p-8 pt-4 md:pt-6">
+    {/* Header - Mobile Optimized */}
+    <div className="space-y-3">
+      <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight truncate">
+            Performance Analytics
+          </h2>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
+            Real-time insights into production performance
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={exportToCSV} disabled={!chartData.length}>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={exportToCSV} 
+            disabled={!chartData.length}
+            className="w-full sm:w-auto"
+          >
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button variant="outline" size="sm" onClick={fetchAnalytics} disabled={loading}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={fetchAnalytics} 
+            disabled={loading}
+            className="w-full sm:w-auto"
+          >
             <RefreshCw className={cn("h-4 w-4 mr-2", loading && "animate-spin")} />
             Refresh
           </Button>
         </div>
       </div>
+    </div>
 
-      {/* Filters Section */}
-     <Card>
-      <CardHeader>
-        <CardTitle className="text-base flex items-center gap-2">
+    {/* Filters Section - Mobile First */}
+    <Card>
+      <CardHeader className="pb-3 md:pb-4">
+        <CardTitle className="text-sm md:text-base flex items-center gap-2">
           <Filter className="h-4 w-4" />
           Filters
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* First row: Date Range and Group By */}
-          <div className="space-y-2 md:col-span-2">
-            <Label>Date Range</Label>
-            <div className="grid grid-cols-2 gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !dateRange.from && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateRange.from ? format(dateRange.from, "PPP") : "Pick start date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dateRange.from}
-                    onSelect={(date) => setDateRange({ ...dateRange, from: date || dateRange.from })}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+      <CardContent className="space-y-4">
+        {/* Date Range - Stack on mobile */}
+        <div className="space-y-2">
+          <Label className="text-sm">Date Range</Label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal text-sm",
+                    !dateRange.from && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">
+                    {dateRange.from ? format(dateRange.from, "MMM dd, yyyy") : "Start date"}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateRange.from}
+                  onSelect={(date) => setDateRange({ ...dateRange, from: date || dateRange.from })}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
 
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !dateRange.to && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateRange.to ? format(dateRange.to, "PPP") : "Pick end date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dateRange.to}
-                    onSelect={(date) => setDateRange({ ...dateRange, to: date || dateRange.to })}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Group By</Label>
-            <Select value={groupBy} onValueChange={(v: any) => setGroupBy(v)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="date">Date</SelectItem>
-                <SelectItem value="worker">Worker</SelectItem>
-                <SelectItem value="product">Product</SelectItem>
-                <SelectItem value="productionLine">Production Line</SelectItem>
-              </SelectContent>
-            </Select>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal text-sm",
+                    !dateRange.to && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">
+                    {dateRange.to ? format(dateRange.to, "MMM dd, yyyy") : "End date"}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateRange.to}
+                  onSelect={(date) => setDateRange({ ...dateRange, to: date || dateRange.to })}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-       
-       
+        {/* Group By - Full width on mobile */}
+        <div className="space-y-2">
+          <Label className="text-sm">Group By</Label>
+          <Select value={groupBy} onValueChange={(v: any) => setGroupBy(v)}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">Date</SelectItem>
+              <SelectItem value="worker">Worker</SelectItem>
+              <SelectItem value="product">Product</SelectItem>
+              <SelectItem value="productionLine">Production Line</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Optional Filters - Stack on mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>Worker ID (Optional)</Label>
+            <Label className="text-sm">Worker ID (Optional)</Label>
             <input
               type="text"
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Enter worker ID"
               value={workerId}
               onChange={(e) => setWorkerId(e.target.value)}
@@ -622,10 +641,10 @@ const exportToCSV = () => {
           </div>
 
           <div className="space-y-2">
-            <Label>Production Line ID (Optional)</Label>
+            <Label className="text-sm">Production Line ID (Optional)</Label>
             <input
               type="text"
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Enter line ID"
               value={productionLineId}
               onChange={(e) => setProductionLineId(e.target.value)}
@@ -633,260 +652,345 @@ const exportToCSV = () => {
           </div>
         </div>
 
-        <div className="mt-4">
-          <Button onClick={fetchAnalytics} disabled={loading} className="w-full md:w-auto">
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              <>
-                <Activity className="mr-2 h-4 w-4" />
-                Generate Report
-              </>
-            )}
-          </Button>
-        </div>
+        <Button 
+          onClick={fetchAnalytics} 
+          disabled={loading} 
+          className="w-full sm:w-auto"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Loading...
+            </>
+          ) : (
+            <>
+              <Activity className="mr-2 h-4 w-4" />
+              Generate Report
+            </>
+          )}
+        </Button>
       </CardContent>
     </Card>
 
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+    {/* Error Display */}
+    {error && (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription className="text-sm">{error}</AlertDescription>
+      </Alert>
+    )}
 
-      {analytics && (
-        <>
-          {/* KPI Cards */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <KPICard
-              title="Total Pieces Produced"
-              value={analytics.overall.totalPieces.toLocaleString()}
-              description="Total production output"
-              icon={<Package className="h-4 w-4" />}
-              trend={12}
-            />
-            <KPICard
-              title="Average Error Rate"
-              value={`${analytics.overall.avgErrorRate.toFixed(2)}%`}
-              description="Quality metric"
-              icon={<AlertCircle className="h-4 w-4" />}
-              className={cn(
-                analytics.overall.avgErrorRate < 2 && "border-green-200 dark:border-green-900",
-                analytics.overall.avgErrorRate >= 5 && "border-red-200 dark:border-red-900"
-              )}
-            />
-            <KPICard
-              title="Average Time"
-              value={`${analytics.overall.avgTimeTaken.toFixed(1)}h`}
-              description="Efficiency metric"
-              icon={<Clock className="h-4 w-4" />}
-            />
-            <KPICard
-              title="Total Records"
-              value={analytics.overall.totalRecords.toLocaleString()}
-              description="Data points collected"
-              icon={<Activity className="h-4 w-4" />}
-            />
-          </div>
+    {analytics && (
+      <>
+        {/* KPI Cards - Mobile Optimized Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <KPICard
+            title="Total Pieces"
+            value={analytics.overall.totalPieces.toLocaleString()}
+            description="Production output"
+            icon={<Package className="h-4 w-4" />}
+            trend={12}
+          />
+          <KPICard
+            title="Error Rate"
+            value={`${analytics.overall.avgErrorRate.toFixed(2)}%`}
+            description="Quality metric"
+            icon={<AlertCircle className="h-4 w-4" />}
+            className={cn(
+              analytics.overall.avgErrorRate < 2 && "border-green-200 dark:border-green-900",
+              analytics.overall.avgErrorRate >= 5 && "border-red-200 dark:border-red-900"
+            )}
+          />
+          <KPICard
+            title="Avg Time"
+            value={`${analytics.overall.avgTimeTaken.toFixed(1)}h`}
+            description="Efficiency metric"
+            icon={<Clock className="h-4 w-4" />}
+          />
+          <KPICard
+            title="Records"
+            value={analytics.overall.totalRecords.toLocaleString()}
+            description="Data points"
+            icon={<Activity className="h-4 w-4" />}
+          />
+        </div>
 
-          {/* Empty State */}
-          {chartData.length === 0 && (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <Activity className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No Data Available</h3>
-                <p className="text-muted-foreground text-center mb-4">
-                  No performance records found for the selected date range and filters.
-                  <br />
-                  Current groupBy: <strong>{groupBy}</strong>
-                  <br />
-                  Raw data items: <strong>{analytics.grouped?.length || 0}</strong>
+        {/* Empty State */}
+        {chartData.length === 0 && (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-8 md:py-12 text-center">
+              <Activity className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mb-3 md:mb-4" />
+              <h3 className="text-base md:text-lg font-semibold mb-2">No Data Available</h3>
+              <div className="text-sm text-muted-foreground space-y-1 mb-4">
+                <p>No performance records found for the selected filters.</p>
+                <p className="text-xs">
+                  Group: <span className="font-medium">{groupBy}</span> • 
+                  Raw items: <span className="font-medium">{analytics.grouped?.length || 0}</span>
                 </p>
-                <Button onClick={fetchAnalytics} variant="outline">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Try Again
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+              <Button onClick={fetchAnalytics} variant="outline" size="sm">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
-          {/* Charts Section - Only show if we have data */}
-          {chartData.length > 0 && (
-            <Tabs defaultValue="production" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="production">Production</TabsTrigger>
-                <TabsTrigger value="quality">Quality</TabsTrigger>
-                <TabsTrigger value="efficiency">Efficiency</TabsTrigger>
-                <TabsTrigger value="comparison">Comparison</TabsTrigger>
+        {/* Charts Section - Mobile Optimized Tabs */}
+        {chartData.length > 0 && (
+          <Tabs defaultValue="production" className="space-y-3 md:space-y-4">
+            <div className="overflow-x-auto">
+              <TabsList className="grid w-full grid-cols-4 min-w-[320px]">
+                <TabsTrigger value="production" className="text-xs md:text-sm px-2">
+                  Production
+                </TabsTrigger>
+                <TabsTrigger value="quality" className="text-xs md:text-sm px-2">
+                  Quality
+                </TabsTrigger>
+                <TabsTrigger value="efficiency" className="text-xs md:text-sm px-2">
+                  Efficiency
+                </TabsTrigger>
+                <TabsTrigger value="comparison" className="text-xs md:text-sm px-2">
+                  Compare
+                </TabsTrigger>
               </TabsList>
+            </div>
 
-            <TabsContent value="production" className="space-y-4">
+            <TabsContent value="production" className="space-y-4 mt-3">
               <Card>
-                <CardHeader>
-                  <CardTitle>Production Trends</CardTitle>
-                  <CardDescription>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base md:text-lg">Production Trends</CardTitle>
+                  <CardDescription className="text-sm">
                     {groupBy === 'date' ? 'Daily production output' : `Production by ${groupBy}`}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    {groupBy === 'date' ? (
-                      <AreaChart data={chartData}>
-                        <defs>
-                          <linearGradient id="colorPieces" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
+                <CardContent className="p-3 md:p-6">
+                  <div className="h-[250px] sm:h-[300px] md:h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      {groupBy === 'date' ? (
+                        <AreaChart data={chartData}>
+                          <defs>
+                            <linearGradient id="colorPieces" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                          <XAxis 
+                            dataKey="date" 
+                            className="text-xs" 
+                            tick={{ fontSize: 10 }}
+                            interval="preserveStartEnd"
+                          />
+                          <YAxis className="text-xs" tick={{ fontSize: 10 }} />
+                          <Tooltip 
+                            contentStyle={{ fontSize: '12px' }}
+                            labelStyle={{ fontSize: '11px' }}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="pieces"
+                            stroke="#3b82f6"
+                            fillOpacity={1}
+                            fill="url(#colorPieces)"
+                          />
+                        </AreaChart>
+                      ) : (
+                        <BarChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                          <XAxis 
+                            dataKey="name" 
+                            className="text-xs" 
+                            angle={-45} 
+                            textAnchor="end" 
+                            height={80}
+                            interval={0}
+                            tick={{ fontSize: 9 }}
+                          />
+                          <YAxis className="text-xs" tick={{ fontSize: 10 }} />
+                          <Tooltip 
+                            contentStyle={{ fontSize: '12px' }}
+                            labelStyle={{ fontSize: '11px' }}
+                          />
+                          <Bar dataKey="pieces" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      )}
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="quality" className="space-y-4 mt-3">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base md:text-lg">Error Rate Analysis</CardTitle>
+                  <CardDescription className="text-sm">Quality metrics and defect rates</CardDescription>
+                </CardHeader>
+                <CardContent className="p-3 md:p-6">
+                  <div className="h-[250px] sm:h-[300px] md:h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                        <XAxis dataKey="date" className="text-xs" />
-                        <YAxis className="text-xs" />
-                        <Tooltip />
-                        <Area
-                          type="monotone"
-                          dataKey="pieces"
-                          stroke="#3b82f6"
-                          fillOpacity={1}
-                          fill="url(#colorPieces)"
+                        <XAxis 
+                          dataKey={groupBy === 'date' ? 'date' : 'name'} 
+                          className="text-xs"
+                          tick={{ fontSize: 10 }}
+                          angle={groupBy !== 'date' ? -45 : 0}
+                          textAnchor={groupBy !== 'date' ? 'end' : 'middle'}
+                          height={groupBy !== 'date' ? 80 : 60}
                         />
-                      </AreaChart>
-                    ) : (
+                        <YAxis className="text-xs" tick={{ fontSize: 10 }} />
+                        <Tooltip 
+                          contentStyle={{ fontSize: '12px' }}
+                          labelStyle={{ fontSize: '11px' }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '11px' }} />
+                        <Line
+                          type="monotone"
+                          dataKey="errorRate"
+                          stroke="#ef4444"
+                          strokeWidth={2}
+                          dot={{ fill: '#ef4444', r: 3 }}
+                          name="Error Rate (%)"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="efficiency" className="space-y-4 mt-3">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base md:text-lg">Time Efficiency</CardTitle>
+                  <CardDescription className="text-sm">Average time taken for production</CardDescription>
+                </CardHeader>
+                <CardContent className="p-3 md:p-6">
+                  <div className="h-[250px] sm:h-[300px] md:h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                         <XAxis 
-                          dataKey="name" 
-                          className="text-xs" 
-                          angle={-45} 
-                          textAnchor="end" 
-                          height={100}
-                          interval={0}
+                          dataKey={groupBy === 'date' ? 'date' : 'name'} 
+                          className="text-xs"
+                          tick={{ fontSize: 10 }}
+                          angle={groupBy !== 'date' ? -45 : 0}
+                          textAnchor={groupBy !== 'date' ? 'end' : 'middle'}
+                          height={groupBy !== 'date' ? 80 : 60}
                         />
-                        <YAxis className="text-xs" />
-                        <Tooltip />
-                        <Bar dataKey="pieces" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                        <YAxis className="text-xs" tick={{ fontSize: 10 }} />
+                        <Tooltip 
+                          contentStyle={{ fontSize: '12px' }}
+                          labelStyle={{ fontSize: '11px' }}
+                        />
+                        <Bar dataKey="timeTaken" fill="#f59e0b" radius={[4, 4, 0, 0]} />
                       </BarChart>
-                    )}
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="quality" className="space-y-4">
+            <TabsContent value="comparison" className="space-y-4 mt-3">
               <Card>
-                <CardHeader>
-                  <CardTitle>Error Rate Analysis</CardTitle>
-                  <CardDescription>Quality metrics and defect rates</CardDescription>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base md:text-lg">Performance Comparison</CardTitle>
+                  <CardDescription className="text-sm">Pieces produced vs Error rate</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                      <XAxis dataKey={groupBy === 'date' ? 'date' : 'name'} className="text-xs" />
-                      <YAxis className="text-xs" />
-                      <Tooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="errorRate"
-                        stroke="#ef4444"
-                        strokeWidth={2}
-                        dot={{ fill: '#ef4444' }}
-                        name="Error Rate (%)"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="efficiency" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Time Efficiency</CardTitle>
-                  <CardDescription>Average time taken for production</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                      <XAxis dataKey={groupBy === 'date' ? 'date' : 'name'} className="text-xs" />
-                      <YAxis className="text-xs" />
-                      <Tooltip />
-                      <Bar dataKey="timeTaken" fill="#f59e0b" radius={[8, 8, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="comparison" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Comparison</CardTitle>
-                  <CardDescription>Pieces produced vs Error rate</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <ScatterChart>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                      <XAxis dataKey="pieces" name="Pieces" className="text-xs" />
-                      <YAxis dataKey="errorRate" name="Error Rate" className="text-xs" />
-                      <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                      <Scatter name="Performance" data={chartData} fill="#8b5cf6" />
-                    </ScatterChart>
-                  </ResponsiveContainer>
+                <CardContent className="p-3 md:p-6">
+                  <div className="h-[250px] sm:h-[300px] md:h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ScatterChart>
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                        <XAxis 
+                          dataKey="pieces" 
+                          name="Pieces" 
+                          className="text-xs"
+                          tick={{ fontSize: 10 }}
+                        />
+                        <YAxis 
+                          dataKey="errorRate" 
+                          name="Error Rate" 
+                          className="text-xs"
+                          tick={{ fontSize: 10 }}
+                        />
+                        <Tooltip 
+                          cursor={{ strokeDasharray: '3 3' }}
+                          contentStyle={{ fontSize: '12px' }}
+                          labelStyle={{ fontSize: '11px' }}
+                        />
+                        <Scatter name="Performance" data={chartData} fill="#8b5cf6" />
+                      </ScatterChart>
+                    </ResponsiveContainer>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
-          )}
+        )}
 
-          {/* Top Performers Table - Only show if we have data */}
-          {chartData.length > 0 && (
+        {/* Top Performers - Mobile Optimized */}
+        {chartData.length > 0 && (
           <Card>
-            <CardHeader>
-              <CardTitle>Top Performers</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base md:text-lg">Top Performers</CardTitle>
+              <CardDescription className="text-sm">
                 Highest production output {groupBy !== 'date' && `by ${groupBy}`}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-8">
+            <CardContent className="p-3 md:p-6">
+              <div className="space-y-4 md:space-y-6">
                 {topPerformers.map((performer, index) => (
-                  <div key={performer.id || index} className="flex items-center">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                      <span className="text-sm font-semibold">{index + 1}</span>
+                  <div key={performer.id || index} className="flex items-start gap-3">
+                    <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-primary/10 flex-shrink-0 mt-0.5">
+                      <span className="text-xs md:text-sm font-semibold">{index + 1}</span>
                     </div>
-                    <div className="ml-4 space-y-1 flex-1">
-                      <p className="text-sm font-medium leading-none">
-                        {getDisplayName(performer)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {performer.pieces.toLocaleString()} pieces
-                        {performer.code && ` • Code: ${performer.code}`}
-                        {performer.location && ` • ${performer.location}`}
-                      </p>
-                    </div>
-                    <div className="ml-auto text-right">
-                      <Badge {...getErrorRateBadge(performer.errorRate)}>
-                        {performer.errorRate.toFixed(1)}% error
-                      </Badge>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {performer.timeTaken.toFixed(1)}h avg time
-                      </p>
+                    
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm md:text-base font-medium leading-tight truncate">
+                            {getDisplayName(performer)}
+                          </p>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs md:text-sm text-muted-foreground mt-1">
+                            <span className="font-medium">
+                              {performer.pieces.toLocaleString()} pieces
+                            </span>
+                            {performer.code && (
+                              <>
+                                <span className="hidden sm:inline">•</span>
+                                <span>Code: {performer.code}</span>
+                              </>
+                            )}
+                            {performer.location && (
+                              <>
+                                <span className="hidden sm:inline">•</span>
+                                <span className="truncate">{performer.location}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-row sm:flex-col items-start sm:items-end gap-2 sm:gap-1 text-right flex-shrink-0">
+                          <Badge {...getErrorRateBadge(performer.errorRate)} className="text-xs">
+                            {performer.errorRate.toFixed(1)}% error
+                          </Badge>
+                          <p className="text-xs text-muted-foreground">
+                            {performer.timeTaken.toFixed(1)}h avg
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
-          )}
-        </>
-      )}
-    </div>
-  );
+        )}
+      </>
+    )}
+  </div>
+);
 }

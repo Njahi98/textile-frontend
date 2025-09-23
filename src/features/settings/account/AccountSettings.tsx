@@ -16,10 +16,12 @@ import { Trash2, Save, Upload, User, X } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import useSWR from "swr";
 import React from "react";
+import { passwordSchema } from "@/lib/schemas";
+
 
 const updateAccountSchema = z.object({
   email: z.string().email('Invalid email format').trim().toLowerCase().optional().or(z.literal('')),
-  password: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
+  password: passwordSchema.optional().or(z.literal("")),
   username: z.string().min(1, 'Username is required').trim().optional().or(z.literal('')),
   firstName: z.string().optional().nullable(),
   lastName: z.string().optional().nullable(),
@@ -102,8 +104,8 @@ export default function AccountSettings() {
       toast.success("Account updated successfully");
 
       reset({ ...data, password: '' });
-    } catch (error: any) {
-      toast.error("Error updating account");
+    } catch (error: any) {      
+      toast.error(error.message);
     } finally {
       setIsUpdating(false);
     }
@@ -175,7 +177,7 @@ export default function AccountSettings() {
         <img 
           src={user.avatarUrl} 
           alt="Avatar" 
-          className="w-20 h-20 rounded-full object-cover"
+          className="w-30 h-30 sm:w-20 sm:h-20 rounded-full object-cover"
         />
       );
     }
@@ -263,10 +265,10 @@ export default function AccountSettings() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center flex-col space-y-4 sm:space-y-0 sm:space-x-4 sm:flex-row">
               {getAvatarDisplay()}
-              <div className="flex flex-col space-y-2">
-                <div className="flex space-x-2">
+              <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-2">
                   <Button
                     variant="outline"
                     size="sm"

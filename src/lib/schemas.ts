@@ -11,7 +11,7 @@ export const loginSchema = z.object({
     .min(6, "Password must be at least 6 characters"),
 });
 
-const passwordSchema = z
+export const passwordSchema = z
   .string()
   .min(1, "Password is required")
   .min(6, "Password must be at least 6 characters")

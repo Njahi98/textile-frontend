@@ -30,10 +30,10 @@ import { toast } from 'sonner'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'First Name is required.' }),
-    lastName: z.string().min(1, { message: 'Last Name is required.' }),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
     username: z.string().min(1, { message: 'Username is required.' }),
-    phone: z.string().min(1, { message: 'Phone number is required.' }),
+    phone: z.string().optional(),
     email: z
       .string()
       .min(1, { message: 'Email is required.' })
@@ -106,11 +106,11 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          firstName: currentRow.firstName || '',
-          lastName: currentRow.lastName || '',
+          firstName: currentRow.firstName ?? '',
+          lastName: currentRow.lastName ?? '',
           username: currentRow.username,
           email: currentRow.email,
-          phone: currentRow.phone || '',
+          phone: currentRow.phone ?? '',
           role: currentRow.role,
           status: currentRow.status,
           password: '',

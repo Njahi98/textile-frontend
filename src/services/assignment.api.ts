@@ -64,19 +64,6 @@ export interface CalendarQueryParams {
   productionLineId?: number;
 }
 
-export interface AssignmentConflict {
-  workerId: number;
-  date: string;
-  shift: string;
-  assignments: {
-    assignmentId: number;
-    productionLineId: number;
-    position: string;
-    productionLineName: string;
-  }[];
-  worker: Worker;
-}
-
 export interface PaginationInfo {
   currentPage: number;
   totalPages: number;
@@ -104,18 +91,6 @@ export interface CalendarResponse {
     month: number;
     totalAssignments: number;
     daysWithAssignments: number;
-  };
-}
-
-export interface ConflictsResponse {
-  success: boolean;
-  conflicts: AssignmentConflict[];
-  summary: {
-    totalConflicts: number;
-    dateRange: {
-      startDate: string;
-      endDate: string;
-    };
   };
 }
 
@@ -156,17 +131,5 @@ export const assignmentApi = {
     }
     const response = await api.get<CalendarResponse>(`/api/assignments/calendar?${searchParams.toString()}`);
     return response.data;
-  },
-
-  async getAssignmentConflicts(params?: { startDate?: string; endDate?: string }): Promise<ConflictsResponse> {
-    const searchParams = new URLSearchParams();
-    if (params?.startDate) {
-      searchParams.append('startDate', params.startDate);
-    }
-    if (params?.endDate) {
-      searchParams.append('endDate', params.endDate);
-    }
-    const response = await api.get<ConflictsResponse>(`/api/assignments/conflicts?${searchParams.toString()}`);
-    return response.data;
-  },
-};
+  }
+}

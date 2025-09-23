@@ -65,7 +65,9 @@ export function AssignmentsDialogs() {
             desc={
               <>
                 You are about to delete an assignment with the ID{' '}
-                <strong>{currentRow.id}</strong>. <br />
+                <strong>{currentRow.id}</strong>. <br /> Worker: <strong>
+                {currentRow.worker.name}</strong>{' '}, Production Line:{' '}
+                <strong>{currentRow.productionLine.name}.</strong> <br />
                 This action cannot be undone.
               </>
             }

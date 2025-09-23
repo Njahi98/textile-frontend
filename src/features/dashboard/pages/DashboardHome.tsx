@@ -259,7 +259,7 @@ export default function DashboardHome() {
         </Card>
 
         {/* Top Performers */}
-        <Card className="col-span-3">
+        <Card className="col-span-4 lg:col-span-3">
           <CardHeader>
             <CardTitle>Top Performers Today</CardTitle>
             <CardDescription>Highest producing workers</CardDescription>
@@ -310,7 +310,7 @@ export default function DashboardHome() {
             <div className="space-y-4">
               {metrics.map((metric) => (
                 <div key={metric.productionLine?.id || Math.random()} className="space-y-2">
-                  <div className="flex items-center justify-between">
+                  <div className="sm:flex items-center justify-between space-y-4 sm:space-y-0">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium">
                         {metric.productionLine?.name || 'Unknown Line'}
@@ -342,7 +342,7 @@ export default function DashboardHome() {
                     </div>
                   </div>
                   {metric.efficiency !== null && metric.productionLine?.targetOutput && (
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Efficiency</span>
                         <span>{metric.efficiency.toFixed(1)}% of target ({metric.productionLine.targetOutput.toLocaleString()} pcs)</span>
@@ -369,7 +369,7 @@ export default function DashboardHome() {
       </Card>
 
       {/* Recent Activities */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
         {/* Recent Assignments */}
         <Card>
           <CardHeader>
