@@ -21,24 +21,29 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { PerformanceRecord } from '../data/schema'
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
+import { PerformanceRecordQueryParams } from '@/services/performance.api'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps {
+  columns: ColumnDef<PerformanceRecord>[]
+  data: PerformanceRecord[]
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalCount: number
+    hasNext: boolean
+    hasPrev: boolean
+  }
+  onQueryChange: (params: PerformanceRecordQueryParams) => void
+  queryParams: PerformanceRecordQueryParams
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable({ columns, data, pagination, onQueryChange, queryParams }: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({})
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
@@ -61,11 +66,18 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    // Disable client-side pagination since we're using server-side pagination
+    manualPagination: true,
+    pageCount: pagination.totalPages,
   })
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table} />
+      <DataTableToolbar 
+        table={table} 
+        onQueryChange={onQueryChange}
+        queryParams={queryParams}
+      />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -109,14 +121,19 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  No performance records found.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination 
+        table={table} 
+        pagination={pagination}
+        onQueryChange={onQueryChange}
+        queryParams={queryParams}
+      />
     </div>
   )
 }

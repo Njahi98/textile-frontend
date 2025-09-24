@@ -8,29 +8,33 @@ import { fetcher } from '@/lib/api'
 import useSWR, { SWRResponse } from 'swr'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { ErrorState } from '@/components/error-state'
-import { PerformanceRecord } from '@/services/performance.api'
-import { performanceRecordSchema } from './data/schema'
+import { PerformanceRecordsResponse, PerformanceRecordQueryParams } from '@/services/performance.api'
+import { performanceRecordListSchema } from './data/schema'
+import { useState } from 'react'
 
 export default function Performance() {
-  interface PerformanceRecordsApiResponse {
-    success: boolean;
-    performanceRecords: PerformanceRecord[];
-    pagination: {
-      currentPage: number;
-      totalPages: number;
-      totalCount: number;
-      hasNext: boolean;
-      hasPrev: boolean;
-    };
-  }
+  const [queryParams, setQueryParams] = useState<PerformanceRecordQueryParams>({
+    page: 1,
+    limit: 50,
+  });
 
   const {
     data,
     error,
     isLoading,
     mutate,
-  }: SWRResponse<PerformanceRecordsApiResponse, Error> = useSWR<PerformanceRecordsApiResponse, Error>(
-    "/api/performance",
+  }: SWRResponse<PerformanceRecordsResponse, Error> = useSWR<PerformanceRecordsResponse, Error>(
+    `/api/performance?${new URLSearchParams({
+      page: queryParams.page?.toString() ?? '1',
+      limit: queryParams.limit?.toString() ?? '50',
+      ...(queryParams.startDate && { startDate: queryParams.startDate }),
+      ...(queryParams.endDate && { endDate: queryParams.endDate }),
+      ...(queryParams.workerId && { workerId: queryParams.workerId.toString() }),
+      ...(queryParams.productId && { productId: queryParams.productId.toString() }),
+      ...(queryParams.productionLineId && { productionLineId: queryParams.productionLineId.toString() }),
+      ...(queryParams.shift && { shift: queryParams.shift }),
+      ...(queryParams.search && { search: queryParams.search }),
+    }).toString()}`,
     fetcher
   );
 
@@ -49,29 +53,28 @@ export default function Performance() {
     );
   if (!data?.success) return <div>No performance records found.</div>;
 
-  const validatedPerformanceRecords = data.performanceRecords.map(performanceRecord => {
-    try {
-      return performanceRecordSchema.parse(performanceRecord);
-    } catch (error) {
-      console.error('Invalid performance record data:', performanceRecord, error);
-      return null;
-    }
-  }).filter(Boolean) as PerformanceRecord[];
+  const performanceRecordList = performanceRecordListSchema.parse(data.performanceRecords);
   
   return (
     <PerformanceRecordsProvider>
       <Main>
-        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
+        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Performance Records</h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your performance records for this month!
+              View and manage worker performance records and productivity metrics.
             </p>
           </div>
           <PerformanceRecordsPrimaryButtons />
         </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          <DataTable data={validatedPerformanceRecords} columns={columns} />
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 space-y-6 lg:flex-row lg:space-y-0 lg:space-x-12'>
+          <DataTable 
+            data={performanceRecordList} 
+            columns={columns} 
+            pagination={data.pagination}
+            onQueryChange={setQueryParams}
+            queryParams={queryParams}
+          />
         </div>
       </Main>
 

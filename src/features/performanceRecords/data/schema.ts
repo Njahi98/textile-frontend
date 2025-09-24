@@ -36,6 +36,9 @@ export const performanceRecordSchema = z.object({
   }),
 });
 
+export const performanceRecordListSchema = z.array(performanceRecordSchema)
+
+
 
 export const createPerformanceRecordSchema = z.object({
   workerId: z.number().int().positive('Worker ID must be a positive integer'),

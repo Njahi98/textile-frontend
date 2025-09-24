@@ -337,7 +337,7 @@ export default function DashboardHome() {
                       <div className="flex items-center">
                         <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
                         <span className="font-medium">{metric.avgTimeTaken.toFixed(1)}</span>
-                        <span className="text-muted-foreground ml-1">min</span>
+                        <span className="text-muted-foreground ml-1">hours</span>
                       </div>
                     </div>
                   </div>

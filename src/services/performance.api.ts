@@ -1,5 +1,8 @@
-import { api } from '@/lib/api';
+import api from '@/lib/api';
 import { mutate } from 'swr';
+
+  type shiftType = "morning" | "afternoon" | "night";
+
 
 export interface PerformanceRecord {
   id: number;
@@ -8,7 +11,7 @@ export interface PerformanceRecord {
   productionLineId: number;
   date: Date;
   piecesMade: number;
-  shift: 'morning' | 'afternoon' | 'night';
+  shift?: shiftType
   timeTaken: number;
   errorRate: number;
   createdAt: Date;
@@ -17,18 +20,18 @@ export interface PerformanceRecord {
     id: number;
     name: string;
     cin: string;
-    role: string;
+    role?: string;
   };
   product: {
     id: number;
     name: string;
     code: string;
-    category: string;
+    category?: string | null;
   };
   productionLine: {
     id: number;
     name: string;
-    location: string;
+    location?: string;
   };
 }
 
@@ -40,6 +43,21 @@ export interface PaginationResponse {
   hasPrev: boolean;
 }
 
+export interface PerformanceRecordsResponse {
+  success: boolean;
+  performanceRecords: PerformanceRecord[];
+  pagination: PaginationResponse;
+  filters?: {
+    startDate?: string;
+    endDate?: string;
+    workerId?: number;
+    productId?: number;
+    productionLineId?: number;
+    shift?: shiftType;
+    search?: string;
+  };
+}
+
 export interface PerformanceRecordQueryParams {
   page?: number;
   limit?: number;
@@ -48,7 +66,8 @@ export interface PerformanceRecordQueryParams {
   workerId?: number;
   productId?: number;
   productionLineId?: number;
-  shift?: 'morning' | 'afternoon' | 'night';
+  shift?: shiftType;
+  search?: string;
 }
 
 export interface CreatePerformanceRecordInput {
@@ -57,7 +76,7 @@ export interface CreatePerformanceRecordInput {
   productionLineId: number;
   date: Date;
   piecesMade: number;
-  shift: 'morning' | 'afternoon' | 'night';
+  shift: string;
   timeTaken: number;
   errorRate: number;
 }
@@ -68,7 +87,7 @@ export interface UpdatePerformanceRecordInput {
   productionLineId?: number;
   date?: Date;
   piecesMade?: number;
-  shift?: 'morning' | 'afternoon' | 'night';
+  shift?: shiftType;
   timeTaken?: number;
   errorRate?: number;
 }
@@ -97,12 +116,20 @@ export interface PerformanceAnalytics {
 }
 
 export const performanceApi = {
-  async getAllPerformanceRecords(params?: PerformanceRecordQueryParams) {
-    const response = await api.get<{
-      success: boolean;
-      performanceRecords: PerformanceRecord[];
-      pagination: PaginationResponse;
-    }>('/api/performance', { params });
+  async getAllPerformanceRecords(params?: PerformanceRecordQueryParams): Promise<PerformanceRecordsResponse> {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.startDate) queryParams.append('startDate', params.startDate);
+    if (params?.endDate) queryParams.append('endDate', params.endDate);
+    if (params?.workerId) queryParams.append('workerId', params.workerId.toString());
+    if (params?.productId) queryParams.append('productId', params.productId.toString());
+    if (params?.productionLineId) queryParams.append('productionLineId', params.productionLineId.toString());
+    if (params?.shift) queryParams.append('shift', params.shift);
+    if (params?.search) queryParams.append('search', params.search);
+
+    const response = await api.get<PerformanceRecordsResponse>(`/api/performance?${queryParams.toString()}`);
     return response.data;
   },
 
@@ -120,7 +147,7 @@ export const performanceApi = {
       message: string;
       performanceRecord: PerformanceRecord;
     }>('/api/performance', data);
-    await mutate('/api/performance');
+    await mutate((key) => typeof key === 'string' && key.startsWith('/api/performance'));
     return response.data;
   },
 
@@ -130,7 +157,7 @@ export const performanceApi = {
       message: string;
       performanceRecord: PerformanceRecord;
     }>(`/api/performance/${id}`, data);
-    await mutate('/api/performance');
+    await mutate((key) => typeof key === 'string' && key.startsWith('/api/performance'));
     return response.data;
   },
 
@@ -139,7 +166,7 @@ export const performanceApi = {
       success: boolean;
       message: string;
     }>(`/api/performance/${id}`);
-    await mutate('/api/performance');
+    await mutate((key) => typeof key === 'string' && key.startsWith('/api/performance'));
     return response.data;
   },
 
