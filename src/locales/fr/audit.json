@@ -1,0 +1,53 @@
+{
+
+
+
+
+    "stats":{
+  "pageTitle": "Statistiques d'Audit",
+  "pageDescription": "Analysez l'activité d'audit et les actions des utilisateurs",
+  "messages": {
+    "loadError": "Échec du chargement des statistiques d'audit"
+  },
+  "filters": {
+    "days": "Jours"
+  },
+  "cards": {
+    "totalActions": {
+      "title": "Total des Actions",
+      "period": "Du {{startDate}} au {{endDate}}"
+    },
+    "topAction": {
+      "title": "Action Principale",
+      "events": "{{count}} événements"
+    },
+    "topResource": {
+      "title": "Ressource Principale", 
+      "events": "{{count}} événements"
+    },
+    "mostActiveUser": {
+      "title": "Utilisateur le Plus Actif",
+      "actions": "{{count}} actions"
+    }
+  },
+  "tabs": {
+    "actionsByType": "Actions par Type",
+    "actionsByResource": "Actions par Ressource",
+    "topUsers": "Top Utilisateurs"
+  },
+  "sections": {
+    "actionsByType": {
+      "title": "Actions par Type"
+    },
+    "actionsByResource": {
+      "title": "Actions par Ressource"
+    },
+    "topUsers": {
+      "title": "Top Utilisateurs"
+    }
+  },
+  "common": {
+    "noData": "Aucune donnée"
+  }
+}
+}

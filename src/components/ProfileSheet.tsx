@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SidebarMenuButton } from "./ui/sidebar";
 import { Bell, Home, LogOut, LucideProps, Settings, User } from "lucide-react";
 import { useAuthStore } from "@/stores/auth.store";
+import { useTranslation } from "react-i18next";
 
 interface NavItem {
   icon: React.ForwardRefExoticComponent<
@@ -22,29 +23,30 @@ interface NavItem {
 
 export function ProfileSheet() {
   const { user, logout } = useAuthStore();
+  const {t}=useTranslation(['common']);
   
   const navItems: NavItem[] = [
-    {
-      icon: Home,
-      label: "Home",
-      href: "/dashboard",
-    },
-    {
-      icon: User,
-      label: "Profile",
-      href: "/profile",
-    },
-    {
-      icon: Bell,
-      label: "Notifications",
-      href: "/notifications",
-    },
-    {
-      icon: Settings,
-      label: "Settings",
-      href: "/settings/account",
-    },
-  ];
+  {
+    icon: Home,
+    label: t('profileSheet.home'),
+    href: "/dashboard",
+  },
+  {
+    icon: User,
+    label: t('profileSheet.profile'),
+    href: "/profile",
+  },
+  {
+    icon: Bell,
+    label: t('profileSheet.notifications'),
+    href: "/notifications",
+  },
+  {
+    icon: Settings,
+    label: t('profileSheet.settings'),
+    href: "/settings/account",
+  },
+];
 
   return (
     <Sheet>

@@ -8,10 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { useTranslation } from "react-i18next";
 
 export function ThemeSwitcher() {
   const { setTheme } = useTheme();
-
+  const {t}=useTranslation(['common']);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,13 +24,13 @@ export function ThemeSwitcher() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
+          {t('navbar.light')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
+          {t('navbar.dark')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
+          {t('navbar.system')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

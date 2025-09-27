@@ -1,0 +1,82 @@
+{
+  "header": {
+    "title": "Performance Analytics",
+    "subtitle": "Real-time insights into production performance"
+  },
+  "buttons": {
+    "export": "Export",
+    "refresh": "Refresh",
+    "generateReport": "Generate Report",
+    "loading": "Loading...",
+    "tryAgain": "Try Again"
+  },
+  "filters": {
+    "title": "Filters",
+    "dateRange": "Date Range",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "groupBy": "Group By",
+    "groupByOptions": {
+      "date": "Date",
+      "worker": "Worker",
+      "product": "Product",
+      "productionLine": "Production Line"
+    },
+    "workerIdOptional": "Worker ID (Optional)",
+    "enterWorkerId": "Enter worker ID",
+    "productionLineIdOptional": "Production Line ID (Optional)",
+    "enterLineId": "Enter line ID"
+  },
+  "kpis": {
+    "totalPieces": "Total Pieces",
+    "productionOutput": "Production output",
+    "errorRate": "Error Rate",
+    "qualityMetric": "Quality metric",
+    "avgTime": "Avg Time",
+    "efficiencyMetric": "Efficiency metric",
+    "records": "Records",
+    "dataPoints": "Data points"
+  },
+  "emptyState": {
+    "title": "No Data Available",
+    "noRecords": "No performance records found for the selected filters.",
+    "group": "Group",
+    "rawItems": "Raw items"
+  },
+  "tabs": {
+    "production": "Production",
+    "quality": "Quality",
+    "efficiency": "Efficiency",
+    "compare": "Compare"
+  },
+  "charts": {
+    "productionTrends": {
+      "title": "Production Trends",
+      "dailyOutput": "Daily production output",
+      "productionBy": "Production by {{groupBy}}"
+    },
+    "errorRateAnalysis": {
+      "title": "Error Rate Analysis",
+      "description": "Quality metrics and defect rates"
+    },
+    "timeEfficiency": {
+      "title": "Time Efficiency",
+      "description": "Average time taken for production"
+    },
+    "performanceComparison": {
+      "title": "Performance Comparison",
+      "description": "Pieces produced vs Error rate"
+    }
+  },
+  "topPerformers": {
+    "title": "Top Performers",
+    "description": "Highest production output",
+    "by": "by {{groupBy}}"
+  },
+  "quality": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor"
+  }
+}

@@ -10,15 +10,14 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { accountApi } from "@/services/account.api";
 import { Trash2, Save, Upload, User, X } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import useSWR from "swr";
 import React from "react";
 import { passwordSchema } from "@/lib/schemas";
-
-
+import { useTranslation } from "react-i18next";
 const updateAccountSchema = z.object({
   email: z.string().email('Invalid email format').trim().toLowerCase().optional().or(z.literal('')),
   password: passwordSchema.optional().or(z.literal("")),
@@ -38,8 +37,8 @@ export default function AccountSettings() {
   const [isDeletingAvatar, setIsDeletingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch account settings using SWR
-  const { data: accountData, error, isLoading, mutate: mutateAccount } = useSWR(
+  const { t } = useTranslation(['accountSettings']);
+  const { data: accountData, error, isLoading, mutate: mutateAccount, } = useSWR(
     '/api/settings/account',
     () => accountApi.getAccountSettings()
   );
@@ -63,8 +62,7 @@ export default function AccountSettings() {
     },
   });
 
-  // Reset form when user data loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
       reset({
         email: user.email ?? '',
@@ -79,13 +77,21 @@ export default function AccountSettings() {
 
   const onSubmit = async (data: UpdateAccountFormData) => {
     if (!isDirty) {
-      toast.info("Please make some changes before saving.");
+      toast.info(t('messages.noChanges'));
       return;
+    }
+    interface updateDataProps{
+      email?: string;
+      username?: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      phone?: string | null;
+      password?: string;
     }
 
     setIsUpdating(true);
     try {
-      const updateData: any = {};
+      const updateData:updateDataProps = {};
       if (data.email && data.email !== user?.email) updateData.email = data.email;
       if (data.username && data.username !== user?.username) updateData.username = data.username;
       if (data.firstName !== user?.firstName) updateData.firstName = data.firstName || null;
@@ -94,15 +100,15 @@ export default function AccountSettings() {
       if (data.password) updateData.password = data.password;
 
       if (Object.keys(updateData).length === 0) {
-        toast.info("Please make some changes before saving.");
+        toast.info(t('messages.noChanges'));
         return;
       }
 
-      await accountApi.updateAccount(updateData);
-      await mutateAccount();
-      
-      toast.success("Account updated successfully");
-
+      const response = await accountApi.updateAccount(updateData);
+      if(response.success){
+        await mutateAccount();
+        toast.success(response.message);
+      }
       reset({ ...data, password: '' });
     } catch (error: any) {      
       toast.error(error.message);
@@ -117,26 +123,26 @@ export default function AccountSettings() {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast.error("Please select an image file");
+      toast.error(t('messages.invalidFileType'));
       return;
     }
 
     // Validate file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size must be less than 10MB");
+      toast.error(t('messages.fileSizeLimit'));
       return;
     }
-
     setIsUploadingAvatar(true);
     try {
-      await accountApi.updateAvatar(file);
-      await mutateAccount(); // Refresh the account data
-      toast.success("Avatar updated successfully");
+      const response = await accountApi.updateAvatar(file);
+      if(response.success){
+        await mutateAccount();
+        toast.success(response.message);
+      }
     } catch (error: any) {
-      toast.error("Error uploading avatar");
+      toast.error(error.message || t('messages.avatarUpdateError'));
     } finally {
       setIsUploadingAvatar(false);
-      // Clear the input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -146,11 +152,13 @@ export default function AccountSettings() {
   const handleDeleteAvatar = async () => {
     setIsDeletingAvatar(true);
     try {
-      await accountApi.deleteAvatar();
-      await mutateAccount(); // Refresh the account data
-      toast.success("Avatar deleted successfully");
+      const response = await accountApi.deleteAvatar();
+      if(response.success){
+        await mutateAccount(); 
+        toast.success(response.message);
+      }
     } catch (error: any) {
-      toast.error("Error deleting avatar");
+      toast.error(error.message || t('messages.avatarDeleteError'));
     } finally {
       setIsDeletingAvatar(false);
     }
@@ -159,13 +167,15 @@ export default function AccountSettings() {
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
     try {
-      await accountApi.deleteAccount();
-      
-      toast.success("Account deleted successfully");
-
-      logout();
+      const response = await accountApi.deleteAccount();
+      if(response.success){
+        toast.success(response.message);
+      }
+      setTimeout(() => {
+        logout();
+      }, 500);
     } catch (error: any) {
-      toast.error("Error deleting account");
+      toast.error(error.message || t('messages.accountDeleteError'));
     } finally {
       setIsDeleting(false);
     }
@@ -216,13 +226,13 @@ export default function AccountSettings() {
         <div className="flex items-center justify-center h-64">
           <Card>
             <CardContent className="p-6">
-              <p className="text-destructive">Error loading account settings</p>
+              <p className="text-destructive">{t('messages.loadingError')}</p>
               <Button 
                 onClick={() => mutateAccount()} 
                 variant="outline" 
                 className="mt-4"
               >
-                Try Again
+                {t('buttons.tryAgain')}
               </Button>
             </CardContent>
           </Card>
@@ -237,7 +247,7 @@ export default function AccountSettings() {
         <div className="flex items-center justify-center h-64">
           <Card>
             <CardContent className="p-6">
-              <p>No account data available</p>
+              <p>{t('messages.noAccountData')}</p>
             </CardContent>
           </Card>
         </div>
@@ -249,19 +259,19 @@ export default function AccountSettings() {
     <Main>
       <div className="mb-6 flex flex-wrap items-center justify-between space-y-2">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Account Settings</h2>
-          <p className="text-muted-foreground">
-            Manage your account settings and preferences.
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">{t('pageTitle')}</h2>
+            <p className="text-muted-foreground">
+              {t('pageDescription')}
+            </p>
         </div>
       </div>
 
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Profile Picture</CardTitle>
+            <CardTitle>{t('sections.profilePicture.title')}</CardTitle>
             <CardDescription>
-              Upload or update your profile picture.
+              {t('sections.profilePicture.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -278,12 +288,12 @@ export default function AccountSettings() {
                     {isUploadingAvatar ? (
                       <>
                         <LoadingSpinner />
-                        Uploading...
+                        {t('buttons.uploading')}
                       </>
                     ) : (
                       <>
                         <Upload className="mr-2 h-4 w-4" />
-                        Upload Avatar
+                          {t('buttons.uploadAvatar')}
                       </>
                     )}
                   </Button>
@@ -297,19 +307,19 @@ export default function AccountSettings() {
                       {isDeletingAvatar ? (
                         <>
                           <LoadingSpinner />
-                          Deleting...
+                          {t('buttons.deleting')}
                         </>
                       ) : (
                         <>
                           <X className="mr-2 h-4 w-4" />
-                          Remove
+                            {t('buttons.remove')}
                         </>
                       )}
                     </Button>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  JPG, PNG or GIF. Max size 10MB.
+                  {t('sections.profilePicture.fileInfo')}
                 </p>
               </div>
               <input
@@ -325,40 +335,40 @@ export default function AccountSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Current Account Information</CardTitle>
+            <CardTitle>{t('sections.currentAccount.title')}</CardTitle>
             <CardDescription>
-              View your current account details below.
+              {t('sections.currentAccount.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm font-medium">Username</Label>
+                <Label className="text-sm font-medium">{t('fields.username')}</Label>
                 <p className="text-sm text-muted-foreground">{user?.username}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium">Email</Label>
+                <Label className="text-sm font-medium">{t('fields.email')}</Label>
                 <p className="text-sm text-muted-foreground">{user?.email}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium">Role</Label>
+                <Label className="text-sm font-medium">{t('fields.role')}</Label>
                 <p className="text-sm text-muted-foreground">{user?.role}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium">Status</Label>
+                <Label className="text-sm font-medium">{t('fields.status')}</Label>
                 <p className="text-sm text-muted-foreground">{user?.status}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium">First Name</Label>
-                <p className="text-sm text-muted-foreground">{user?.firstName ?? 'Not set'}</p>
+                <Label className="text-sm font-medium">{t('fields.firstName')}</Label>
+                <p className="text-sm text-muted-foreground">{user?.firstName ?? t('common.notSet')}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium">Last Name</Label>
-                <p className="text-sm text-muted-foreground">{user?.lastName ?? 'Not set'}</p>
+                <Label className="text-sm font-medium">{t('fields.lastName')}</Label>
+                <p className="text-sm text-muted-foreground">{user?.lastName ?? t('common.notSet')}</p>
               </div>
               <div>
-                <Label className="text-sm font-medium">Phone</Label>
-                <p className="text-sm text-muted-foreground">{user?.phone ?? 'Not set'}</p>
+                <Label className="text-sm font-medium">{t('fields.phone')}</Label>
+                <p className="text-sm text-muted-foreground">{user?.phone ?? t('common.notSet')}</p>
               </div>
             </div>
           </CardContent>
@@ -366,20 +376,20 @@ export default function AccountSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Update Account</CardTitle>
+            <CardTitle>{t('sections.updateAccount.title')}</CardTitle>
             <CardDescription>
-              Make changes to your account information here.
+              {t('sections.updateAccount.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username">{t('fields.username')}</Label>
                   <Input
                     id="username"
                     {...register("username")}
-                    placeholder="Enter username"
+                    placeholder={t('placeholders.username')}
                   />
                   {errors.username && (
                     <p className="text-sm text-destructive">{errors.username.message}</p>
@@ -387,12 +397,12 @@ export default function AccountSettings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('fields.email')}</Label>
                   <Input
                     id="email"
                     type="email"
                     {...register("email")}
-                    placeholder="Enter email"
+                    placeholder={t('placeholders.email')}
                   />
                   {errors.email && (
                     <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -400,11 +410,11 @@ export default function AccountSettings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName">{t('fields.firstName')}</Label>
                   <Input
                     id="firstName"
                     {...register("firstName")}
-                    placeholder="Enter first name"
+                    placeholder={t('placeholders.firstName')}
                   />
                   {errors.firstName && (
                     <p className="text-sm text-destructive">{errors.firstName.message}</p>
@@ -412,11 +422,11 @@ export default function AccountSettings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">{t('fields.lastName')}</Label>
                   <Input
                     id="lastName"
                     {...register("lastName")}
-                    placeholder="Enter last name"
+                    placeholder={t('placeholders.lastName')}
                   />
                   {errors.lastName && (
                     <p className="text-sm text-destructive">{errors.lastName.message}</p>
@@ -424,11 +434,11 @@ export default function AccountSettings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">{t('fields.phone')}</Label>
                   <Input
                     id="phone"
                     {...register("phone")}
-                    placeholder="Enter phone number"
+                    placeholder={t('placeholders.phone')}
                   />
                   {errors.phone && (
                     <p className="text-sm text-destructive">{errors.phone.message}</p>
@@ -436,12 +446,12 @@ export default function AccountSettings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">New Password</Label>
+                  <Label htmlFor="password">{t('fields.newPassword')}</Label>
                   <Input
                     id="password"
                     type="password"
                     {...register("password")}
-                    placeholder="Leave empty to keep current password"
+                    placeholder={t('placeholders.password')}
                   />
                   {errors.password && (
                     <p className="text-sm text-destructive">{errors.password.message}</p>
@@ -453,12 +463,12 @@ export default function AccountSettings() {
                 {isUpdating ? (
                   <>
                     <LoadingSpinner/>
-                    Updating...
+                    {t('buttons.updating')}
                   </>
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Save Changes
+                    {t('buttons.saveChanges')}
                   </>
                 )}
               </Button>
@@ -470,10 +480,10 @@ export default function AccountSettings() {
 
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive">Danger Zone</CardTitle>
-            <CardDescription>
-              Permanently delete your account and all associated data.
-            </CardDescription>
+            <CardTitle className="text-destructive">{t('sections.dangerZone.title')}</CardTitle>
+          <CardDescription>
+            {t('sections.dangerZone.description')}
+          </CardDescription>
           </CardHeader>
           <CardContent>
             <AlertDialog>
@@ -482,31 +492,30 @@ export default function AccountSettings() {
                   {isDeleting ? (
                     <>
                       <LoadingSpinner/>
-                      Deleting...
+                      {t('buttons.deleting')}
                     </>
                   ) : (
                     <>
                       <Trash2 className="mr-2 h-4 w-4" />
-                      Delete Account
+                      {t('buttons.deleteAccount')}
                     </>
                   )}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogTitle>{t('dialogs.deleteConfirm.title')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your
-                    account and remove all of your data from our servers.
+                    {t('dialogs.deleteConfirm.description')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>{t('buttons.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDeleteAccount}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Yes, delete my account
+                    {t('dialogs.deleteConfirm.confirm')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

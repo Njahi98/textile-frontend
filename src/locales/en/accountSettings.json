@@ -1,0 +1,77 @@
+{
+  "pageTitle": "Account Settings",
+  "pageDescription": "Manage your account settings and preferences.",
+  "sections": {
+    "profilePicture": {
+      "title": "Profile Picture",
+      "description": "Upload or update your profile picture.",
+      "fileInfo": "JPG, PNG or GIF. Max size 10MB."
+    },
+    "currentAccount": {
+      "title": "Current Account Information",
+      "description": "View your current account details below."
+    },
+    "updateAccount": {
+      "title": "Update Account",
+      "description": "Make changes to your account information here."
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Permanently delete your account and all associated data."
+    }
+  },
+  "fields": {
+    "username": "Username",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone",
+    "newPassword": "New Password"
+  },
+  "placeholders": {
+    "username": "Enter username",
+    "email": "Enter email",
+    "firstName": "Enter first name",
+    "lastName": "Enter last name",
+    "phone": "Enter phone number",
+    "password": "Leave empty to keep current password"
+  },
+  "buttons": {
+    "tryAgain": "Try Again",
+    "uploadAvatar": "Upload Avatar",
+    "uploading": "Uploading...",
+    "remove": "Remove",
+    "deleting": "Deleting...",
+    "saveChanges": "Save Changes",
+    "updating": "Updating...",
+    "deleteAccount": "Delete Account",
+    "cancel": "Cancel"
+  },
+  "messages": {
+    "noChanges": "Please make some changes before saving.",
+    "updateSuccess": "Account updated successfully",
+    "updateError": "Error updating account",
+    "invalidFileType": "Please select an image file",
+    "fileSizeLimit": "File size must be less than 10MB",
+    "avatarUpdateSuccess": "Avatar updated successfully",
+    "avatarUpdateError": "Error uploading avatar",
+    "avatarDeleteSuccess": "Avatar deleted successfully",
+    "avatarDeleteError": "Error deleting avatar",
+    "accountDeleteSuccess": "Account deleted successfully",
+    "accountDeleteError": "Error deleting account",
+    "loadingError": "Error loading account settings",
+    "noAccountData": "No account data available"
+  },
+  "dialogs": {
+    "deleteConfirm": {
+      "title": "Are you absolutely sure?",
+      "description": "This action cannot be undone. This will permanently delete your account and remove all of your data from our servers.",
+      "confirm": "Yes, delete my account"
+    }
+  },
+  "common": {
+    "notSet": "Not set"
+  }
+}

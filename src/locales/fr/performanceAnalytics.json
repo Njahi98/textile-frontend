@@ -1,0 +1,82 @@
+{
+  "header": {
+    "title": "Analyse de Performance",
+    "subtitle": "Insights en temps réel sur la performance de production"
+  },
+  "buttons": {
+    "export": "Exporter",
+    "refresh": "Actualiser",
+    "generateReport": "Générer le Rapport",
+    "loading": "Chargement...",
+    "tryAgain": "Essayer Encore"
+  },
+  "filters": {
+    "title": "Filtres",
+    "dateRange": "Plage de Dates",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "groupBy": "Grouper par",
+    "groupByOptions": {
+      "date": "Date",
+      "worker": "Ouvrier",
+      "product": "Produit",
+      "productionLine": "Ligne de Production"
+    },
+    "workerIdOptional": "ID Ouvrier (Optionnel)",
+    "enterWorkerId": "Saisir l'ID ouvrier",
+    "productionLineIdOptional": "ID Ligne de Production (Optionnel)",
+    "enterLineId": "Saisir l'ID de ligne"
+  },
+  "kpis": {
+    "totalPieces": "Total Pièces",
+    "productionOutput": "Production sortante",
+    "errorRate": "Taux d'Erreur",
+    "qualityMetric": "Métrique qualité",
+    "avgTime": "Temps Moyen",
+    "efficiencyMetric": "Métrique efficacité",
+    "records": "Enregistrements",
+    "dataPoints": "Points de données"
+  },
+  "emptyState": {
+    "title": "Aucune Donnée Disponible",
+    "noRecords": "Aucun enregistrement de performance trouvé pour les filtres sélectionnés.",
+    "group": "Groupe",
+    "rawItems": "Éléments bruts"
+  },
+  "tabs": {
+    "production": "Production",
+    "quality": "Qualité",
+    "efficiency": "Efficacité",
+    "compare": "Comparer"
+  },
+  "charts": {
+    "productionTrends": {
+      "title": "Tendances de Production",
+      "dailyOutput": "Production quotidienne",
+      "productionBy": "Production par {{groupBy}}"
+    },
+    "errorRateAnalysis": {
+      "title": "Analyse du Taux d'Erreur",
+      "description": "Métriques de qualité et taux de défaut"
+    },
+    "timeEfficiency": {
+      "title": "Efficacité Temporelle",
+      "description": "Temps moyen pris pour la production"
+    },
+    "performanceComparison": {
+      "title": "Comparaison des Performances",
+      "description": "Pièces produites vs Taux d'erreur"
+    }
+  },
+  "topPerformers": {
+    "title": "Meilleurs Performeurs",
+    "description": "Production la plus élevée",
+    "by": "par {{groupBy}}"
+  },
+  "quality": {
+    "excellent": "Excellent",
+    "good": "Bon",
+    "fair": "Correct",
+    "poor": "Mauvais"
+  }
+}

@@ -12,6 +12,7 @@ import { ProfileSheet } from "@/components/ProfileSheet";
 import DynamicBreadCrumb from "@/components/DynamicBreadCrumb";
 import { NotificationsDropdown } from "@/features/chats/components/Notification";
 import { NavigationProgress } from "@/components/navigation-progress";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function DashboardLayout() {
   return (
@@ -27,6 +28,7 @@ export default function DashboardLayout() {
             <DynamicBreadCrumb/>          
           </div>
           <div className="flex items-center gap-2 px-4">
+            <LanguageSwitcher/>
             <NotificationsDropdown/>
             <ColorThemeSwitcher />
             <ThemeSwitcher />

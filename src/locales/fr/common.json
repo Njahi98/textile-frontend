@@ -1,0 +1,60 @@
+{
+  "navbar":{
+    "loginButton": "Se connecter",
+    "signUpButton": "S'inscrire",
+    "settingsButton": "Paramètres",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "profileSheet": {
+    "home": "Accueil",
+    "profile": "Profil",
+    "notifications": "Notifications",
+    "settings": "Paramètres"
+  },
+  "notifications":{
+  "markAllRead": "marquer comme lu",
+  "clearAll": "Tout effacer",
+  "offline": "Hors ligne",
+  "showingRecent": "Affichage des {{count}} dernières notifications",
+    "loading": "Chargement des notifications...",
+    "noNotifications": "Pas encore de notifications",
+    "welcomeMessage": "Vous verrez ici les nouveaux messages et mises à jour"
+  },
+  "notFound": {
+    "title": "Oups ! Page introuvable !",
+    "description": "Il semble que la page que vous recherchez n'existe pas ou a peut-être été supprimée.",
+    "goBack": "Retour",
+    "backHome": "Retour à l'accueil"
+  },
+  "table": {
+    "sort": {
+      "asc": "Croissant",
+      "desc": "Décroissant", 
+      "hide": "Masquer"
+    },
+    "filters": {
+      "filterUsers": "Filtrer les utilisateurs...",
+      "status": "Statut",
+      "role": "Rôle",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "suspended": "Suspendu"
+    },
+    "pagination": {
+      "selectedRows": "{{selected}} sur {{total}} ligne(s) sélectionnée(s)",
+      "rowsPerPage": "Lignes par page",
+      "page": "Page {current} sur {total}",
+      "goToFirst": "Aller à la première page",
+      "goToPrevious": "Aller à la page précédente",
+      "goToNext": "Aller à la page suivante",
+      "goToLast": "Aller à la dernière page",
+      "noResults": "Aucun résultat."
+    },
+    "viewOptions": {
+      "view": "Affichage",
+      "toggleColumns": "Basculer les colonnes"
+    }
+  }
+}

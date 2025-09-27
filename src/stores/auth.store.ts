@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { AuthState, AuthStore } from '@/types/auth';
 import { authApi } from '@/services/auth.api';
+import { isAxiosError } from 'axios';
 
 const initialState: AuthState = {
   user: null,
@@ -57,16 +58,22 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       get().setupAutoRefresh();
       
       return { success: true };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred during login';
-      set({
-        error: errorMessage,
-        isLoading: false,
-        user: null,
-        isAuthenticated: false,
-      });
-      return { success: false, error: errorMessage };
-    }
+    } catch (error: unknown) {
+      const errorMessage =
+      isAxiosError<{ error?: string }>(error)
+    ? error.response?.data?.error ?? error.message
+    : error instanceof Error
+      ? error.message
+      : "An error occurred during login";
+
+  set({
+    error: errorMessage,
+    isLoading: false,
+    user: null,
+    isAuthenticated: false,
+  });
+  return { success: false, error: errorMessage };
+}
   },
 
   register: async (userData: { username: string; email: string; password: string }) => {

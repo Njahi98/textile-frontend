@@ -11,6 +11,7 @@ import {
   LogIn,
   Rocket
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const fadeInUp = {
@@ -29,60 +30,62 @@ const staggerContainer = {
 };
 
 export default function Home() {
+  const {t} = useTranslation(['home']);
+
   const features = [
-    {
-      icon: BarChart3,
-      title: "Real-time Analytics",
-      description: "Monitor production metrics, worker performance, and line efficiency with live dashboards and instant insights.",
-      color: ""
-    },
-    {
-      icon: Users,
-      title: "Worker Management",
-      description: "Track individual performance, manage assignments, and optimize workforce allocation across production lines.",
-      color: ""
-    },
-    {
-      icon: TrendingUp,
-      title: "Performance Optimization",
-      description: "AI-powered recommendations to boost productivity, reduce errors, and maximize output quality.",
-      color: ""
-    },
-    {
-      icon: Clock,
-      title: "Shift Planning",
-      description: "Smart scheduling system that balances workload, tracks attendance, and ensures optimal coverage.",
-      color: ""
-    }
-  ];
+  {
+    icon: BarChart3,
+    title: t('features.analytics.title'),
+    description: t('features.analytics.description'),
+    color: ""
+  },
+  {
+    icon: Users,
+    title: t('features.workers.title'),
+    description: t('features.workers.description'),
+    color: ""
+  },
+  {
+    icon: TrendingUp,
+    title: t('features.optimization.title'),
+    description: t('features.optimization.description'),
+    color: ""
+  },
+  {
+    icon: Clock,
+    title: t('features.scheduling.title'),
+    description: t('features.scheduling.description'),
+    color: ""
+  }
+];
 
   const stats = [
-    { value: "45%", label: "Increase in Productivity" },
-    { value: "60%", label: "Reduction in Errors" },
-    { value: "24/7", label: "Real-time Monitoring" },
-    { value: "2hrs", label: "Saved Daily per Line" }
-  ];
+  { value: "45%", label: t('stats.productivity') },
+  { value: "60%", label: t('stats.errorReduction') },
+  { value: "24/7", label: t('stats.monitoring') },
+  { value: "2hrs", label: t('stats.timeSaved') }
+];
 
   const testimonials = [
-    {
-      quote: "This platform transformed how we manage our production lines. The insights are invaluable.",
-      author: "Sarah Chen",
-      role: "Production Manager",
-      company: "TechTextile Industries"
-    },
-    {
-      quote: "Worker performance tracking has never been this easy. We've seen dramatic improvements.",
-      author: "Mohamed Ali",
-      role: "Operations Director",
-      company: "Global Fabrics Co."
-    },
-    {
-      quote: "The Excel import feature saved us months of data migration. Seamless integration!",
-      author: "Lisa Martinez",
-      role: "Plant Supervisor",
-      company: "Premium Textiles Ltd."
-    }
-  ];
+  {
+    quote: t('testimonials.sarah.quote'),
+    author: "Sarah Chen",
+    role: t('testimonials.sarah.role'),
+    company: "TechTextile Industries"
+  },
+  {
+    quote: t('testimonials.mohamed.quote'),
+    author: "Mohamed Ali", 
+    role: t('testimonials.mohamed.role'),
+    company: "Global Fabrics Co."
+  },
+  {
+    quote: t('testimonials.lisa.quote'),
+    author: "Lisa Martinez",
+    role: t('testimonials.lisa.role'),
+    company: "Premium Textiles Ltd."
+  }
+];
 
   return (
     <>
@@ -99,9 +102,9 @@ export default function Home() {
             variants={fadeInUp}
             className="text-5xl lg:text-7xl font-bold text-foreground mb-6 leading-tight"
           >
-            Optimize Your Textile
+            {t('hero.title')}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary/70 to-foreground/70">
-              Production Lines
+              {t('hero.subtitle')}
             </span>
           </motion.h1>
           
@@ -109,8 +112,7 @@ export default function Home() {
             variants={fadeInUp}
             className="text-xl text-muted-foreground mb-10 max-w-3xl mx-auto"
           >
-            Transform your textile facility with real-time analytics, intelligent worker management, 
-            and data-driven insights. Import Excel data, track performance, and boost productivity by up to 45%.
+            {t('hero.description')}
           </motion.p>
           
             <motion.div 
@@ -121,7 +123,7 @@ export default function Home() {
               <button type="button" className="w-full sm:w-auto px-8 py-4 bg-foreground text-background hover:bg-foreground/90
                text-lg rounded-md transition-all transform hover:scale-105 flex items-center
               justify-center font-semibold shadow-lg cursor-pointer">
-              Sign In
+              {t('buttons.signIn')}
               <LogIn className="ml-2 h-5 w-5" />
               </button>
             </Link>
@@ -129,7 +131,7 @@ export default function Home() {
               <button type="button" className="w-full sm:w-auto px-8 py-4 border border-border text-foreground/80
                hover:bg-secondary text-lg rounded-md transition-colors flex items-center
               justify-center backdrop-blur-sm cursor-pointer">
-              Get Started
+              {t('buttons.getStarted')}
               <Rocket className="ml-2 h-5 w-5" />
               </button>
             </Link>
@@ -186,10 +188,10 @@ export default function Home() {
         >
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              Why Choose TextilePro?
+              {t('sections.features.title')}
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Built specifically for textile manufacturers, our platform understands your unique challenges
+              {t('sections.features.subtitle')}
             </p>
           </div>
 
@@ -226,16 +228,16 @@ export default function Home() {
           className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Simple Setup, Powerful Results
+           <h2 className="text-4xl font-bold text-foreground mb-4">
+              {t('sections.howItWorks.title')}
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: "1", title: "Import Your Data", desc: "Upload Excel files or manually input your production data" },
-              { step: "2", title: "Track Performance", desc: "Monitor workers, products, and production lines in real-time" },
-              { step: "3", title: "Optimize & Scale", desc: "Use AI insights to improve efficiency and reduce costs" }
+              { step: "1", title: t('steps.import.title'), desc: t('steps.import.description') },
+              { step: "2", title: t('steps.track.title'), desc: t('steps.track.description') },
+              { step: "3", title: t('steps.optimize.title'), desc: t('steps.optimize.description') }
             ].map((item) => (
               <motion.div
               key={item.step}
@@ -269,10 +271,10 @@ export default function Home() {
         >
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              Trusted by Industry Leaders
+              {t('sections.testimonials.title')}
             </h2>
             <p className="text-muted-foreground text-lg">
-              Join hundreds of textile facilities improving their operations
+              {t('sections.testimonials.subtitle')}
             </p>
           </div>
 
@@ -315,37 +317,36 @@ export default function Home() {
             <div className="bg-card/50 border border-border/40 rounded-xl p-12 backdrop-blur-sm text-center">
             <Shield className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-foreground mb-4">
-              Ready to Try TextilePro?
+              {t('sections.cta.title')}
             </h2>
             <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Experience how TextilePro can transform your textile production. 
-              Sign up now for our demo version and explore all features.
+              {t('sections.cta.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 w-full max-w-md mx-auto">         
               <Link to="/auth/login" className="w-full">
               <button type="button" className="w-full px-8 py-3 bg-foreground text-background hover:bg-foreground/90 rounded-md font-semibold transition-colors flex items-center justify-center shadow-lg">
-                Sign In
+                {t('buttons.signIn')}
                 <CheckCircle className="ml-2 h-5 w-5" />
               </button>
               </Link>
               <Link to="/auth/register" className="w-full">
               <button type="button" className="w-full px-8 py-3 border border-border text-foreground hover:bg-secondary rounded-md font-semibold transition-colors backdrop-blur-sm flex items-center justify-center">
-                Get Started
+                {t('buttons.getStarted')}
               </button>
               </Link>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
               <span className="flex items-center">
               <CheckCircle className="h-4 w-4 mr-2 text-emerald-500" />
-              Demo Version
+              {t('features.demo')}
               </span>
               <span className="flex items-center">
               <CheckCircle className="h-4 w-4 mr-2 text-emerald-500" />
-              No Credit Card
+              {t('features.noCard')}
               </span>
               <span className="flex items-center">
               <CheckCircle className="h-4 w-4 mr-2 text-emerald-500" />
-              Try All Features
+              {t('features.tryAll')}
               </span>
             </div>
             </div>
@@ -360,7 +361,7 @@ export default function Home() {
             <span className="text-xl font-bold text-foreground">TextilePro</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            © 2025 TextilePro. All rights reserved. | Privacy | Terms
+            {t('footer.copyright')}
           </div>
         </div>
       </footer>

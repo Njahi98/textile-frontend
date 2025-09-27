@@ -1,0 +1,61 @@
+{
+  "stats": {
+    "totalWorkers": "Total Ouvriers",
+    "activeToday": "{{count}} actifs aujourd'hui",
+    "working": "{{count}} travaillent",
+    "productionLines": "Lignes de Production",
+    "ofTotal": "sur {{total}} lignes au total",
+    "todayProduction": "Production d'Aujourd'hui",
+    "errorRate": "{{rate}}% taux d'erreur",
+    "records": "{{count}} enregistrements",
+    "monthProduction": "Production du Mois",
+    "totalRecords": "{{count}} enregistrements au total"
+  },
+  "charts": {
+    "productionTrends": {
+      "title": "Tendances de Production",
+      "description": "Aperçu de la production des 7 derniers jours",
+      "totalProduction": "Production Totale",
+      "dailyAverage": "Moyenne Journalière",
+      "trend": "Tendance"
+    },
+    "topPerformers": {
+      "title": "Meilleurs Performeurs Aujourd'hui",
+      "description": "Ouvriers les plus productifs",
+      "noData": "Aucune donnée de performance pour aujourd'hui"
+    },
+    "productionLines": {
+      "title": "Performance des Lignes de Production",
+      "description": "Métriques de production d'aujourd'hui par ligne",
+      "noData": "Aucune donnée de production disponible pour aujourd'hui"
+    }
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "metrics": {
+    "efficiency": "Efficacité"
+  },
+  "activities": {
+    "assignments": {
+      "title": "Affectations Récentes",
+      "description": "Dernières affectations d'ouvriers",
+      "noData": "Aucune affectation récente"
+    },
+    "performance": {
+      "title": "Performance Récente",
+      "description": "Derniers enregistrements de production",
+      "noData": "Aucun enregistrement récent"
+    },
+    "newWorkers": {
+      "title": "Nouveaux Ouvriers",
+      "description": "Récemment ajoutés au système",
+      "noData": "Aucun nouvel ouvrier récemment"
+    }
+  },
+  "common": {
+    "noDataAvailable": "Aucune donnée disponible",
+    "noRole": "Aucun Rôle"
+  }
+}

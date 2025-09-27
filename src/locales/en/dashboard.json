@@ -1,0 +1,61 @@
+{
+  "stats": {
+    "totalWorkers": "Total Workers",
+    "activeToday": "{{count}} active today",
+    "working": "{{count}} working",
+    "productionLines": "Production Lines",
+    "ofTotal": "of {{total}} total lines",
+    "todayProduction": "Today's Production",
+    "errorRate": "{{rate}}% error rate",
+    "records": "{{count}} records",
+    "monthProduction": "Month Production", 
+    "totalRecords": "{{count}} total records"
+  },
+  "charts": {
+    "productionTrends": {
+      "title": "Production Trends",
+      "description": "Last 7 days production overview",
+      "totalProduction": "Total Production",
+      "dailyAverage": "Daily Average",
+      "trend": "Trend"
+    },
+    "topPerformers": {
+      "title": "Top Performers Today",
+      "description": "Highest producing workers",
+      "noData": "No performance data for today"
+    },
+    "productionLines": {
+      "title": "Production Line Performance",
+      "description": "Today's production metrics by line",
+      "noData": "No production data available for today"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "metrics": {
+    "efficiency": "Efficiency"
+  },
+  "activities": {
+    "assignments": {
+      "title": "Recent Assignments",
+      "description": "Latest worker assignments",
+      "noData": "No recent assignments"
+    },
+    "performance": {
+      "title": "Recent Performance",
+      "description": "Latest production records",
+      "noData": "No recent records"
+    },
+    "newWorkers": {
+      "title": "New Workers",
+      "description": "Recently added to system",
+      "noData": "No new workers recently"
+    }
+  },
+  "common": {
+    "noDataAvailable": "No data available",
+    "noRole": "No Role"
+  }
+}

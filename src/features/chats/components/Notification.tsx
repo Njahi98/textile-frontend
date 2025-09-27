@@ -16,6 +16,7 @@ import { useChat } from '../hooks/use-chat';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import type { Notification } from '@/services/chat.api';
+import { useTranslation } from 'react-i18next';
 
 const NotificationTypeIcon = ({ type }: { type: string }) => {
   const iconMap = {
@@ -131,6 +132,7 @@ export function NotificationsDropdown() {
   const [markingIndividual, setMarkingIndividual] = useState<Set<number>>(new Set());
   const [clearingAll, setClearingAll] = useState(false);
 
+  const {t}=useTranslation(['common'])
 
   const navigate = useNavigate();
 
@@ -228,13 +230,13 @@ export function NotificationsDropdown() {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-80 max-h-[400px] flex flex-col">
+      <DropdownMenuContent align="end" className="w-85 sm:w-90 max-h-[400px] flex flex-col">
         <DropdownMenuLabel className="flex items-center justify-between py-3 shrink-0">
-        <span className="font-semibold">Notifications</span>
+        <span className="font-semibold text-sm">Notifications</span>
         <div className="flex items-center gap-2">
           {showOfflineBadge && (
             <Badge variant="outline" className="text-xs px-2 py-1">
-              Offline
+              {t('notifications.offline')}
             </Badge>
           )}
           {hasUnreadNotifications && (
@@ -251,7 +253,7 @@ export function NotificationsDropdown() {
               ) : (
                 <>
                   <CheckCheck className="h-3 w-3 mr-1" />
-                  Mark all read
+                  {t('notifications.markAllRead')}
                 </>
               )}
             </Button>
@@ -268,7 +270,7 @@ export function NotificationsDropdown() {
               {clearingAll ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                "Clear all"
+                t('notifications.clearAll')
               )}
             </Button>
           )}
@@ -280,13 +282,13 @@ export function NotificationsDropdown() {
         {loading && !hasNotifications ? (
           <div className="flex justify-center items-center py-8 flex-1">
             <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">Loading notifications...</span>
+            <span className="ml-2 text-sm text-muted-foreground">{t('notifications.loading')}</span>
           </div>
         ) : !hasNotifications ? (
           <div className="text-center py-8 px-4 flex-1">
-            <div className="text-muted-foreground text-sm mb-2">No notifications yet</div>
+            <div className="text-muted-foreground text-sm mb-2">{t('notifications.noNotifications')}</div>
             <div className="text-xs text-muted-foreground">
-              You'll see new messages and updates here
+              {t('notifications.welcomeMessage')}
             </div>
           </div>
         ) : (
@@ -311,7 +313,7 @@ export function NotificationsDropdown() {
             <DropdownMenuSeparator className="shrink-0" />
             <div className="px-3 py-2 text-center shrink-0">
               <span className="text-xs text-muted-foreground">
-                Showing {Math.min(recentNotifications.length, 50)} recent notifications
+                  {t('notifications.showingRecent', { count: Math.min(recentNotifications.length, 50) })}
               </span>
             </div>
           </>

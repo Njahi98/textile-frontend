@@ -27,6 +27,7 @@ import { userStatus, userTypes } from '../data/data'
 import { User } from '../data/schema'
 import { userApi } from '@/services/user.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z
   .object({
@@ -101,6 +102,7 @@ interface Props {
 }
 
 export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
+  const {t}=useTranslation(['users'])
   const isEdit = !!currentRow
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
@@ -175,10 +177,9 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>{isEdit ? t('dialog.edit.title') : t('dialog.add.title')}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit ? t('dialog.edit.description') : t('dialog.add.description')}
           </DialogDescription>
         </DialogHeader>
         <div className='-mr-4  w-full overflow-y-auto py-1 pr-4'>
@@ -197,7 +198,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      First Name
+                      {t('form.labels.firstName')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -217,7 +218,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Last Name
+                      {t('form.labels.lastName')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -237,7 +238,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Username
+                      {t('form.labels.username')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -256,7 +257,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Email
+                      {t('form.labels.email')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -274,8 +275,8 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 name='phone'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Phone Number
+                    <FormLabel className='col-span-2 text-left'>
+                      {t('form.labels.phoneNumber')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -294,7 +295,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Role
+                      {t('form.labels.role')}
                     </FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
@@ -317,7 +318,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                   render={({ field }) => (
                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                       <FormLabel className='col-span-2 text-right'>
-                        Status
+                        {t('form.labels.status')}
                       </FormLabel>
                       <SelectDropdown
                         defaultValue={field.value}
@@ -340,7 +341,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Password
+                      {t('form.labels.password')}
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
@@ -357,8 +358,8 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 name='confirmPassword'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Confirm Password
+                    <FormLabel className='col-span-2 text-left'>
+                      {t('form.labels.confirmPassword')}
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
@@ -376,7 +377,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         </div>
         <DialogFooter>
           <Button type='submit' form='user-form'>
-            Save changes
+            {t('buttons.saveChanges')}
           </Button>
         </DialogFooter>
       </DialogContent>

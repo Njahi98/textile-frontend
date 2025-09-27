@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { assignmentApi, Assignment } from "@/services/assignment.api";
+import { useTranslation } from "react-i18next";
 
 interface CalendarDay {
   date: Date;
@@ -34,24 +35,35 @@ interface CalendarDay {
   isToday: boolean;
 }
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+export default function AssignmentCalendar() {
+  const { t } = useTranslation(['assignment']);
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarData, setCalendarData] = useState<
+    Record<string, Assignment[]>
+  >({});
+
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [filterWorkerId, setFilterWorkerId] = useState<number | undefined>();
+  const [filterProductionLineId, setFilterProductionLineId] = useState<
+    number | undefined
+  >();
+
+  const [workers, setWorkers] = useState<{ id: number; name: string }[]>([]);
+  const [productionLines, setProductionLines] = useState<
+    { id: number; name: string }[]
+  >([]);
+
+  const MONTHS = [
+  t('calendar.months.january'), t('calendar.months.february'), t('calendar.months.march'), t('calendar.months.april'),
+  t('calendar.months.may'), t('calendar.months.june'), t('calendar.months.july'), t('calendar.months.august'),
+  t('calendar.months.september'), t('calendar.months.october'), t('calendar.months.november'), t('calendar.months.december')
 ];
 
-const SHIFTS = ["morning", "afternoon", "night"];
+  const SHIFTS = ["morning", "afternoon", "night"];
 
-const SHIFT_COLORS = {
+  const SHIFT_COLORS = {
   morning:
     "bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800",
   afternoon:
@@ -59,22 +71,6 @@ const SHIFT_COLORS = {
   night:
     "bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-800",
 };
-
-export default function AssignmentCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [calendarData, setCalendarData] = useState<
-    Record<string, Assignment[]>
-  >({});
-  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [filterWorkerId, setFilterWorkerId] = useState<number | undefined>();
-  const [filterProductionLineId, setFilterProductionLineId] = useState<
-    number | undefined
-  >();
-  const [workers, setWorkers] = useState<{ id: number; name: string }[]>([]);
-  const [productionLines, setProductionLines] = useState<
-    { id: number; name: string }[]
-  >([]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
@@ -166,7 +162,7 @@ export default function AssignmentCalendar() {
     : [];
 
   const formatShift = (shift: string) => {
-    return shift.charAt(0).toUpperCase() + shift.slice(1);
+    return t(`calendar.shifts.${shift}`);
   };
 
   const getShiftColor = (shift: string) => {
@@ -184,12 +180,12 @@ return (
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-3">
             <Calendar className="h-6 w-6 text-primary flex-shrink-0" />
-            <h2 className="text-xl md:text-2xl font-bold truncate">
-              Assignment Calendar
-            </h2>
+           <h2 className="text-xl md:text-2xl font-bold truncate">
+            {t('calendar.header.title')}
+          </h2>
           </div>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
-            View and manage worker assignments on a monthly calendar.
+            {t('calendar.header.subtitle')}
           </p>
         </div>
       </div>
@@ -203,10 +199,10 @@ return (
           }
         >
           <SelectTrigger className="w-full sm:w-40">
-            <SelectValue placeholder="All Workers" />
+            <SelectValue placeholder={t('calendar.filters.allWorkers')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Workers</SelectItem>
+            <SelectItem value="all">{t('calendar.filters.allWorkers')}</SelectItem>
             {workers.map((worker) => (
               <SelectItem key={worker.id} value={worker.id.toString()}>
                 {worker.name}
@@ -224,10 +220,10 @@ return (
           }
         >
           <SelectTrigger className="w-full sm:w-44">
-            <SelectValue placeholder="All Production Lines" />
+            <SelectValue placeholder={t('calendar.filters.allProductionLines')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Production Lines</SelectItem>
+            <SelectItem value="all">{t('calendar.filters.allProductionLines')}</SelectItem>
             {productionLines.map((line) => (
               <SelectItem key={line.id} value={line.id.toString()}>
                 {line.name}
@@ -265,14 +261,9 @@ return (
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={goToToday}
-                className="w-full sm:w-auto"
-              >
-                Today
-              </Button>
+              <Button variant="outline" size="sm" onClick={goToToday} className="w-full sm:w-auto">
+              {t('calendar.navigation.today')}
+            </Button>
             </div>
           </CardHeader>
           <CardContent className="p-3 md:p-6">
@@ -283,17 +274,15 @@ return (
             ) : (
               <div className="grid grid-cols-7 gap-0.5 md:gap-1">
                 {/* Day headers */}
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                  (day) => (
-                    <div
-                      key={day}
-                      className="p-1 md:p-2 text-center text-xs md:text-sm font-medium text-gray-500"
-                    >
-                      <span className="hidden sm:inline">{day}</span>
-                      <span className="sm:hidden">{day.charAt(0)}</span>
-                    </div>
-                  )
-                )}
+               {[
+                  t('calendar.dayHeaders.sun'), t('calendar.dayHeaders.mon'), t('calendar.dayHeaders.tue'), 
+                  t('calendar.dayHeaders.wed'), t('calendar.dayHeaders.thu'), t('calendar.dayHeaders.fri'), t('calendar.dayHeaders.sat')
+                ].map((day, index) => (
+                  <div key={index} className="p-1 md:p-2 text-center text-xs md:text-sm font-medium text-gray-500">
+                    <span className="hidden sm:inline">{day}</span>
+                    <span className="sm:hidden">{day.charAt(0)}</span>
+                  </div>
+                ))}
 
                 {/* Calendar days */}
                 {calendarDays.map((day, index) => (
@@ -346,8 +335,8 @@ return (
                             ))}
                           {day.assignments.length > (window.innerWidth < 640 ? 1 : 2) && (
                             <div className="text-xs text-muted-foreground px-0.5 md:px-1">
-                              +{day.assignments.length - (window.innerWidth < 640 ? 1 : 2)} more
-                            </div>
+                            {t('calendar.calendarMore.more', { count: day.assignments.length - (window.innerWidth < 640 ? 1 : 2) })}
+                          </div>
                           )}
                         </div>
                       </div>
@@ -358,7 +347,7 @@ return (
                         <DialogTitle className="flex items-start gap-2 text-left">
                           <Calendar className="h-5 w-5 flex-shrink-0 mt-0.5" />
                           <span className="min-w-0">
-                            Assignments for{" "}
+                            {t('calendar.dialog.assignmentsFor')}{" "}
                             <span className="block sm:inline">
                               {day.date.toLocaleDateString("en-US", {
                                 weekday: "long",
@@ -374,7 +363,7 @@ return (
                       <div className="space-y-4 mt-4">
                         {selectedDayAssignments.length === 0 ? (
                           <p className="text-gray-500 text-center py-8">
-                            No assignments for this day
+                            {t('calendar.dialog.noAssignments')}
                           </p>
                         ) : (
                           <div className="space-y-4">
@@ -390,7 +379,7 @@ return (
                                   <h4 className="font-medium text-sm text-gray-600 flex items-center gap-2">
                                     <Clock className="h-4 w-4 flex-shrink-0" />
                                     <span>
-                                      {formatShift(shift)} Shift ({shiftAssignments.length})
+                                      {formatShift(shift)} {t('calendar.dialog.shift')} ({shiftAssignments.length})
                                     </span>
                                   </h4>
                                   <div className="grid gap-2">
@@ -432,8 +421,8 @@ return (
                                           
                                           {assignment.productionLine.location && (
                                             <div className="text-xs text-gray-500 pl-5 sm:pl-0">
-                                              Location: {assignment.productionLine.location}
-                                            </div>
+                                          {t('calendar.dialog.location')}: {assignment.productionLine.location}
+                                        </div>
                                           )}
                                         </div>
                                       </Card>

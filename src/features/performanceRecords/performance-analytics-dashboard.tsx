@@ -24,6 +24,7 @@ import type { PerformanceAnalytics, AnalyticsQueryParams } from '@/services/perf
 import { toast } from 'sonner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
+import { useTranslation } from 'react-i18next';
 
 
 interface DateRange {
@@ -87,6 +88,9 @@ export default function PerformanceAnalytics() {
   const [loading, setLoading] = useState(false);
   const [analytics, setAnalytics] = useState<PerformanceAnalytics | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const { t } = useTranslation(['performanceAnalytics']);
+
   
   // Filter states
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -200,12 +204,12 @@ if (groupBy === 'date') {
       .slice(0, 5);
   }, [chartData]);
 
-  const getErrorRateBadge = (rate: number) => {
-    if (rate < 2) return { variant: 'default' as const, text: 'Excellent' };
-    if (rate < 5) return { variant: 'secondary' as const, text: 'Good' };
-    if (rate < 10) return { variant: 'outline' as const, text: 'Fair' };
-    return { variant: 'destructive' as const, text: 'Poor' };
-  };
+const getErrorRateBadge = (rate: number) => {
+  if (rate < 2) return { variant: 'default' as const, text: t('quality.excellent') };
+  if (rate < 5) return { variant: 'secondary' as const, text: t('quality.good') };
+  if (rate < 10) return { variant: 'outline' as const, text: t('quality.fair') };
+  return { variant: 'destructive' as const, text: t('quality.poor') };
+};
 
   const getDisplayName = (item: ChartDataItem) => {
     return item.date || item.name || 'Unknown';
@@ -510,15 +514,15 @@ const exportToCSV = () => {
 
  return (
   <div className="flex-1 space-y-3 md:space-y-4 p-3 md:p-4 lg:p-8 pt-4 md:pt-6">
-    {/* Header - Mobile Optimized */}
+    {/* Header */}
     <div className="space-y-3">
       <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div className="min-w-0 flex-1">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight truncate">
-            Performance Analytics
+            {t('header.title')}
           </h2>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
-            Real-time insights into production performance
+            {t('header.subtitle')}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
@@ -530,7 +534,7 @@ const exportToCSV = () => {
             className="w-full sm:w-auto"
           >
             <Download className="h-4 w-4 mr-2" />
-            Export
+            {t('buttons.export')}
           </Button>
           <Button 
             variant="outline" 
@@ -540,7 +544,7 @@ const exportToCSV = () => {
             className="w-full sm:w-auto"
           >
             <RefreshCw className={cn("h-4 w-4 mr-2", loading && "animate-spin")} />
-            Refresh
+            {t('buttons.refresh')}
           </Button>
         </div>
       </div>
@@ -551,13 +555,13 @@ const exportToCSV = () => {
       <CardHeader className="pb-3 md:pb-4">
         <CardTitle className="text-sm md:text-base flex items-center gap-2">
           <Filter className="h-4 w-4" />
-          Filters
+          {t('filters.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Date Range - Stack on mobile */}
         <div className="space-y-2">
-          <Label className="text-sm">Date Range</Label>
+          <Label className="text-sm">{t('filters.dateRange')}</Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Popover>
               <PopoverTrigger asChild>
@@ -569,8 +573,8 @@ const exportToCSV = () => {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">
-                    {dateRange.from ? format(dateRange.from, "MMM dd, yyyy") : "Start date"}
+                 <span className="truncate">
+                    {dateRange.from ? format(dateRange.from, "MMM dd, yyyy") : t('filters.startDate')}
                   </span>
                 </Button>
               </PopoverTrigger>
@@ -595,7 +599,7 @@ const exportToCSV = () => {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
                   <span className="truncate">
-                    {dateRange.to ? format(dateRange.to, "MMM dd, yyyy") : "End date"}
+                    {dateRange.to ? format(dateRange.to, "MMM dd, yyyy") : t('filters.endDate')}
                   </span>
                 </Button>
               </PopoverTrigger>
@@ -613,39 +617,39 @@ const exportToCSV = () => {
 
         {/* Group By - Full width on mobile */}
         <div className="space-y-2">
-          <Label className="text-sm">Group By</Label>
+          <Label className="text-sm">{t('filters.groupBy')}</Label>
           <Select value={groupBy} onValueChange={(v: any) => setGroupBy(v)}>
             <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date">Date</SelectItem>
-              <SelectItem value="worker">Worker</SelectItem>
-              <SelectItem value="product">Product</SelectItem>
-              <SelectItem value="productionLine">Production Line</SelectItem>
+              <SelectItem value="date">{t('filters.groupByOptions.date')}</SelectItem>
+              <SelectItem value="worker">{t('filters.groupByOptions.worker')}</SelectItem>
+              <SelectItem value="product">{t('filters.groupByOptions.product')}</SelectItem>
+              <SelectItem value="productionLine">{t('filters.groupByOptions.productionLine')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Optional Filters - Stack on mobile */}
+        {/* Optional Filters */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label className="text-sm">Worker ID (Optional)</Label>
+            <Label className="text-sm">{t('filters.workerIdOptional')}</Label>
             <input
               type="text"
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder="Enter worker ID"
+              placeholder={t('filters.enterWorkerId')}
               value={workerId}
               onChange={(e) => setWorkerId(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm">Production Line ID (Optional)</Label>
+            <Label className="text-sm">{t('filters.productionLineIdOptional')}</Label>
             <input
               type="text"
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder="Enter line ID"
+              placeholder={t('filters.enterLineId')}
               value={productionLineId}
               onChange={(e) => setProductionLineId(e.target.value)}
             />
@@ -660,12 +664,12 @@ const exportToCSV = () => {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Loading...
+              {t('buttons.loading')}
             </>
           ) : (
             <>
               <Activity className="mr-2 h-4 w-4" />
-              Generate Report
+              {t('buttons.generateReport')}
             </>
           )}
         </Button>
@@ -685,16 +689,16 @@ const exportToCSV = () => {
         {/* KPI Cards - Mobile Optimized Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           <KPICard
-            title="Total Pieces"
+            title={t('kpis.totalPieces')}
             value={analytics.overall.totalPieces.toLocaleString()}
-            description="Production output"
+            description={t('kpis.productionOutput')}
             icon={<Package className="h-4 w-4" />}
             trend={12}
           />
           <KPICard
-            title="Error Rate"
+            title={t('kpis.errorRate')}
             value={`${analytics.overall.avgErrorRate.toFixed(2)}%`}
-            description="Quality metric"
+            description={t('kpis.qualityMetric')}
             icon={<AlertCircle className="h-4 w-4" />}
             className={cn(
               analytics.overall.avgErrorRate < 2 && "border-green-200 dark:border-green-900",
@@ -702,15 +706,15 @@ const exportToCSV = () => {
             )}
           />
           <KPICard
-            title="Avg Time"
+            title={t('kpis.avgTime')}
             value={`${analytics.overall.avgTimeTaken.toFixed(1)}h`}
-            description="Efficiency metric"
+            description={t('kpis.efficiencyMetric')}
             icon={<Clock className="h-4 w-4" />}
           />
           <KPICard
-            title="Records"
+            title={t('kpis.records')}
             value={analytics.overall.totalRecords.toLocaleString()}
-            description="Data points"
+            description={t('kpis.dataPoints')}
             icon={<Activity className="h-4 w-4" />}
           />
         </div>
@@ -720,17 +724,17 @@ const exportToCSV = () => {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-8 md:py-12 text-center">
               <Activity className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground mb-3 md:mb-4" />
-              <h3 className="text-base md:text-lg font-semibold mb-2">No Data Available</h3>
+             <h3 className="text-base md:text-lg font-semibold mb-2">{t('emptyState.title')}</h3>
               <div className="text-sm text-muted-foreground space-y-1 mb-4">
-                <p>No performance records found for the selected filters.</p>
+                <p>{t('emptyState.noRecords')}</p>
                 <p className="text-xs">
-                  Group: <span className="font-medium">{groupBy}</span> • 
-                  Raw items: <span className="font-medium">{analytics.grouped?.length || 0}</span>
+                    {t('emptyState.group')}: <span className="font-medium">{groupBy}</span> •  
+                    {t('emptyState.rawItems')}: <span className="font-medium">{analytics.grouped?.length || 0}</span>
                 </p>
               </div>
               <Button onClick={fetchAnalytics} variant="outline" size="sm">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Try Again
+                {t('buttons.tryAgain')}
               </Button>
             </CardContent>
           </Card>
@@ -742,16 +746,16 @@ const exportToCSV = () => {
             <div className="overflow-x-auto">
               <TabsList className="grid w-full grid-cols-4 min-w-[320px]">
                 <TabsTrigger value="production" className="text-xs md:text-sm px-2">
-                  Production
+                    {t('tabs.production')}
                 </TabsTrigger>
                 <TabsTrigger value="quality" className="text-xs md:text-sm px-2">
-                  Quality
+                    {t('tabs.quality')}
                 </TabsTrigger>
                 <TabsTrigger value="efficiency" className="text-xs md:text-sm px-2">
-                  Efficiency
+                    {t('tabs.efficiency')}
                 </TabsTrigger>
                 <TabsTrigger value="comparison" className="text-xs md:text-sm px-2">
-                  Compare
+                    {t('tabs.compare')}
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -759,9 +763,9 @@ const exportToCSV = () => {
             <TabsContent value="production" className="space-y-4 mt-3">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base md:text-lg">Production Trends</CardTitle>
+                  <CardTitle className="text-base md:text-lg">{t('charts.productionTrends.title')}</CardTitle>
                   <CardDescription className="text-sm">
-                    {groupBy === 'date' ? 'Daily production output' : `Production by ${groupBy}`}
+                    {groupBy === 'date' ? t('charts.productionTrends.dailyOutput') : t('charts.productionTrends.productionBy', { groupBy })}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-3 md:p-6">
@@ -824,8 +828,8 @@ const exportToCSV = () => {
             <TabsContent value="quality" className="space-y-4 mt-3">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base md:text-lg">Error Rate Analysis</CardTitle>
-                  <CardDescription className="text-sm">Quality metrics and defect rates</CardDescription>
+                  <CardTitle className="text-base md:text-lg">{t('charts.errorRateAnalysis.title')}</CardTitle>
+                  <CardDescription className="text-sm">{t('charts.errorRateAnalysis.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="p-3 md:p-6">
                   <div className="h-[250px] sm:h-[300px] md:h-[350px]">
@@ -864,8 +868,8 @@ const exportToCSV = () => {
             <TabsContent value="efficiency" className="space-y-4 mt-3">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base md:text-lg">Time Efficiency</CardTitle>
-                  <CardDescription className="text-sm">Average time taken for production</CardDescription>
+                  <CardTitle className="text-base md:text-lg">{t('charts.timeEfficiency.title')}</CardTitle>
+                  <CardDescription className="text-sm">{t('charts.timeEfficiency.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="p-3 md:p-6">
                   <div className="h-[250px] sm:h-[300px] md:h-[350px]">
@@ -896,8 +900,8 @@ const exportToCSV = () => {
             <TabsContent value="comparison" className="space-y-4 mt-3">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base md:text-lg">Performance Comparison</CardTitle>
-                  <CardDescription className="text-sm">Pieces produced vs Error rate</CardDescription>
+                  <CardTitle className="text-base md:text-lg">{t('charts.performanceComparison.title')}</CardTitle>
+                  <CardDescription className="text-sm">{t('charts.performanceComparison.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="p-3 md:p-6">
                   <div className="h-[250px] sm:h-[300px] md:h-[350px]">
@@ -935,9 +939,9 @@ const exportToCSV = () => {
         {chartData.length > 0 && (
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base md:text-lg">Top Performers</CardTitle>
+              <CardTitle className="text-base md:text-lg">{t('topPerformers.title')}</CardTitle>
               <CardDescription className="text-sm">
-                Highest production output {groupBy !== 'date' && `by ${groupBy}`}
+                {t('topPerformers.description')} {groupBy !== 'date' && t('topPerformers.by', { groupBy })}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-3 md:p-6">

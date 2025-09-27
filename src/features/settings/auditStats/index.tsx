@@ -7,9 +7,11 @@ import { AuditStatsResponse } from "@/services/auditLog.api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, BarChart3, Database, Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function AuditStats() {
   const [days, setDays] = useState<number>(30);
+  const { t } = useTranslation(['audit']);
 
   const { data, error, isLoading, mutate } = useSWR<AuditStatsResponse, Error>(
     `/api/audit-logs/stats?days=${days}`,
@@ -25,7 +27,7 @@ export function AuditStats() {
   if (error) {
     return (
       <ErrorState
-        title="Failed to load audit statistics"
+        title={t('stats.messages.loadError')}
         message={typeof error.message === "string" ? error.message : "An unknown error occurred."}
         onRetry={() => void mutate()}
       />
@@ -41,12 +43,12 @@ export function AuditStats() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Audit Statistics</h1>
-          <p className="text-muted-foreground">Analyze audit activity and user actions</p>
+          <h1 className="text-3xl font-bold">{t('stats.pageTitle')}</h1>
+          <p className="text-muted-foreground">{t('stats.pageDescription')}</p>
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="text-sm text-muted-foreground">Days</label>
+          <label className="text-sm text-muted-foreground">{t('stats.filters.days')}</label>
           <select
             className="rounded-md border bg-background px-2 py-1 text-sm"
             value={days}
@@ -65,47 +67,50 @@ export function AuditStats() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Actions</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.cards.totalActions.title')}</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalActions}</div>
             <p className="text-xs text-muted-foreground">
-              From {new Date(stats.period.startDate).toLocaleDateString()} to {new Date(stats.period.endDate).toLocaleDateString()}
+              {t('stats.cards.totalActions.period', { 
+                startDate: new Date(stats.period.startDate).toLocaleDateString(),
+                endDate: new Date(stats.period.endDate).toLocaleDateString()
+              })}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Top Action</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.cards.topAction.title')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.actionsByType?.[0]?.action ?? "—"}</div>
-            <p className="text-xs text-muted-foreground">{stats.actionsByType?.[0]?.count ?? 0} events</p>
+            <div className="text-2xl font-bold">{stats.actionsByType?.[0]?.action ?? t('common.noData')}</div>
+            <p className="text-xs text-muted-foreground">{t('stats.cards.topAction.events', { count: stats.actionsByType?.[0]?.count ?? 0 })}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Top Resource</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.cards.topResource.title')}</CardTitle>
             <Database className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.actionsByResource?.[0]?.resource ?? "—"}</div>
-            <p className="text-xs text-muted-foreground">{stats.actionsByResource?.[0]?.count ?? 0} events</p>
+            <div className="text-2xl font-bold">{stats.actionsByResource?.[0]?.resource ?? t('common.noData')}</div>
+            <p className="text-xs text-muted-foreground">{t('stats.cards.topResource.events', { count: stats.actionsByResource?.[0]?.count ?? 0 })}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Most Active User</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.cards.mostActiveUser.title')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold truncate">{stats.topUsers?.[0]?.username ?? "—"}</div>
-            <p className="text-xs text-muted-foreground">{stats.topUsers?.[0]?.action_count ?? 0} actions</p>
+          <div className="text-2xl font-bold truncate">{stats.topUsers?.[0]?.username ?? t('common.noData')}</div>
+          <p className="text-xs text-muted-foreground">{t('stats.cards.mostActiveUser.actions', { count: stats.topUsers?.[0]?.action_count ?? 0 })}</p>
           </CardContent>
         </Card>
       </div>
@@ -113,15 +118,15 @@ export function AuditStats() {
       {/* Detail Sections */}
       <Tabs defaultValue="types" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="types">Actions by Type</TabsTrigger>
-          <TabsTrigger value="resources">Actions by Resource</TabsTrigger>
-          <TabsTrigger value="users">Top Users</TabsTrigger>
+          <TabsTrigger value="types">{t('stats.tabs.actionsByType')}</TabsTrigger>
+          <TabsTrigger value="resources">{t('stats.tabs.actionsByResource')}</TabsTrigger>
+          <TabsTrigger value="users">{t('stats.tabs.topUsers')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="types" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Actions by Type</CardTitle>
+              <CardTitle>{t('stats.sections.actionsByType.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
@@ -132,7 +137,7 @@ export function AuditStats() {
                   </li>
                 ))}
                 {(!stats.actionsByType || stats.actionsByType.length === 0) && (
-                  <li className="text-sm text-muted-foreground">No data</li>
+                  <li className="text-sm text-muted-foreground">{t('stats.common.noData')}</li>
                 )}
               </ul>
             </CardContent>
@@ -142,7 +147,7 @@ export function AuditStats() {
         <TabsContent value="resources" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Actions by Resource</CardTitle>
+              <CardTitle>{t('stats.sections.actionsByResource.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
@@ -153,7 +158,7 @@ export function AuditStats() {
                   </li>
                 ))}
                 {(!stats.actionsByResource || stats.actionsByResource.length === 0) && (
-                  <li className="text-sm text-muted-foreground">No data</li>
+                  <li className="text-sm text-muted-foreground">{t('stats.common.noData')}</li>
                 )}
               </ul>
             </CardContent>
@@ -163,7 +168,7 @@ export function AuditStats() {
         <TabsContent value="users" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Top Users</CardTitle>
+              <CardTitle>{t('stats.sections.topUsers.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
@@ -176,7 +181,7 @@ export function AuditStats() {
                   </li>
                 ))}
                 {(!stats.topUsers || stats.topUsers.length === 0) && (
-                  <li className="text-sm text-muted-foreground">No data</li>
+                  <li className="text-sm text-muted-foreground">{t('stats.common.noData')}</li>
                 )}
               </ul>
             </CardContent>

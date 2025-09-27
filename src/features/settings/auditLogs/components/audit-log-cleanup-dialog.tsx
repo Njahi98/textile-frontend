@@ -29,7 +29,7 @@ export function AuditLogCleanupDialog({ open, onOpenChange }: AuditLogCleanupDia
     setIsLoading(true)
     try {
       const result = await auditLogApi.cleanupAuditLogs(daysNumber)
-      toast.success(`Successfully cleaned up ${result.deletedCount} audit log records`)
+      toast.success(result.message)
       
       await mutate('/api/audit-logs')
       

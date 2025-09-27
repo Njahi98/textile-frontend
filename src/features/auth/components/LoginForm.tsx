@@ -9,18 +9,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormData, PasswordResetRequestData, passwordResetRequestSchema } from "@/lib/schemas";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEffect, useState } from "react";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import GoogleLoginButton from '@/components/GoogleLoginButton';
-
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate();
+  const { t } = useTranslation(['auth']);
   const { login, isLoading, error, clearError, isAuthenticated, requestPasswordReset } = useAuthStore();
   const [passwordReset, setPasswordReset] = useState(false);
-  
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
@@ -44,15 +44,15 @@ export default function LoginForm({
   const onSubmit = async (data: LoginFormData) => {
     const result = await login(data.email, data.password);
     if (result.success) {
-      toast.success('Login successful!');
+      toast.success(t('messages.loginSuccess'));
       void navigate('/dashboard');
     }
   };
 
   const onPasswordReset = async (data: PasswordResetRequestData) => {
     try {
-       await requestPasswordReset(data.email);
-      toast.success('If an account exists with this email, you will receive a password reset link');
+      await requestPasswordReset(data.email);
+      toast.success(t('messages.passwordResetSent'));
       setPasswordReset(false);
       passwordResetForm.reset();
     } catch (error) {
@@ -60,7 +60,6 @@ export default function LoginForm({
         error instanceof Error ? error.message : 'An unexpected error occurred';
       toast.error(errorMessage);
     }
-    
   };
 
   const handlePasswordResetSubmit = (e: React.FormEvent) => {
@@ -85,14 +84,14 @@ export default function LoginForm({
             >
               <div className="flex flex-col gap-6 flex-1">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">Forgot Password</h1>
+                  <h1 className="text-2xl font-bold">{t('forgotPassword.title')}</h1>
                   <p className="text-muted-foreground text-balance">
-                    Enter your registered email and we will send you a link to reset your password.
+                    {t('forgotPassword.subtitle')}
                   </p>
                 </div>
 
                 <div className="grid gap-5">
-                  <Label htmlFor="reset-email">Email</Label>
+                  <Label htmlFor="reset-email">{t('login.email')}</Label>
                   <Input
                     {...passwordResetForm.register("email")}
                     id="reset-email"
@@ -108,11 +107,11 @@ export default function LoginForm({
                     className="w-full hover:cursor-pointer"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Requesting...' : 'Request Reset Link'}
+                    {isLoading ? t('auth:forgotPassword.requesting') : t('auth:forgotPassword.requestButton')}
                   </Button>
                   <div className="text-center text-sm">
                     <p onClick={() => setPasswordReset(false)} className="hover:underline cursor-pointer">
-                      Try a different login method
+                      {t('forgotPassword.tryDifferent')}
                     </p>
                   </div>
                 </div>
@@ -125,9 +124,9 @@ export default function LoginForm({
             >
               <div className="flex flex-col gap-6 flex-1">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">Welcome back</h1>
+                  <h1 className="text-2xl font-bold">{t('login.title')}</h1>
                   <p className="text-muted-foreground text-balance">
-                    Login to your account
+                    {t('login.subtitle')}
                   </p>
                 </div>
 
@@ -138,7 +137,7 @@ export default function LoginForm({
                 )}
 
                 <div className="grid gap-3">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('login.email')}</Label>
                   <Input
                     {...loginForm.register("email")}
                     id="email"
@@ -153,12 +152,12 @@ export default function LoginForm({
 
                 <div className="grid gap-3">
                   <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('login.password')}</Label>
                     <p
                       onClick={() => setPasswordReset(true)}
                       className="ml-auto text-sm underline-offset-2 hover:underline cursor-pointer"
                     >
-                      Forgot your password?
+                      {t('login.forgotPassword')}
                     </p>
                   </div>
                   <Input 
@@ -178,27 +177,27 @@ export default function LoginForm({
                     className="w-full hover:cursor-pointer"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Logging in...' : 'Login'}
+                    {isLoading ? t('auth:login.loggingIn') : t('auth:login.loginButton')}
                   </Button>
 
                   <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                     <span className="bg-card text-muted-foreground relative z-10 px-2">
-                      Or continue with
+                      {t('login.orContinue')}
                     </span>
                   </div>
 
                   <div className="grid-cols-3 gap-4 flex place-items-center">
                     <GoogleLoginButton 
-                      text="Login with Google"
+                      text={t('login.googleLogin')}
                       disabled={isLoading}
                       onSuccess={() => void navigate('/dashboard')}
                     />
                   </div>
 
                   <div className="text-center text-sm">
-                    Don&apos;t have an account?{" "}
+                    {t('login.noAccount')}{" "}
                     <Link to="/auth/register" className="underline underline-offset-4">
-                      Sign up
+                      {t('login.signUp')}
                     </Link>
                   </div>
                 </div>
@@ -206,14 +205,12 @@ export default function LoginForm({
             </form>
           )}
          
-
           <div className="hidden md:block" /> {/* Placeholder for image */}
         </CardContent>
       </Card>
       
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        {t('login.agreementText')}
       </div>
     </div>
   );

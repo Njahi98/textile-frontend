@@ -1,0 +1,52 @@
+{
+    "calendar":{
+  "header": {
+    "title": "Calendrier des Affectations",
+    "subtitle": "Visualiser et gérer les affectations des ouvriers sur un calendrier mensuel."
+  },
+  "months": {
+    "january": "Janvier",
+    "february": "Février",
+    "march": "Mars",
+    "april": "Avril",
+    "may": "Mai",
+    "june": "Juin",
+    "july": "Juillet",
+    "august": "Août",
+    "september": "Septembre",
+    "october": "Octobre",
+    "november": "Novembre",
+    "december": "Décembre"
+  },
+  "dayHeaders": {
+    "sun": "Dim",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mer",
+    "thu": "Jeu",
+    "fri": "Ven",
+    "sat": "Sam"
+  },
+  "shifts": {
+    "morning": "Matin",
+    "afternoon": "Après-midi",
+    "night": "Nuit"
+  },
+  "filters": {
+    "allWorkers": "Tous les Ouvriers",
+    "allProductionLines": "Toutes les Lignes de Production"
+  },
+  "navigation": {
+    "today": "Aujourd'hui"
+  },
+  "calendarMore": {
+    "more": "+{{count}} de plus"
+  },
+  "dialog": {
+    "assignmentsFor": "Affectations pour",
+    "noAssignments": "Aucune affectation pour cette journée",
+    "shift": "Équipe",
+    "location": "Emplacement"
+  }
+}
+}

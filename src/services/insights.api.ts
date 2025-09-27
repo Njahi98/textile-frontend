@@ -10,6 +10,7 @@ export interface InsightsFilters {
 
 export interface AIInsightResponse {
     success: boolean;
+    message:string;
     insights: {
         summary: string;
         recommendations: Array<{

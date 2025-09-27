@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import i18n from './i18n';
 
 const VITE_API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -34,7 +35,14 @@ export const api = axios.create({
 export const fetcher = <T,>(url: string): Promise<T> => api.get(url).then((res: AxiosResponse<T>) => res.data);
 
 api.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    try {
+      const lng = i18n.language || (typeof window !== 'undefined' ? localStorage.getItem('preferred-language') || 'en' : 'en');
+      if (!config.headers) config.headers = {} as any;
+      (config.headers as Record<string, string>)['Accept-Language'] = lng;
+    } catch {}
+    return config;
+  },
   (error: unknown) =>
     Promise.reject(error instanceof Error ? error : new Error(String(error)))
 );

@@ -1,0 +1,53 @@
+{
+    "calendar":
+    {
+  "header": {
+    "title": "Assignment Calendar",
+    "subtitle": "View and manage worker assignments on a monthly calendar."
+  },
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "dayHeaders": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "shifts": {
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "night": "Night"
+  },
+  "filters": {
+    "allWorkers": "All Workers",
+    "allProductionLines": "All Production Lines"
+  },
+  "navigation": {
+    "today": "Today"
+  },
+  "calendarMore": {
+    "more": "+{{count}} more"
+  },
+  "dialog": {
+    "assignmentsFor": "Assignments for",
+    "noAssignments": "No assignments for this day",
+    "shift": "Shift",
+    "location": "Location"
+  }
+}
+}

@@ -1,0 +1,86 @@
+{
+  "hero": {
+    "title": "Optimize Your Textile",
+    "subtitle": "Production Lines",
+    "description": "Transform your textile facility with real-time analytics, intelligent worker management, and data-driven insights. Import Excel data, track performance, and boost productivity by up to 45%."
+  },
+  "buttons": {
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "stats": {
+    "productivity": "Increase in Productivity",
+    "errorReduction": "Reduction in Errors", 
+    "monitoring": "Real-time Monitoring",
+    "timeSaved": "Saved Daily per Line"
+  },
+  "features": {
+    "analytics": {
+      "title": "Real-time Analytics",
+      "description": "Monitor production metrics, worker performance, and line efficiency with live dashboards and instant insights."
+    },
+    "workers": {
+      "title": "Worker Management", 
+      "description": "Track individual performance, manage assignments, and optimize workforce allocation across production lines."
+    },
+    "optimization": {
+      "title": "Performance Optimization",
+      "description": "AI-powered recommendations to boost productivity, reduce errors, and maximize output quality."
+    },
+    "scheduling": {
+      "title": "Shift Planning",
+      "description": "Smart scheduling system that balances workload, tracks attendance, and ensures optimal coverage."
+    },
+    "demo": "Demo Version",
+    "noCard": "No Credit Card",
+    "tryAll": "Try All Features"
+  },
+  "sections": {
+    "features": {
+      "title": "Why Choose TextilePro?",
+      "subtitle": "Built specifically for textile manufacturers, our platform understands your unique challenges"
+    },
+    "howItWorks": {
+      "title": "Simple Setup, Powerful Results"
+    },
+    "testimonials": {
+      "title": "Trusted by Industry Leaders",
+      "subtitle": "Join hundreds of textile facilities improving their operations"
+    },
+    "cta": {
+      "title": "Ready to Try TextilePro?",
+      "description": "Experience how TextilePro can transform your textile production. Sign up now for our demo version and explore all features."
+    }
+  },
+  "steps": {
+    "import": {
+      "title": "Import Your Data",
+      "description": "Upload Excel files or manually input your production data"
+    },
+    "track": {
+      "title": "Track Performance", 
+      "description": "Monitor workers, products, and production lines in real-time"
+    },
+    "optimize": {
+      "title": "Optimize & Scale",
+      "description": "Use AI insights to improve efficiency and reduce costs"
+    }
+  },
+  "testimonials": {
+    "sarah": {
+      "quote": "This platform transformed how we manage our production lines. The insights are invaluable.",
+      "role": "Production Manager"
+    },
+    "mohamed": {
+      "quote": "Worker performance tracking has never been this easy. We've seen dramatic improvements.",
+      "role": "Operations Director"
+    },
+    "lisa": {
+      "quote": "The Excel import feature saved us months of data migration. Seamless integration!",
+      "role": "Plant Supervisor"
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 TextilePro. All rights reserved. | Privacy | Terms"
+  }
+}

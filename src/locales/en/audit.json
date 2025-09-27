@@ -1,0 +1,53 @@
+{
+
+
+
+
+    "stats":{
+  "pageTitle": "Audit Statistics",
+  "pageDescription": "Analyze audit activity and user actions",
+  "messages": {
+    "loadError": "Failed to load audit statistics"
+  },
+  "filters": {
+    "days": "Days"
+  },
+  "cards": {
+    "totalActions": {
+      "title": "Total Actions",
+      "period": "From {{startDate}} to {{endDate}}"
+    },
+    "topAction": {
+      "title": "Top Action",
+      "events": "{{count}} events"
+    },
+    "topResource": {
+      "title": "Top Resource", 
+      "events": "{{count}} events"
+    },
+    "mostActiveUser": {
+      "title": "Most Active User",
+      "actions": "{{count}} actions"
+    }
+  },
+  "tabs": {
+    "actionsByType": "Actions by Type",
+    "actionsByResource": "Actions by Resource",
+    "topUsers": "Top Users"
+  },
+  "sections": {
+    "actionsByType": {
+      "title": "Actions by Type"
+    },
+    "actionsByResource": {
+      "title": "Actions by Resource"
+    },
+    "topUsers": {
+      "title": "Top Users"
+    }
+  },
+  "common": {
+    "noData": "No data"
+  }
+}
+}

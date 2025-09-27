@@ -212,8 +212,7 @@ export const AIInsightsDashboard: React.FC = () => {
       
       setPersistedData(dataToSave);
       saveToStorage(STORAGE_KEYS.INSIGHTS_DATA, dataToSave);
-      
-      toast.success( 'AI insights have been successfully generated for the selected date range.', {
+  toast.success(result.message, {
         duration: 3000,
       });
       
@@ -231,11 +230,11 @@ export const AIInsightsDashboard: React.FC = () => {
           setRateLimitInfo(newRateLimitInfo);
           setCooldownTimer(errorData.remainingTime);
           
-          toast.error(`AI insights can only be generated once every 30 minutes. Please wait ${formatTime(errorData.remainingTime)} before trying again.`, {
+          toast.error(errorData.message, {
             duration: 5000,
           });
         } else {
-          toast.error('AI insights can only be generated once every 30 minutes. Please wait before trying again.', {
+          toast.error(errorData.message, {
             duration: 5000,
           });
         }

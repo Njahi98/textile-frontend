@@ -31,6 +31,7 @@ import {
   Area,
   AreaChart
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 interface StatsResponse {
   success: boolean;
@@ -105,6 +106,8 @@ function StatCard({
 }
 
 export default function DashboardHome() {
+    const { t } = useTranslation(['dashboard']);
+    
   const { data: statsData, error: statsError, isLoading: statsLoading } = 
     useSWR<StatsResponse>('/api/dashboard/stats', fetcher, { refreshInterval: 30000 });
 
@@ -158,34 +161,34 @@ export default function DashboardHome() {
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Workers"
-          value={stats?.workers.total || 0}
-          description={`${stats?.workers.activeToday || 0} active today`}
-          icon={Users}
-          trend={(stats?.workers.activeToday ?? 0) > 0 ? 'up' : 'neutral'}
-          trendValue={`${stats?.workers.activeToday || 0} working`}
-        />
-        <StatCard
-          title="Production Lines"
-          value={stats?.productionLines.active || 0}
-          description={`of ${stats?.productionLines.total || 0} total lines`}
-          icon={Factory}
-        />
-        <StatCard
-          title="Today's Production"
-          value={(stats?.production.today.pieces || 0).toLocaleString()}
-          description={`${stats?.production.today.avgErrorRate?.toFixed(2) || 0}% error rate`}
-          icon={Package}
-          trend={(stats?.production.today.pieces ?? 0) > 0 ? 'up' : 'neutral'}
-          trendValue={`${stats?.production.today.records || 0} records`}
-        />
-        <StatCard
-          title="Month Production"
-          value={(stats?.production.month.pieces || 0).toLocaleString()}
-          description={`${stats?.production.month.records || 0} total records`}
-          icon={TrendingUp}
-        />
+       <StatCard
+  title={t('stats.totalWorkers')}
+  value={stats?.workers.total || 0}
+  description={t('stats.activeToday', { count: stats?.workers.activeToday || 0 })}
+  icon={Users}
+  trend={(stats?.workers.activeToday ?? 0) > 0 ? 'up' : 'neutral'}
+  trendValue={t('stats.working', { count: stats?.workers.activeToday || 0 })}
+/>
+<StatCard
+  title={t('stats.productionLines')}
+  value={stats?.productionLines.active || 0}
+  description={t('stats.ofTotal', { active: stats?.productionLines.active || 0, total: stats?.productionLines.total || 0 })}
+  icon={Factory}
+/>
+<StatCard
+  title={t('stats.todayProduction')}
+  value={(stats?.production.today.pieces || 0).toLocaleString()}
+  description={t('stats.errorRate', { rate: stats?.production.today.avgErrorRate?.toFixed(2) || 0 })}
+  icon={Package}
+  trend={(stats?.production.today.pieces ?? 0) > 0 ? 'up' : 'neutral'}
+  trendValue={t('stats.records', { count: stats?.production.today.records || 0 })}
+/>
+<StatCard
+  title={t('stats.monthProduction')}
+  value={(stats?.production.month.pieces || 0).toLocaleString()}
+  description={t('stats.totalRecords', { count: stats?.production.month.records || 0 })}
+  icon={TrendingUp}
+/>
       </div>
 
       {/* Production Trends and Top Performers */}
@@ -193,8 +196,8 @@ export default function DashboardHome() {
         {/* Production Trends Chart */}
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Production Trends</CardTitle>
-            <CardDescription>Last 7 days production overview</CardDescription>
+            <CardTitle>{t('charts.productionTrends.title')}</CardTitle>
+            <CardDescription>{t('charts.productionTrends.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             {trends?.data && trends.data.length > 0 ? (
@@ -234,21 +237,21 @@ export default function DashboardHome() {
               </div>
             ) : (
               <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                No data available
+                {t('common.noDataAvailable')}
               </div>
             )}
             {trends?.summary && (
               <div className="mt-4 grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Production</p>
+<p className="text-sm text-muted-foreground">{t('charts.productionTrends.totalProduction')}</p>
                   <p className="text-lg font-semibold">{trends.summary.totalProduction.toLocaleString()}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Daily Average</p>
+<p className="text-sm text-muted-foreground">{t('charts.productionTrends.dailyAverage')}</p>
                   <p className="text-lg font-semibold">{Math.round(trends.summary.avgDailyProduction).toLocaleString()}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Trend</p>
+<p className="text-sm text-muted-foreground">{t('charts.productionTrends.trend')}</p>
                   <p className={`text-lg font-semibold ${trends.summary.trendPercentage > 0 ? 'text-green-500' : trends.summary.trendPercentage < 0 ? 'text-red-500' : ''}`}>
                     {trends.summary.trendPercentage > 0 ? '+' : ''}{trends.summary.trendPercentage}%
                   </p>
@@ -261,8 +264,8 @@ export default function DashboardHome() {
         {/* Top Performers */}
         <Card className="col-span-4 lg:col-span-3">
           <CardHeader>
-            <CardTitle>Top Performers Today</CardTitle>
-            <CardDescription>Highest producing workers</CardDescription>
+<CardTitle>{t('charts.topPerformers.title')}</CardTitle>
+<CardDescription>{t('charts.topPerformers.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -291,7 +294,7 @@ export default function DashboardHome() {
               ))}
               {topPerformers.length === 0 && (
                 <div className="text-center text-muted-foreground py-8">
-                  No performance data for today
+                  {t('charts.topPerformers.noData')}
                 </div>
               )}
             </div>
@@ -302,8 +305,8 @@ export default function DashboardHome() {
       {/* Production Line Metrics */}
       <Card>
         <CardHeader>
-          <CardTitle>Production Line Performance</CardTitle>
-          <CardDescription>Today's production metrics by line</CardDescription>
+          <CardTitle>{t('charts.productionLines.title')}</CardTitle>
+          <CardDescription>{t('charts.productionLines.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           {metrics.length > 0 ? (
@@ -316,9 +319,9 @@ export default function DashboardHome() {
                         {metric.productionLine?.name || 'Unknown Line'}
                       </span>
                       {metric.productionLine?.isActive ? (
-                        <Badge variant="default" className="h-5">Active</Badge>
+                        <Badge variant="default" className="h-5">{t('status.active')}</Badge>
                       ) : (
-                        <Badge variant="secondary" className="h-5">Inactive</Badge>
+                        <Badge variant="secondary" className="h-5">{t('status.inactive')}</Badge>
                       )}
                     </div>
                     <div className="flex items-center space-x-4 text-sm">
@@ -344,7 +347,7 @@ export default function DashboardHome() {
                   {metric.efficiency !== null && metric.productionLine?.targetOutput && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>Efficiency</span>
+                        <span>{t('metrics.efficiency')}</span>
                         <span>{metric.efficiency.toFixed(1)}% of target ({metric.productionLine.targetOutput.toLocaleString()} pcs)</span>
                       </div>
                       <Progress 
@@ -362,7 +365,7 @@ export default function DashboardHome() {
             </div>
           ) : (
             <div className="text-center text-muted-foreground py-8">
-              No production data available for today
+              {t('charts.productionLines.noData')}
             </div>
           )}
         </CardContent>
@@ -373,8 +376,8 @@ export default function DashboardHome() {
         {/* Recent Assignments */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Assignments</CardTitle>
-            <CardDescription>Latest worker assignments</CardDescription>
+            <CardTitle>{t('activities.assignments.title')}</CardTitle>
+<CardDescription>{t('activities.assignments.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -403,7 +406,7 @@ export default function DashboardHome() {
               ))}
               {(!activities?.assignments || activities.assignments.length === 0) && (
                 <div className="text-center text-muted-foreground py-4">
-                  No recent assignments
+                  {t('activities.assignments.noData')}
                 </div>
               )}
             </div>
@@ -413,8 +416,8 @@ export default function DashboardHome() {
         {/* Recent Performance Records */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Performance</CardTitle>
-            <CardDescription>Latest production records</CardDescription>
+            <CardTitle>{t('activities.performance.title')}</CardTitle>
+<CardDescription>{t('activities.performance.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -443,7 +446,7 @@ export default function DashboardHome() {
               ))}
               {(!activities?.performanceRecords || activities.performanceRecords.length === 0) && (
                 <div className="text-center text-muted-foreground py-4">
-                  No recent records
+                  {t('activities.performance.noData')}
                 </div>
               )}
             </div>
@@ -453,8 +456,8 @@ export default function DashboardHome() {
         {/* New Workers */}
         <Card>
           <CardHeader>
-            <CardTitle>New Workers</CardTitle>
-            <CardDescription>Recently added to system</CardDescription>
+            <CardTitle>{t('activities.newWorkers.title')}</CardTitle>
+<CardDescription>{t('activities.newWorkers.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -466,7 +469,7 @@ export default function DashboardHome() {
                   </div>
                   <div className="text-right">
                     <Badge variant="outline" className="text-xs">
-                      {worker.role || 'No Role'}
+                      {worker.role || t('common.noRole')}
                     </Badge>
                     <p className="text-xs text-muted-foreground mt-1">
                       {formatDate(worker.createdAt)}
@@ -476,7 +479,7 @@ export default function DashboardHome() {
               ))}
               {(!activities?.newWorkers || activities.newWorkers.length === 0) && (
                 <div className="text-center text-muted-foreground py-4">
-                  No new workers recently
+                  {t('activities.newWorkers.noData')}
                 </div>
               )}
             </div>

@@ -1,0 +1,97 @@
+{
+  "pageTitle": "Liste des Utilisateurs",
+  "pageDescription": "Gérez vos utilisateurs et leurs rôles ici.",
+  "messages": {
+    "loadError": "Échec du chargement des utilisateurs",
+    "noUsers": "Aucun utilisateur trouvé.",
+    "createSuccess": "Utilisateur créé avec succès",
+    "updateSuccess": "Utilisateur mis à jour avec succès",
+    "deleteSuccess": "Utilisateur supprimé avec succès",
+    "createError": "Erreur lors de la création de l'utilisateur",
+    "updateError": "Erreur lors de la mise à jour de l'utilisateur",
+    "deleteError": "Erreur lors de la suppression de l'utilisateur",
+    "confirmDelete": "Entrez le nom d'utilisateur pour confirmer la suppression."
+  },
+  "buttons": {
+    "addUser": "Ajouter Utilisateur",
+    "saveChanges": "Enregistrer les modifications",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "reset": "Réinitialiser",
+    "clearFilters": "Effacer les filtres"
+  },
+  "table": {
+    "headers": {
+      "username": "Nom d'utilisateur",
+      "name": "Nom",
+      "email": "Email",
+      "phoneNumber": "Numéro de Téléphone",
+      "status": "Statut",
+      "role": "Rôle",
+      "actions": "Actions"
+    },
+    "sort": {
+      "asc": "Croissant",
+      "desc": "Décroissant", 
+      "hide": "Masquer"
+    },
+    "filters": {
+      "filterUsers": "Filtrer les utilisateurs...",
+      "status": "Statut",
+      "role": "Rôle",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "suspended": "Suspendu"
+    },
+    "pagination": {
+      "selectedRows": "{{selected}} sur {{total}} ligne(s) sélectionnée(s)",
+      "rowsPerPage": "Lignes par page",
+      "page": "Page {current} sur {total}",
+      "goToFirst": "Aller à la première page",
+      "goToPrevious": "Aller à la page précédente",
+      "goToNext": "Aller à la page suivante",
+      "goToLast": "Aller à la dernière page",
+      "noResults": "Aucun résultat."
+    },
+    "viewOptions": {
+      "view": "Affichage",
+      "toggleColumns": "Basculer les colonnes"
+    }
+  },
+  "dialog": {
+    "add": {
+      "title": "Ajouter Nouvel Utilisateur",
+      "description": "Créez un nouvel utilisateur ici. Cliquez sur enregistrer quand vous avez terminé."
+    },
+    "edit": {
+      "title": "Modifier Utilisateur",
+      "description": "Mettez à jour l'utilisateur ici. Cliquez sur enregistrer quand vous avez terminé."
+    },
+      "delete": {
+    "title": "Supprimer Utilisateur",
+    "description": "Êtes-vous sûr de vouloir supprimer",
+    "warning": "Cette action supprimera définitivement l'utilisateur avec le rôle de {{role}} du système. Cette action ne peut pas être annulée.",
+    "confirmLabel": "Nom d'utilisateur :",
+    "alertTitle": "Attention !",
+    "alertDescription": "Soyez prudent, cette opération ne peut pas être annulée."
+  }
+  },
+  "form": {
+    "labels": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "username": "Nom d'utilisateur",
+      "email": "Email", 
+      "phoneNumber": "Numéro de Téléphone",
+      "role": "Rôle",
+      "status": "Statut",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer mot de passe"
+    }
+  },
+  "facetedFilter": {
+    "noResults": "Aucun résultat trouvé.",
+    "selected": "sélectionné(s)"
+  }
+}

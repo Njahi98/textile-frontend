@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "dashboard": "Tableau de Bord",
+    "users": "Utilisateurs",
+    "chats": "Discussions",
+    "workers": "Ouvriers",
+    "productionLines": "Lignes de Production",
+    "assignments": {
+      "title": "Affectations",
+      "overview": "Vue d'ensemble",
+      "calendar": "Calendrier"
+    },
+    "products": "Produits",
+    "performance": {
+      "title": "Performance",
+      "overview": "Vue d'ensemble",
+      "analytics": "Analytiques",
+      "aiInsights": "Insights IA"
+    },
+    "auditLogs": {
+      "title": "Journaux d'Audit",
+      "overview": "Vue d'ensemble",
+      "stats": "Statistiques"
+    },
+    "accountSettings": "Paramètres du Compte"
+  },
+  "navUser":{
+   "home": "Accueil",
+  "profile": "Profil",
+  "notifications": "Notifications",
+  "settings": "Paramètres",
+  "logout": "Se déconnecter"
+}
+}

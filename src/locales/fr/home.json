@@ -1,0 +1,86 @@
+{
+  "hero": {
+    "title": "Optimisez Votre Textile",
+    "subtitle": "Lignes de Production",
+    "description": "Transformez votre usine textile avec des analyses en temps réel, une gestion intelligente des travailleurs et des insights basés sur les données. Importez des données Excel, suivez les performances et augmentez la productivité jusqu'à 45%."
+  },
+  "buttons": {
+    "signIn": "Se Connecter",
+    "getStarted": "Commencer"
+  },
+  "stats": {
+    "productivity": "Augmentation de la Productivité",
+    "errorReduction": "Réduction des Erreurs",
+    "monitoring": "Surveillance en Temps Réel", 
+    "timeSaved": "Économisées par Jour par Ligne"
+  },
+  "features": {
+    "analytics": {
+      "title": "Analyses en Temps Réel",
+      "description": "Surveillez les métriques de production, les performances des travailleurs et l'efficacité des lignes avec des tableaux de bord en direct et des insights instantanés."
+    },
+    "workers": {
+      "title": "Gestion des Travailleurs",
+      "description": "Suivez les performances individuelles, gérez les affectations et optimisez l'allocation de la main-d'œuvre sur les lignes de production."
+    },
+    "optimization": {
+      "title": "Optimisation des Performances", 
+      "description": "Recommandations alimentées par l'IA pour stimuler la productivité, réduire les erreurs et maximiser la qualité de production."
+    },
+    "scheduling": {
+      "title": "Planification des Équipes",
+      "description": "Système de planification intelligent qui équilibre la charge de travail, suit les présences et assure une couverture optimale."
+    },
+    "demo": "Version Démo",
+    "noCard": "Pas de Carte de Crédit",
+    "tryAll": "Essayer Toutes les Fonctionnalités"
+  },
+  "sections": {
+    "features": {
+      "title": "Pourquoi Choisir TextilePro ?",
+      "subtitle": "Conçu spécifiquement pour les fabricants textiles, notre plateforme comprend vos défis uniques"
+    },
+    "howItWorks": {
+      "title": "Configuration Simple, Résultats Puissants"
+    },
+    "testimonials": {
+      "title": "Approuvé par les Leaders de l'Industrie", 
+      "subtitle": "Rejoignez des centaines d'installations textiles améliorant leurs opérations"
+    },
+    "cta": {
+      "title": "Prêt à Essayer TextilePro ?",
+      "description": "Découvrez comment TextilePro peut transformer votre production textile. Inscrivez-vous maintenant pour notre version démo et explorez toutes les fonctionnalités."
+    }
+  },
+  "steps": {
+    "import": {
+      "title": "Importez Vos Données",
+      "description": "Téléchargez des fichiers Excel ou saisissez manuellement vos données de production"
+    },
+    "track": {
+      "title": "Suivez les Performances",
+      "description": "Surveillez les travailleurs, produits et lignes de production en temps réel"
+    },
+    "optimize": {
+      "title": "Optimisez et Développez",
+      "description": "Utilisez les insights IA pour améliorer l'efficacité et réduire les coûts"
+    }
+  },
+  "testimonials": {
+    "sarah": {
+      "quote": "Cette plateforme a transformé notre façon de gérer nos lignes de production. Les insights sont inestimables.",
+      "role": "Responsable de Production"
+    },
+    "mohamed": {
+      "quote": "Le suivi des performances des travailleurs n'a jamais été aussi facile. Nous avons constaté des améliorations spectaculaires.",
+      "role": "Directeur des Opérations"
+    },
+    "lisa": {
+      "quote": "La fonctionnalité d'import Excel nous a fait économiser des mois de migration de données. Intégration transparente !",
+      "role": "Superviseur d'Usine"
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 TextilePro. Tous droits réservés. | Confidentialité | Conditions"
+  }
+}

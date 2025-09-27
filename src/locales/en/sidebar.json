@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "chats": "Chats",
+    "workers": "Workers",
+    "productionLines": "Production Lines",
+    "assignments": {
+      "title": "Assignments",
+      "overview": "Overview",
+      "calendar": "Calendar"
+    },
+    "products": "Products",
+    "performance": {
+      "title": "Performance",
+      "overview": "Overview",
+      "analytics": "Analytics",
+      "aiInsights": "AI Insights"
+    },
+    "auditLogs": {
+      "title": "Audit Logs",
+      "overview": "Overview",
+      "stats": "Stats"
+    },
+    "accountSettings": "Account Settings"
+  },
+  "navUser":{
+  "home": "Home",
+  "profile": "Profile",
+  "notifications": "Notifications",
+  "settings": "Settings",
+  "logout": "Log out"
+}
+}

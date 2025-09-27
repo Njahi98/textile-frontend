@@ -32,6 +32,7 @@ import {
 import { useAuthStore } from "@/stores/auth.store"
 import { AuthState } from "@/types/auth"
 import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 
 
@@ -43,6 +44,7 @@ export function NavUser({
   user
 }:NavUserProps) {
   const { isMobile } = useSidebar()
+  const {t}=useTranslation(['sidebar'])
   const {logout} = useAuthStore();
   return (
     <SidebarMenu>
@@ -85,21 +87,21 @@ export function NavUser({
               <DropdownMenuItem asChild>
               <Link to="/dashboard" className="flex items-center gap-2">
                 <House />
-                Home
+                {t('navUser.home')}
               </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <SquareUser />
-                Profile
+                {t('navUser.profile')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
-                Notifications
+                {t('navUser.notifications')}
               </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                 <Link to="/settings/account" className="flex items-center gap-2">
                   <Settings />
-                  Settings
+                  {t('navUser.settings')}
                 </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -107,7 +109,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem className="hover:cursor-pointer" onClick={() => {void logout()}}>
               <LogOut/>
-              Log out
+              {t('navUser.logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

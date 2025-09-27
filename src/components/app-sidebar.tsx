@@ -21,97 +21,100 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/auth.store";
+import { useTranslation } from "react-i18next";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
+  const { t } = useTranslation(['sidebar']);
+
 
   const navItems = [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutDashboard,
-      isActive: true,
-    },
-    {
-      title: "Users",
-      url: "/users",
-      icon: User,
-    },
-    {
-      title: "Chats",
-      url: "/chat",
-      icon: MessagesSquare,
-    },
-    {
-      title: "Workers",
-      url: "/workers",
-      icon: Frame,
-    },
-    {
-      title: "Production Lines",
-      url: "/production-lines",
-      icon: Command,
-    },
-    {
-      title: "Assignments",
-      url: "/assignments",
-      icon: AudioWaveform,
-      items: [
-        {
-          title: "Overview",
-          url: "/assignments/overview",
-        },
-        {
-          title: "Calendar",
-          url: "/assignments/calendar",
-        },
-      ],
-    },
-    {
-      title: "Products",
-      url: "/products",
-      icon: Box,
-    },
-    {
-      title: "Performance",
-      url: "/performance",
-      icon: GalleryVerticalEnd,
-      items: [
-        {
-          title: "Overview",
-          url: "/performance/overview",
-        },
-        {
-          title: "Analytics",
-          url: "/performance/analytics",
-        },
-        {
-          title: "AI Insights",
-          url: "/performance/ai-insights",
-        },
-      ],
-    },
-    {
-      title: "Audit Logs",
-      url: "/settings/audit-logs",
-      icon: Logs,
-      items: [
-        {
-          title: "Overview",
-          url: "/settings/audit-logs",
-        },
-        {
-          title: "Stats",
-          url: "/settings/audit-stats",
-        },
-      ],
-    },
-    {
-      title: "Account Settings",
-      url: "/settings/account",
-      icon: Settings,
-    },
-  ].filter(Boolean);
+  {
+    title: t('nav.dashboard'),
+    url: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: t('nav.users'),
+    url: "/users",
+    icon: User,
+  },
+  {
+    title: t('nav.chats'),
+    url: "/chat",
+    icon: MessagesSquare,
+  },
+  {
+    title: t('nav.workers'),
+    url: "/workers",
+    icon: Frame,
+  },
+  {
+    title: t('nav.productionLines'),
+    url: "/production-lines",
+    icon: Command,
+  },
+  {
+    title: t('nav.assignments.title'),
+    url: "/assignments",
+    icon: AudioWaveform,
+    items: [
+      {
+        title: t('nav.assignments.overview'),
+        url: "/assignments/overview",
+      },
+      {
+        title: t('nav.assignments.calendar'),
+        url: "/assignments/calendar",
+      },
+    ],
+  },
+  {
+    title: t('nav.products'),
+    url: "/products",
+    icon: Box,
+  },
+  {
+    title: t('nav.performance.title'),
+    url: "/performance",
+    icon: GalleryVerticalEnd,
+    items: [
+      {
+        title: t('nav.performance.overview'),
+        url: "/performance/overview",
+      },
+      {
+        title: t('nav.performance.analytics'),
+        url: "/performance/analytics",
+      },
+      {
+        title: t('nav.performance.aiInsights'),
+        url: "/performance/ai-insights",
+      },
+    ],
+  },
+  {
+    title: t('nav.auditLogs.title'),
+    url: "/settings/audit-logs",
+    icon: Logs,
+    items: [
+      {
+        title: t('nav.auditLogs.overview'),
+        url: "/settings/audit-logs",
+      },
+      {
+        title: t('nav.auditLogs.stats'),
+        url: "/settings/audit-stats",
+      },
+    ],
+  },
+  {
+    title: t('nav.accountSettings'),
+    url: "/settings/account",
+    icon: Settings,
+  },
+].filter(Boolean);
 
   const data = {
     navMain: navItems,

@@ -8,6 +8,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { User } from '../data/schema'
 import { userApi } from '@/services/user.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   open: boolean
@@ -17,6 +18,7 @@ interface Props {
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState('')
+  const { t } = useTranslation(['users'])
 
   const handleDelete = async() => {
     try {
@@ -49,40 +51,36 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             className='stroke-destructive mr-1 inline-block'
             size={18}
           />{' '}
-          Delete User
+          {t('dialog.delete.title')}
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            {t('dialog.delete.description')}{' '}
             <span className='font-bold'>{currentRow.username}</span>?
             <br />
-            This action will permanently remove the user with the role of{' '}
-            <span className='font-bold'>
-              {currentRow.role.toUpperCase()}
-            </span>{' '}
-            from the system. This cannot be undone.
+            {t('dialog.delete.warning', { role: currentRow.role.toUpperCase() })}
           </p>
 
           <Label className='my-2'>
-            Username:
+            {t('dialog.delete.confirmLabel')}
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter username to confirm deletion.'
+              placeholder={t('messages.confirmDelete')}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t('dialog.delete.alertTitle')}</AlertTitle>
             <AlertDescription>
-              Please be carefull, this operation can not be rolled back.
+              {t('dialog.delete.alertDescription')}
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='Delete'
+      confirmText={t('buttons.delete')}
       destructive
     />
   )

@@ -1,0 +1,97 @@
+{
+  "pageTitle": "User List",
+  "pageDescription": "Manage your users and their roles here.",
+  "messages": {
+    "loadError": "Failed to load users",
+    "noUsers": "No users found.",
+    "createSuccess": "User created successfully",
+    "updateSuccess": "User updated successfully",
+    "deleteSuccess": "User deleted successfully",
+    "createError": "Error creating user",
+    "updateError": "Error updating user",
+    "deleteError": "Error deleting user",
+    "confirmDelete": "Enter username to confirm deletion."
+  },
+  "buttons": {
+    "addUser": "Add User",
+    "saveChanges": "Save changes",
+    "delete": "Delete",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "clearFilters": "Clear filters"
+  },
+  "table": {
+    "headers": {
+      "username": "Username",
+      "name": "Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "status": "Status",
+      "role": "Role",
+      "actions": "Actions"
+    },
+    "sort": {
+      "asc": "Asc",
+      "desc": "Desc",
+      "hide": "Hide"
+    },
+    "filters": {
+      "filterUsers": "Filter users...",
+      "status": "Status",
+      "role": "Role",
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended"
+    },
+    "pagination": {
+      "selectedRows": "{{selected}} of {{total}} row(s) selected",
+      "rowsPerPage": "Rows per page",
+      "page": "Page {current} of {total}",
+      "goToFirst": "Go to first page",
+      "goToPrevious": "Go to previous page",
+      "goToNext": "Go to next page",
+      "goToLast": "Go to last page",
+      "noResults": "No results."
+    },
+    "viewOptions": {
+      "view": "View",
+      "toggleColumns": "Toggle columns"
+    }
+  },
+  "dialog": {
+    "add": {
+      "title": "Add New User",
+      "description": "Create new user here. Click save when you're done."
+    },
+    "edit": {
+      "title": "Edit User",
+      "description": "Update the user here. Click save when you're done."
+    },
+    "delete": {
+    "title": "Delete User",
+    "description": "Are you sure you want to delete",
+    "warning": "This action will permanently remove the user with the role of {{role}} from the system. This cannot be undone.",
+    "confirmLabel": "Username:",
+    "alertTitle": "Warning!",
+    "alertDescription": "Please be careful, this operation cannot be rolled back."
+  }
+  },
+  "form": {
+    "labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "username": "Username",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "role": "Role",
+      "status": "Status",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    }
+  },
+  "facetedFilter": {
+    "noResults": "No results found.",
+    "selected": "selected"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "pageTitle": "Paramètres du Compte",
+  "pageDescription": "Gérez vos paramètres et préférences de compte.",
+  "sections": {
+    "profilePicture": {
+      "title": "Photo de Profil",
+      "description": "Téléchargez ou mettez à jour votre photo de profil.",
+      "fileInfo": "JPG, PNG ou GIF. Taille max 10Mo."
+    },
+    "currentAccount": {
+      "title": "Informations Actuelles du Compte",
+      "description": "Consultez vos détails de compte actuels ci-dessous."
+    },
+    "updateAccount": {
+      "title": "Mettre à Jour le Compte",
+      "description": "Apportez des modifications à vos informations de compte ici."
+    },
+    "dangerZone": {
+      "title": "Zone de Danger",
+      "description": "Supprimez définitivement votre compte et toutes les données associées."
+    }
+  },
+  "fields": {
+    "username": "Nom d'utilisateur",
+    "email": "Email",
+    "role": "Rôle",
+    "status": "Statut",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phone": "Téléphone",
+    "newPassword": "Nouveau Mot de Passe"
+  },
+  "placeholders": {
+    "username": "Entrez le nom d'utilisateur",
+    "email": "Entrez l'email",
+    "firstName": "Entrez le prénom",
+    "lastName": "Entrez le nom",
+    "phone": "Entrez le numéro de téléphone",
+    "password": "Laissez vide pour garder le mot de passe actuel"
+  },
+  "buttons": {
+    "tryAgain": "Réessayer",
+    "uploadAvatar": "Télécharger Avatar",
+    "uploading": "Téléchargement...",
+    "remove": "Supprimer",
+    "deleting": "Suppression...",
+    "saveChanges": "Enregistrer les Modifications",
+    "updating": "Mise à jour...",
+    "deleteAccount": "Supprimer le Compte",
+    "cancel": "Annuler"
+  },
+  "messages": {
+    "noChanges": "Veuillez apporter des modifications avant d'enregistrer.",
+    "updateSuccess": "Compte mis à jour avec succès",
+    "updateError": "Erreur lors de la mise à jour du compte",
+    "invalidFileType": "Veuillez sélectionner un fichier image",
+    "fileSizeLimit": "La taille du fichier doit être inférieure à 10Mo",
+    "avatarUpdateSuccess": "Avatar mis à jour avec succès",
+    "avatarUpdateError": "Erreur lors du téléchargement de l'avatar",
+    "avatarDeleteSuccess": "Avatar supprimé avec succès",
+    "avatarDeleteError": "Erreur lors de la suppression de l'avatar",
+    "accountDeleteSuccess": "Compte supprimé avec succès",
+    "accountDeleteError": "Erreur lors de la suppression du compte",
+    "loadingError": "Erreur lors du chargement des paramètres du compte",
+    "noAccountData": "Aucune donnée de compte disponible"
+  },
+  "dialogs": {
+    "deleteConfirm": {
+      "title": "Êtes-vous absolument sûr ?",
+      "description": "Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte et retirera toutes vos données de nos serveurs.",
+      "confirm": "Oui, supprimer mon compte"
+    }
+  },
+  "common": {
+    "notSet": "Non défini"
+  }
+}

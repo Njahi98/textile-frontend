@@ -301,7 +301,7 @@ export default function Chats() {
           <Alert variant="destructive" className="mb-4">
             <WifiOff className="h-4 w-4" />
             <AlertDescription>
-              Connection failed: {connectionError}
+              Connection failed
               <Button
                 variant="outline"
                 size="sm"
@@ -666,12 +666,20 @@ export default function Chats() {
                 <div className='border-border flex size-16 items-center justify-center rounded-full border-2'>
                   <MessagesSquare className='size-8' />
                 </div>
-                <div className='space-y-2 text-center'>
-                  <h1 className='text-xl font-semibold'>Your messages</h1>
-                  <p className='text-muted-foreground text-sm'>
-                    {connected ? 'Send a message to start a chat.' : 'Connecting to chat server...'}
-                  </p>
-                </div>
+          <div className="space-y-2 text-center">
+              <h1 className="text-xl font-semibold">Your messages</h1>
+              {connected ? (
+                <p className="text-muted-foreground text-sm">
+                  Start a conversation by sending a message.
+                </p>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  Connecting to the chat server... <br />
+                  This project is hosted on Render’s free tier, so you may need to refresh
+                  the page if the chat services don’t start right away.
+                </p>
+              )}
+            </div>
                 <Button
                   className='bg-blue-500 px-6 text-white hover:bg-blue-600'
                   onClick={() => setCreateConversationDialog(true)}

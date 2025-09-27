@@ -1,0 +1,68 @@
+{
+  "navbar":{
+    "loginButton": "Sign in",
+    "signUpButton": "Get started",
+    "settingsButton": "Settings",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "profileSheet": {
+    "home": "Home",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "settings": "Settings"
+  },
+  "notifications":{
+  "markAllRead": "Mark all as read",
+  "clearAll": "Clear all",
+  "offline": "Offline",
+  "showingRecent": "Showing {{count}} recent notifications",
+    "loading": "Loading notifications...",
+    "noNotifications": "No notifications yet",
+    "welcomeMessage": "You'll see new messages and updates here"
+  },
+  "notFound": {
+    "title": "Oops! Page Not Found!",
+    "description": "It seems like the page you're looking for does not exist or might have been removed.",
+    "goBack": "Go Back",
+    "backHome": "Back to Home"
+  },
+    "table": {
+    "sort": {
+      "asc": "Asc",
+      "desc": "Desc",
+      "hide": "Hide"
+    },
+    "filters": {
+      "filterUsers": "Filter users...",
+      "status": "Status",
+      "role": "Role",
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended"
+    },
+    "pagination": {
+      "selectedRows": "{{selected}} of {{total}} row(s) selected",
+      "rowsPerPage": "Rows per page",
+      "page": "Page {current} of {total}",
+      "goToFirst": "Go to first page",
+      "goToPrevious": "Go to previous page",
+      "goToNext": "Go to next page",
+      "goToLast": "Go to last page",
+      "noResults": "No results."
+    },
+    "viewOptions": {
+      "view": "View",
+      "toggleColumns": "Toggle columns"
+    }
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "loading": "Loading..."
+  }
+}
