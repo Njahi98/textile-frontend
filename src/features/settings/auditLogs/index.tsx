@@ -11,12 +11,15 @@ import { ErrorState } from "@/components/error-state";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useState } from "react";
 import { AuditLogsResponse, AuditLogQueryParams } from "@/services/auditLog.api";
+import { useTranslation } from "react-i18next";
 
 export default function AuditLogs() {
   const [queryParams, setQueryParams] = useState<AuditLogQueryParams>({
     page: 1,
     limit: 50,
   });
+  const { t } = useTranslation(['auditLogs']);
+
 
   const {
     data,
@@ -41,16 +44,16 @@ export default function AuditLogs() {
   if (error)
     return (
       <ErrorState
-        title="Failed to load audit logs"
+        title={t('failedToLoadLogs')}
         message={
           typeof error.message === "string"
             ? error.message
-            : "An unknown error occurred."
+            : t('unknownError')
         }
         onRetry={() => void mutate()}
       />
     );
-  if (!data?.success) return <div>No audit logs found.</div>;
+    if (!data?.success) return <div>{t('noLogsFound')}</div>;
 
   const auditLogList = auditLogListSchema.parse(data.auditLogs);
 
@@ -59,9 +62,9 @@ export default function AuditLogs() {
       <Main>
         <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Audit Logs</h2>
+            <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
             <p className="text-muted-foreground">
-              View and manage system audit logs and user activities.
+              {t('description')}
             </p>
           </div>
           <AuditLogsPrimaryButtons />

@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "Liste des Ouvriers",
+    "subtitle": "Gérer vos ouvriers et leurs rôles ici."
+  },
+  "errors": {
+    "failedToLoad": "Échec du chargement des ouvriers",
+    "unknownError": "Une erreur inconnue s'est produite.",
+    "noWorkersFound": "Aucun ouvrier trouvé."
+  },
+  "buttons": {
+    "import": "Importer",
+    "addWorker": "Ajouter Ouvrier"
+  },
+  "table": {
+    "filterPlaceholder": "Filtrer les ouvriers...",
+    "reset": "Réinitialiser"
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Supprimer Ouvrier",
+      "confirmText": "Êtes-vous sûr de vouloir supprimer {{name}} ?",
+      "warningText": "Cette action supprimera définitivement l'ouvrier avec le numéro CIN {{cin}} et le rôle {{role}} du système. Cette action ne peut pas être annulée.",
+      "cinLabel": "CIN",
+      "cinPlaceholder": "Saisir le CIN pour confirmer la suppression.",
+      "alertTitle": "Attention !",
+      "alertDescription": "Veuillez faire attention, cette opération ne peut pas être annulée.",
+      "confirmButton": "Supprimer"
+    },
+    "import": {
+      "title": "Importer des Ouvriers",
+      "description": "Importer des ouvriers depuis un fichier CSV. Colonnes requises : nom, cin. Optionnel : email, téléphone, rôle.",
+      "fileLabel": "Fichier CSV",
+      "close": "Fermer",
+      "importing": "Importation...",
+      "import": "Importer"
+    },
+    "action": {
+      "editTitle": "Modifier Ouvrier",
+      "addTitle": "Ajouter Nouvel Ouvrier",
+      "editDescription": "Mettre à jour l'ouvrier ici. Cliquez sur enregistrer quand vous avez terminé.",
+      "addDescription": "Créer un nouvel ouvrier ici. Cliquez sur enregistrer quand vous avez terminé."
+    }
+  },
+  "form": {
+    "name": "Nom",
+    "cin": "CIN",
+    "email": "Email",
+    "phoneNumber": "Numéro de Téléphone",
+    "role": "Rôle",
+    "saveChanges": "Enregistrer les modifications"
+  }
+}

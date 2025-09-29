@@ -3,8 +3,20 @@ import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
 import { ProductionLine } from '../data/schema'
-import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
+import { DataTableColumnHeader } from '@/features/shared/data-table/data-table-column-header'
+import { Badge } from '@/components/ui/badge'
+
+const productionLineTypes = new Map<boolean, string>([
+  [
+    true,
+    'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200',
+  ],
+  [
+    false,
+    'bg-neutral-300/40 border-neutral-300',
+  ],
+])
 
 export const columns: ColumnDef<ProductionLine>[] = [
   {
@@ -66,18 +78,30 @@ export const columns: ColumnDef<ProductionLine>[] = [
       <div>{row.getValue('capacity') ?? '-'}</div>
     ),
   },
-  {
-    accessorKey: 'isActive',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
-    ),
-    cell: ({ row }) => (
-      <div>{row.getValue('isActive') ? 'Active' : 'Inactive'}</div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
+{
+  accessorKey: 'isActive',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Status" />
+  ),
+  cell: ({ row }) => {
+    const isActive = row.original.isActive as boolean
+    const badgeColor = productionLineTypes.get(isActive)
+
+    return (
+      <div className="flex space-x-2">
+        <Badge variant="outline" className={cn('capitalize', badgeColor)}>
+          {isActive ? 'Active' : 'Inactive'}
+        </Badge>
+      </div>
+    )
   },
-  {
+  filterFn: (row, id, value) => {
+    return value.includes(row.getValue(id)?.toString())
+  },
+  enableHiding: false,
+  enableSorting: false,
+},
+{
     accessorKey: 'targetOutput',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Target Output' />

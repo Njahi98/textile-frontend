@@ -27,6 +27,7 @@ import { toast } from 'sonner'
 import { useCallback, useMemo, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { X, Image as ImageIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   open: boolean
@@ -47,6 +48,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess }: Props) {
+    const { t } = useTranslation(['products']);
+  
   const isUpdate = !!currentRow
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
@@ -84,12 +87,14 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
     
     setIsDeletingImage(true)
     try {
-      await productApi.deleteImage(currentRow.id)
-      toast.success('Image deleted successfully')
+      const response = await productApi.deleteImage(currentRow.id)
+      if(response.success){
+        toast.success(response.message ?? t('imageDeletedSuccess'))
+      }
       setImagePreview(null)
       onSuccess?.()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete image')
+      toast.error(error instanceof Error ? error.message : t('failedToDeleteImage'))
     } finally {
       setIsDeletingImage(false)
     }
@@ -116,10 +121,12 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
         
         // Only make the API call if there are changes
         if (Object.keys(updateData).length > 0) {
-          await productApi.update(currentRow.id, updateData)
-          toast.success('Product updated successfully')
+          const response = await productApi.update(currentRow.id, updateData)
+        if(response.success){
+          toast.success(response.message ?? t('productUpdatedSuccess'))
+        }
         } else {
-          toast.info('No changes to save')
+          toast.info(t('noChangesToSave'))
         }
       } else {
         // For create, send form data plus image
@@ -127,8 +134,10 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
           ...data,
           image: selectedImage ?? undefined
         }
-        await productApi.create(createData)
-        toast.success('Product created successfully')
+        const response = await productApi.create(createData)
+        if(response.success){
+          toast.success(response.message ?? t('productCreatedSuccess'))
+        }
       }
       
       onSuccess?.()
@@ -137,9 +146,9 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
       setImagePreview(null)
       setSelectedImage(null)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to save product')
+      toast.error(error instanceof Error ? error.message : t('failedToSaveProduct'))
     }
-  }, [isUpdate, currentRow, selectedImage, onSuccess, onOpenChange, form, defaultValues])
+  }, [isUpdate, currentRow, selectedImage, onSuccess, onOpenChange, form, defaultValues,t])
 
   const currentImageUrl = currentRow?.imageUrl
 
@@ -157,12 +166,12 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Product</SheetTitle>
+        <SheetTitle>{isUpdate ? t('updateProduct') : t('createProduct')}</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the product by providing necessary info. '
-              : 'Add a new product by providing necessary info. '}
-            Click save when you&apos;re done.
+              ? t('updateProductDescription')
+              : t('createProductDescription')}
+            {t('clickSaveWhenDone')}
           </SheetDescription>
         </SheetHeader>
         <div className='flex-1 overflow-y-auto'>
@@ -176,7 +185,7 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
             >
               {/* Image Upload Section */}
               <FormItem className='space-y-1'>
-                <FormLabel>Product Image</FormLabel>
+                <FormLabel>{t('productImage')}</FormLabel>
                 <div className='space-y-3'>
                   {/* Current Image Display */}
                   {(currentImageUrl ?? imagePreview) && (
@@ -234,9 +243,9 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
                 name='name'
                 render={({ field }) => (
                   <FormItem className='space-y-1'>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{t('name')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Enter product name' />
+                      <Input {...field} placeholder={t('enterProductName')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -248,9 +257,9 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
                 name='code'
                 render={({ field }) => (
                   <FormItem className='space-y-1'>
-                    <FormLabel>Product Code</FormLabel>
+                    <FormLabel>{t('productCode')}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Enter product code (SKU)' />
+                      <Input {...field} placeholder={t('enterProductCode')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -262,11 +271,11 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
                 name='description'
                 render={({ field }) => (
                   <FormItem className='space-y-1'>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t('descriptionField')}</FormLabel>
                     <FormControl>
                       <Textarea 
                         {...field} 
-                        placeholder='Enter description'
+                          placeholder={t('enterDescription')}
                         value={field.value ?? ''}
                       />
                     </FormControl>
@@ -280,11 +289,11 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
                 name='category'
                 render={({ field }) => (
                   <FormItem className='space-y-1'>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>{t('category')}</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
-                        placeholder='Enter category (e.g., shirts, pants, fabric)'
+                          placeholder={t('enterCategory')}
                         value={field.value ?? ''}
                       />
                     </FormControl>
@@ -298,12 +307,12 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
                 name='unitPrice'
                 render={({ field }) => (
                   <FormItem className='space-y-1'>
-                    <FormLabel>Unit Price</FormLabel>
+                    <FormLabel>{t('unitPrice')}</FormLabel>
                     <FormControl>
                       <Input 
                         type="number"
                         step="0.01"
-                        placeholder='Enter unit price'
+                          placeholder={t('enterUnitPrice')}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value ? Number(e.target.value) : null)}
                       />
@@ -317,10 +326,10 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
         </div>
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
-            <Button variant='outline'>Cancel</Button>
+          <Button variant='outline'>{t('cancel')}</Button>
           </SheetClose>
           <Button form='product-form' type='submit'>
-            {isUpdate ? 'Update' : 'Create'} Product
+            {isUpdate ? t('updateProduct') : t('createProduct')}
           </Button>
         </SheetFooter>
       </SheetContent>

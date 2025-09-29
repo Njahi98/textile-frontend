@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import useSWR from 'swr'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   open: boolean
@@ -36,6 +37,7 @@ interface Props {
 function useUserSearch(query: string, searchUsers: (query: string) => Promise<User[]>) {
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 
   useEffect(() => {
     if (timeoutRef.current) {
@@ -172,6 +174,7 @@ const SelectedUserBadge = ({
 }
 
 export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers }: Props) {
+  const { t } = useTranslation(['chat']);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [isGroup, setIsGroup] = useState(false)
@@ -260,7 +263,7 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[600px] max-h-[80vh] overflow-hidden flex flex-col'>
         <DialogHeader>
-          <DialogTitle>New message</DialogTitle>
+          <DialogTitle>{t('newMessage')}</DialogTitle>
         </DialogHeader>
         
         <div className='flex flex-col gap-4 flex-1 overflow-hidden'>
@@ -285,7 +288,7 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
               ))
             ) : (
               <span className="text-muted-foreground text-sm italic">
-                Search for users to start a conversation
+                {t('searchUsersToStart')}
               </span>
             )}
           </div>
@@ -302,9 +305,9 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                 />
                 <Label htmlFor="group-mode" className="flex items-center gap-2 cursor-pointer">
                   <Users size={16} />
-                  Group conversation
+                  {t('groupConversation')}
                   {selectedUsers.length > 1 && (
-                    <Badge variant="secondary" className="text-xs">Required</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('required')}</Badge>
                   )}
                 </Label>
               </div>
@@ -312,19 +315,19 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
               {isGroup && (
                 <div className="space-y-2">
                   <Label htmlFor="group-name" className="text-sm">
-                    Group name {selectedUsers.length > 1 && <span className="text-red-500">*</span>}
+                    {t('groupName')} {selectedUsers.length > 1 && <span className="text-red-500">*</span>}
                   </Label>
                   <Input
                     id="group-name"
                     value={groupName}
                     onChange={(e) => setGroupName(e.target.value)}
-                    placeholder="Enter group name..."
+                    placeholder={t('enterGroupName')}
                     className="h-9"
                     maxLength={50}
                   />
                   {groupName.length > 40 && (
                     <p className="text-xs text-muted-foreground">
-                      {50 - groupName.length} characters remaining
+                          {t('charactersRemaining', { count: 50 - groupName.length })}
                     </p>
                   )}
                 </div>
@@ -336,7 +339,7 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
           <div className="flex-1 overflow-hidden">
             <Command className='rounded-lg border h-full flex flex-col'>
               <CommandInput
-                placeholder='Search people...'
+                placeholder={t('searchPeople')}
                 className='text-foreground'
                 value={searchQuery}
                 onValueChange={setSearchQuery}
@@ -345,7 +348,7 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                 {isSearching ? (
                   <div className="flex items-center justify-center p-6">
                     <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                    <span className="text-sm text-muted-foreground">Searching...</span>
+                    <span className="text-sm text-muted-foreground">{t('searching')}</span>
                   </div>
                 ) : searchError ? (
                   <div className="p-4">
@@ -354,15 +357,15 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
                       <AlertDescription className="flex items-center justify-between">
                         {searchError.message}
                         <Button variant="outline" size="sm" onClick={searchError.retry}>
-                          Retry
+                          {t('retry')}
                         </Button>
                       </AlertDescription>
                     </Alert>
                   </div>
                 ) : !hasSearchQuery ? (
-                  <CommandEmpty>Type at least 2 characters to search</CommandEmpty>
+                  <CommandEmpty>{t('typeToSearch')}</CommandEmpty>
                 ) : searchResults.length === 0 ? (
-                  <CommandEmpty>No users found</CommandEmpty>
+                  <CommandEmpty>{t('noUsersFound')}</CommandEmpty>
                 ) : (
                   <CommandGroup>
                     {searchResults.map((user) => (
@@ -389,14 +392,14 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
             {isCreating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
+                {t('creating')}
               </>
             ) : (
               <>
-                {isGroup ? 'Create Group' : 'Start Chat'}
+                {isGroup ? t('createGroup') : t('startChat')}
                 {selectedUsers.length > 0 && (
                   <Badge variant="secondary" className="ml-2">
-                    {selectedUsers.length} {selectedUsers.length === 1 ? 'person' : 'people'}
+                      {selectedUsers.length} {selectedUsers.length === 1 ? t('person') : t('people')}
                   </Badge>
                 )}
               </>

@@ -1,0 +1,65 @@
+{
+  "header": {
+    "title": "Production Lines List",
+    "subtitle": "Manage your production lines here."
+  },
+  "errors": {
+    "failedToLoad": "Failed to load production lines",
+    "unknownError": "An unknown error occurred.",
+    "noProductionLinesFound": "No production lines found."
+  },
+  "buttons": {
+    "addProductionLine": "Add Production line"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "status": "Status"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "table": {
+    "openMenu": "Open menu",
+    "filterPlaceholder": "Filter production lines...",
+    "activeFilter": "Active",
+    "reset": "Reset"
+  },
+  "messages": {
+    "updateSuccess": "Production line updated successfully",
+    "updateError": "Failed to toggle production line status",
+    "createSuccess": "Production line created successfully",
+    "deleteError": "Failed to delete production line",
+    "saveError": "Failed to save production line",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Delete this production line: {{id}} ?",
+      "description": "You are about to delete a production line with the ID <strong>{{id}}</strong>. <br />This action cannot be undone.",
+      "confirmButton": "Delete"
+    },
+    "mutate": {
+      "updateTitle": "Update Production Line",
+      "createTitle": "Create Production Line",
+      "updateDescription": "Update the production line by providing necessary info. Click save when you're done.",
+      "createDescription": "Add a new production line by providing necessary info. Click save when you're done.",
+      "cancel": "Cancel",
+      "updateButton": "Update Production Line",
+      "createButton": "Create Production Line"
+    }
+  },
+  "form": {
+    "name": "Name",
+    "namePlaceholder": "Enter production line name",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description",
+    "capacity": "Capacity",
+    "capacityPlaceholder": "Enter capacity",
+    "targetOutput": "Target Output",
+    "targetOutputPlaceholder": "Enter target output",
+    "location": "Location",
+    "locationPlaceholder": "Enter location"
+  }
+}

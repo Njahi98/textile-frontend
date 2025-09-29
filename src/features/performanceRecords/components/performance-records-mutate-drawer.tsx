@@ -20,6 +20,7 @@ import { z } from 'zod'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 type PerformanceRecordForm = z.infer<typeof createPerformanceRecordSchema>
 
@@ -48,6 +49,8 @@ export function PerformanceRecordsMutateDrawer({
   currentRow?: PerformanceRecord; 
 }) {
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation(['performanceRecords']);
+  
   const isUpdate = !!currentRow
 
   
@@ -91,7 +94,7 @@ export function PerformanceRecordsMutateDrawer({
       
       
       if (!data.shift) {
-        toast.error('Shift is required')
+        toast.error(t('shiftRequired'))
         return
       }
 
@@ -109,19 +112,19 @@ export function PerformanceRecordsMutateDrawer({
       if (isUpdate && currentRow) {
         const response = await performanceApi.updatePerformanceRecord(currentRow.id, submitData)
         if (response.success) {
-          toast.success('Performance record updated successfully')
+          toast.success(response.message || t('recordUpdatedSuccess'))
         }
       } else {
         const response = await performanceApi.createPerformanceRecord(submitData)
         if (response.success) {
-          toast.success('Performance record created successfully')
+          toast.success(response.message || t('recordCreatedSuccess'))
         }
       }
       
       onOpenChange(false)
       form.reset()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'An error occurred')
+          toast.error(error instanceof Error ? error.message : t('errorOccurred'))
     } finally {
       setIsLoading(false)
     }
@@ -132,10 +135,10 @@ export function PerformanceRecordsMutateDrawer({
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
           <SheetTitle>
-            {isUpdate ? 'Update Performance Record' : 'Create Performance Record'}
+            {isUpdate ? t('updateRecord') : t('createRecord')}
           </SheetTitle>
           <SheetDescription>
-            {isUpdate ? 'Update the performance record details below.' : 'Fill in the performance record details below.'}
+            {isUpdate ? t('updateRecordDescription') : t('createRecordDescription')}
           </SheetDescription>
         </SheetHeader>
         <div className='flex-1 overflow-y-auto'>
@@ -146,14 +149,14 @@ export function PerformanceRecordsMutateDrawer({
               name='workerId'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Worker</FormLabel>
+                  <FormLabel>{t('worker')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={workers.map(worker => ({
                         value: worker.id.toString(),
                         label: `${worker.name} (${worker.cin})`
                       }))}
-                      placeholder="Select a worker"
+                      placeholder={t('selectWorker')}
                       defaultValue={field.value.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                       className='w-full'
@@ -168,14 +171,14 @@ export function PerformanceRecordsMutateDrawer({
               name='productId'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Product</FormLabel>
+                  <FormLabel>{t('product')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={products.map((product: Product) => ({
                         value: product.id.toString(),
                         label: `${product.name} (${product.code})`
                       }))}
-                      placeholder="Select a product"
+                      placeholder={t('selectProduct')}
                       defaultValue={field.value.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                       className='w-full'
@@ -190,14 +193,14 @@ export function PerformanceRecordsMutateDrawer({
               name='productionLineId'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Production Line</FormLabel>
+                  <FormLabel>{t('productionLine')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={productionLines.map(line => ({
                         value: line.id.toString(),
                         label: `${line.name}${line.location ? ` - ${line.location}` : ''}`
                       }))}
-                      placeholder="Select a production line"
+                      placeholder={t('selectProductionLine')}
                       defaultValue={field.value.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                       className='w-full'
@@ -212,13 +215,13 @@ export function PerformanceRecordsMutateDrawer({
               name='piecesMade'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Pieces Made</FormLabel>
+                  <FormLabel>{t('piecesMade')}</FormLabel>
                   <FormControl>
                     <Input 
                       {...field} 
                       type="number"
                       min="0"
-                      placeholder='Enter number of pieces made' 
+                      placeholder={t('enterPiecesMade')} 
                       className='w-full'
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
@@ -232,14 +235,14 @@ export function PerformanceRecordsMutateDrawer({
               name='timeTaken'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Time Taken (hours)</FormLabel>
+                  <FormLabel>{t('timeTaken')}</FormLabel>
                   <FormControl>
                     <Input 
                       {...field} 
                       type="number"
                       step="0.01"
                       min="0"
-                      placeholder='Enter time taken in hours' 
+                      placeholder={t('enterTimeTaken')} 
                       className='w-full'
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
@@ -253,7 +256,7 @@ export function PerformanceRecordsMutateDrawer({
               name='errorRate'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Error Rate (%)</FormLabel>
+                  <FormLabel>{t('errorRate')}</FormLabel>
                   <FormControl>
                     <Input 
                       {...field} 
@@ -261,7 +264,7 @@ export function PerformanceRecordsMutateDrawer({
                       step="0.01"
                       min="0"
                       max="100"
-                      placeholder='Enter error rate percentage' 
+                      placeholder={t('enterErrorRate')}
                       className='w-full'
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
@@ -275,14 +278,14 @@ export function PerformanceRecordsMutateDrawer({
               name='shift'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Shift</FormLabel>
+                  <FormLabel>{t('shift')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={SHIFT_OPTIONS.map(shift => ({
                         value: shift.value,
                         label: shift.label
                       }))}
-                      placeholder="Select a shift"
+                        placeholder={t('selectShift')}
                       defaultValue={field.value ?? ''}
                       onValueChange={field.onChange}
                       className='w-full'
@@ -297,7 +300,7 @@ export function PerformanceRecordsMutateDrawer({
               name='date'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>{t('date')}</FormLabel>
                   <FormControl>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -309,7 +312,7 @@ export function PerformanceRecordsMutateDrawer({
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? format(field.value, 'PPP') : 'Pick a date'}
+                          {field.value ? format(field.value, 'PPP') : t('pickDate')}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
@@ -337,14 +340,14 @@ export function PerformanceRecordsMutateDrawer({
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button 
             type='submit' 
             disabled={isLoading}
             onClick={() => void form.handleSubmit(onSubmit)()}
           >
-            {isLoading ? 'Saving...' : isUpdate ? 'Update' : 'Create'}
+              {isLoading ? t('saving') : isUpdate ? t('update') : t('create')}
           </Button>
         </div>
       </SheetContent>

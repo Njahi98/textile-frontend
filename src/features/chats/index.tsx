@@ -27,8 +27,11 @@ import { NewChat } from './components/new-chat'
 import { useChat } from './hooks/use-chat'
 import { Message, Conversation } from '@/services/chat.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 export default function Chats() {
+  const { t } = useTranslation(['chat']);
+
   const [search, setSearch] = useState('')
   const [mobileSelectedUser, setMobileSelectedUser] = useState<Conversation | null>(null)
   const [createConversationDialogOpened, setCreateConversationDialog] = useState(false)
@@ -79,9 +82,9 @@ export default function Chats() {
     let dateKey: string
     
     if (isToday(messageDate)) {
-      dateKey = 'Today'
+      dateKey = t('today')
     } else if (isYesterday(messageDate)) {
-      dateKey = 'Yesterday'
+      dateKey = t('Yesterday')
     } else {
       dateKey = format(messageDate, 'd MMM, yyyy')
     }
@@ -171,9 +174,12 @@ export default function Chats() {
         refreshConversations(),
         refreshNotifications()
       ]);
-      toast.success('Chat data refreshed');
+      toast.success(t('chatDataRefreshed'));
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
-      toast.error('Failed to refresh data');
+      toast.error(t('failedToRefreshData'));
     }
   };
 
@@ -195,7 +201,7 @@ export default function Chats() {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         if (file.size > 10 * 1024 * 1024) {
-          toast.error(`File ${file.name} is too large. Maximum size is 10MB.`)
+          toast.error(t('fileTooLarge', { fileName: file.name }))
           continue
         }
         await uploadFile(selectedConversation.id, file)
@@ -203,7 +209,7 @@ export default function Chats() {
     } catch (error) {
       console.error('File upload failed:', error)
       const errorMessage = error instanceof Error ? error.message : 'File upload failed. Please try again.'
-      toast.error(`File upload failed: ${errorMessage}`)
+      toast.error(t('fileUploadFailed', { error: errorMessage }))
     } finally {
       setUploading(false)
       if (fileInputRef.current) {
@@ -283,7 +289,7 @@ export default function Chats() {
               variant="ghost"
               onClick={() => message.fileUrl && window.open(message.fileUrl, '_blank')}
             >
-              Download
+              {t('download')}
             </Button>
           </div>
         )
@@ -301,7 +307,7 @@ export default function Chats() {
           <Alert variant="destructive" className="mb-4">
             <WifiOff className="h-4 w-4" />
             <AlertDescription>
-              Connection failed
+              {t('connectionFailed')}
               <Button
                 variant="outline"
                 size="sm"
@@ -309,7 +315,7 @@ export default function Chats() {
                 onClick={handleRefresh}
               >
                 <RefreshCw className="h-4 w-4 mr-1" />
-                Retry
+                {t('retry')}
               </Button>
             </AlertDescription>
           </Alert>
@@ -319,58 +325,65 @@ export default function Chats() {
           {/* Left Side - Conversation List */}
           <div className='flex w-full flex-col gap-2 sm:w-56 lg:w-72 2xl:w-80'>
             <div className='bg-background sticky top-0 z-10 -mx-4 px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
-              <div className='flex items-center justify-between py-2'>
-                <div className='flex gap-2 items-center'>
-                  <h1 className='text-2xl font-bold'>Inbox</h1>
-                  <MessagesSquare size={20} />
-                  {!connected && (
-                    <Badge variant="destructive" className="text-xs">
-                      <WifiOff className="h-3 w-3 mr-1" />
-                      Offline
-                    </Badge>
-                  )}
-                  {connected && (
-                    <Badge variant="secondary" className="text-xs">
-                      Online
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="flex gap-1">
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    onClick={handleRefresh}
-                    className='rounded-lg'
-                    disabled={loading}
-                  >
-                    <RefreshCw size={18} className={cn('stroke-muted-foreground', loading && 'animate-spin')} />
-                  </Button>
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    onClick={() => setCreateConversationDialog(true)}
-                    className='rounded-lg'
-                    disabled={!connected}
-                  >
-                    <SquarePen size={20} className='stroke-muted-foreground' />
-                  </Button>
-                </div>
+             <div className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <h1 className="text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">
+                  {t('inbox')}
+                </h1>
+                <MessagesSquare size={20} className="flex-shrink-0" />
+                {!connected && (
+                  <Badge variant="destructive" className="text-xs flex-shrink-0">
+                    <WifiOff className="h-3 w-3 mr-1" />
+                    {t('offline')}
+                  </Badge>
+                )}
+                {connected && (
+                  <Badge variant="secondary" className="text-xs flex-shrink-0">
+                    {t('online')}
+                  </Badge>
+                )}
               </div>
+
+              <div className="flex gap-1 flex-shrink-0">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={handleRefresh}
+                  className="rounded-lg"
+                  disabled={loading}
+                >
+                  <RefreshCw
+                    size={18}
+                    className={cn(
+                      'stroke-muted-foreground',
+                      loading && 'animate-spin'
+                    )}
+                  />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setCreateConversationDialog(true)}
+                  className="rounded-lg"
+                  disabled={!connected}
+                >
+                  <SquarePen size={20} className="stroke-muted-foreground" />
+                </Button>
+              </div>
+            </div>
 
               <label className='border-input focus-within:ring-ring flex h-12 w-full items-center space-x-0 rounded-md border pl-2 focus-within:ring-1 focus-within:outline-hidden'>
                 <Search size={15} className='mr-2 stroke-slate-500' />
-                <span className='sr-only'>Search</span>
+                <span className='sr-only'>{t('search')}</span>
                 <input
                   type='text'
                   className='w-full flex-1 bg-inherit text-sm focus-visible:outline-hidden'
-                  placeholder='Search conversations...'
+                  placeholder={t('searchConversations')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </label>
             </div>
-
             <ScrollArea className='-mx-3 h-full p-3'>
               {loading && conversations.length === 0 ? (
                 <div className="flex justify-center items-center py-8">
@@ -378,7 +391,7 @@ export default function Chats() {
                 </div>
               ) : filteredConversations.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  {search ? 'No conversations found' : 'No conversations yet'}
+                    {search ? t('noConversationsFound') : t('noConversationsYet')}
                 </div>
               ) : (
                 filteredConversations.map((conversation) => {
@@ -396,13 +409,13 @@ export default function Chats() {
                         lastMessageText = `${prefix}${lastMessage.content}`
                         break
                       case 'IMAGE':
-                        lastMessageText = `${prefix}sent an image`
+                        lastMessageText = `${prefix}${t('sentAnImage')}`
                         break
                       case 'VIDEO':
-                        lastMessageText = `${prefix}sent a video`
+                        lastMessageText = `${prefix}${t('sentAVideo')}`
                         break
                       case 'FILE':
-                        lastMessageText = `${prefix}sent a file`
+                          lastMessageText = `${prefix}${t('sentAFile')}`
                         break
                       default:
                         lastMessageText = `${prefix}${lastMessage.content}`
@@ -450,7 +463,7 @@ export default function Chats() {
                                 'text-muted-foreground text-sm line-clamp-1 flex-1',
                                 hasUnread && 'text-foreground font-medium'
                               )}>
-                                {lastMessageText || 'No messages yet'}
+                                {lastMessageText || t('noMessagesYet')}
                               </span>
                               {hasUnread && conversation.unreadCount > 0 && (
                                 <Badge variant="default" className="ml-2 text-xs px-1.5 py-0.5 min-w-0">
@@ -506,7 +519,7 @@ export default function Chats() {
                         {/* Typing indicator */}
                         {getTypingUsersInConversation(selectedConversation.id).length > 0 && (
                           <span className="text-primary text-xs">
-                            typing...
+                            {t('typing')}
                           </span>
                         )}
                       </div>
@@ -526,7 +539,7 @@ export default function Chats() {
                         </div>
                       ) : Object.keys(groupedMessages).length === 0 ? (
                         <div className="text-center py-8 text-muted-foreground">
-                          No messages yet. Start the conversation!
+                          {t('noMessagesStartConversation')}
                         </div>
                       ) : (
                         <div className="flex flex-col gap-4">
@@ -632,7 +645,7 @@ export default function Chats() {
                       ref={messageInputRef}
                       value={messageInput}
                       onChange={handleInputChange}
-                      placeholder={uploading ? 'Uploading file...' : !connected ? 'Connecting...' : 'Type your message...'}
+                      placeholder={uploading ? t('uploadingFile') : !connected ? t('connecting') : t('typeYourMessage')}
                       className='flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
                       disabled={!connected || uploading}
                     />
@@ -655,7 +668,7 @@ export default function Chats() {
                     className='h-full sm:hidden'
                     disabled={!messageInput.trim() || !connected || uploading}
                   >
-                    <Send size={18} /> Send
+                    <Send size={18} /> {t('send')}
                   </Button>
                 </form>
               </div>
@@ -667,16 +680,15 @@ export default function Chats() {
                   <MessagesSquare className='size-8' />
                 </div>
           <div className="space-y-2 text-center">
-              <h1 className="text-xl font-semibold">Your messages</h1>
+              <h1 className="text-xl font-semibold">{t('yourMessages')}</h1>
               {connected ? (
                 <p className="text-muted-foreground text-sm">
-                  Start a conversation by sending a message.
+                  {t('startConversationMessage')}
                 </p>
               ) : (
                 <p className="text-muted-foreground text-sm">
-                  Connecting to the chat server... <br />
-                  This project is hosted on Render’s free tier, so you may need to refresh
-                  the page if the chat services don’t start right away.
+                  {t('connectingMessage')} <br />
+                  {t('renderMessage')}
                 </p>
               )}
             </div>
@@ -685,7 +697,7 @@ export default function Chats() {
                   onClick={() => setCreateConversationDialog(true)}
                   disabled={!connected}
                 >
-                  Send message
+                  {t('sendMessage')}
                 </Button>
               </div>
             </div>

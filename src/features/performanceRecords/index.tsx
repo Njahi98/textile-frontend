@@ -11,12 +11,14 @@ import { ErrorState } from '@/components/error-state'
 import { PerformanceRecordsResponse, PerformanceRecordQueryParams } from '@/services/performance.api'
 import { performanceRecordListSchema } from './data/schema'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function Performance() {
   const [queryParams, setQueryParams] = useState<PerformanceRecordQueryParams>({
     page: 1,
     limit: 50,
   });
+  const { t } = useTranslation(['performanceRecords']);
 
   const {
     data,
@@ -42,16 +44,16 @@ export default function Performance() {
   if (error)
     return (
       <ErrorState
-        title="Failed to load performance records"
+        title={t('failedToLoadRecords')}
         message={
           typeof error.message === "string"
             ? error.message
-            : "An unknown error occurred."
+            : t('unknownError')
         }
         onRetry={() => void mutate()}
       />
     );
-  if (!data?.success) return <div>No performance records found.</div>;
+    if (!data?.success) return <div>{t('noRecordsFound')}</div>;
 
   const performanceRecordList = performanceRecordListSchema.parse(data.performanceRecords);
   
@@ -60,9 +62,9 @@ export default function Performance() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Performance Records</h2>
+          <h2 className='text-2xl font-bold tracking-tight'>{t('title')}</h2>
             <p className='text-muted-foreground'>
-              View and manage worker performance records and productivity metrics.
+            {t('description')}
             </p>
           </div>
           <PerformanceRecordsPrimaryButtons />

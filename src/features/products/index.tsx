@@ -9,6 +9,7 @@ import useSWR, { SWRResponse } from 'swr';
 import { fetcher } from '@/lib/api'
 import { ErrorState } from '@/components/error-state'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { useTranslation } from 'react-i18next'
 
 interface ProductsApiResponse  {
   success: boolean;
@@ -18,24 +19,34 @@ interface ProductsApiResponse  {
 export default function Products() {
 
   const { data, error, isLoading, mutate }: SWRResponse<ProductsApiResponse, Error> = useSWR<ProductsApiResponse, Error>('/api/products', fetcher)
+  const { t } = useTranslation(['products']);
+
 
   if (isLoading) return <LoadingSpinner/>
-  if (error) return <ErrorState 
-    title="Failed to load products" 
-    message={typeof error.message === 'string' ? error.message : 'An unknown error occurred.'}
-    onRetry={() => void mutate()} 
-  />
-  if (!data?.success) return <div>No products found.</div>;
+ if (error) {
+  return (
+    <ErrorState
+      title={t("error.title")}
+      message={
+        typeof error.message === "string"
+          ? error.message
+          : t("error.unknown")
+      }
+      onRetry={() => void mutate()}
+    />
+  )
+}
+  if (!data?.success) return <div>{t('noProductsFound')}</div>;
   const productsList = data.products;
   return (
     <ProductsProvider>
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Products List</h2>
-            <p className='text-muted-foreground'>
-              Manage your products here.
-            </p>
+          <h2 className='text-2xl font-bold tracking-tight'>{t('title')}</h2>
+          <p className='text-muted-foreground'>
+            {t('description')}
+          </p>
           </div>
           <ProductsPrimaryButtons />
         </div>

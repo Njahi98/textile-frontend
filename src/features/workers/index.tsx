@@ -9,6 +9,7 @@ import useSWR, { SWRResponse } from "swr";
 import { fetcher } from "@/lib/api";
 import { ErrorState } from "@/components/error-state";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 
 interface WorkersApiResponse {
   success: boolean;
@@ -25,21 +26,24 @@ export default function Workers() {
     "/api/workers",
     fetcher
   );
+  const { t } = useTranslation(['workers']);
 
   if (isLoading) return <LoadingSpinner />;
   if (error)
     return (
       <ErrorState
-        title="Failed to load workers"
+        title={t('errors.failedToLoad')}
         message={
           typeof error.message === "string"
             ? error.message
-            : "An unknown error occurred."
+            : t('errors.unknownError')
         }
         onRetry={() => void mutate()}
       />
     );
-  if (!data?.success) return <div>No workers found.</div>;
+
+  if (!data?.success) return <div>{t('errors.noWorkersFound')}</div>;
+
 
   const workerList = workerListSchema.parse(data.workers);
 
@@ -48,9 +52,9 @@ export default function Workers() {
       <Main>
         <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Worker List</h2>
+            <h2 className="text-2xl font-bold tracking-tight">{t('header.title')}</h2>
             <p className="text-muted-foreground">
-              Manage your workers and their roles here.
+              {t('header.subtitle')}
             </p>
           </div>
           <WorkersPrimaryButtons />

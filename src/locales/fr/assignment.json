@@ -1,5 +1,65 @@
 {
-    "calendar":{
+  "header": {
+    "title": "Affectations",
+    "subtitle": "Voici une liste de vos affectations pour ce mois !"
+  },
+  "errors": {
+    "failedToLoad": "Échec du chargement des affectations",
+    "unknownError": "Une erreur inconnue s'est produite.",
+    "noAssignmentsFound": "Aucune affectation trouvée."
+  },
+  "buttons": {
+    "createAssignment": "Créer Affectation"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
+  "table": {
+    "openMenu": "Ouvrir le menu",
+    "filterPlaceholder": "Filtrer par nom d'ouvrier...",
+    "filterByDate": "Filtrer par date",
+    "reset": "Réinitialiser",
+    "noResults": "Aucun résultat."
+  },
+  "messages": {
+    "deleteSuccess": "Affectation supprimée avec succès",
+    "deleteError": "Échec de la suppression de l'affectation",
+    "deleteUnknownError": "Une erreur s'est produite lors de la suppression de l'affectation",
+    "updateSuccess": "Affectation mise à jour avec succès",
+    "createSuccess": "Affectation créée avec succès",
+    "saveError": "Une erreur s'est produite"
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Supprimer cette affectation : {{id}} ?",
+      "description": "Vous êtes sur le point de supprimer une affectation avec l'ID {{id}}.  Ouvrier : {{workerName}}, Ligne de Production : {{productionLineName}}. Cette action ne peut pas être annulée.",
+      "confirmButton": "Supprimer"
+    },
+    "mutate": {
+      "updateTitle": "Mettre à Jour Affectation",
+      "createTitle": "Créer Affectation",
+      "updateDescription": "Mettre à jour les détails de l'affectation ci-dessous.",
+      "createDescription": "Remplir les détails de l'affectation ci-dessous.",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "updateButton": "Mettre à Jour",
+      "createButton": "Créer"
+    }
+  },
+  "form": {
+    "worker": "Ouvrier",
+    "selectWorker": "Sélectionner un ouvrier",
+    "productionLine": "Ligne de Production",
+    "selectProductionLine": "Sélectionner une ligne de production",
+    "position": "Position",
+    "positionPlaceholder": "Saisir le numéro de position",
+    "shift": "Équipe",
+    "selectShift": "Sélectionner une équipe",
+    "date": "Date",
+    "pickDate": "Choisir une date"
+  },
+  "calendar":{
   "header": {
     "title": "Calendrier des Affectations",
     "subtitle": "Visualiser et gérer les affectations des ouvriers sur un calendrier mensuel."

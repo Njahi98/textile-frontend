@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { DataTableViewOptions } from './data-table-view-options'
+import { DataTableViewOptions } from '../../shared/data-table/data-table-view-options'
 import { shifts } from '../data/data'
-import { DataTableFacetedFilter } from './data-table-faceted-filter'
+import { DataTableFacetedFilter } from '../../shared/data-table/data-table-faceted-filter'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -21,6 +22,8 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const { t } = useTranslation(['assignment']);
+  
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date)
@@ -41,7 +44,7 @@ export function DataTableToolbar<TData>({
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
         <Input
-          placeholder='Filter by Worker name...'
+          placeholder={t('table.filterPlaceholder')}
           value={(table.getColumn('workerName')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('workerName')?.setFilterValue(event.target.value)
@@ -66,7 +69,7 @@ export function DataTableToolbar<TData>({
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? format(selectedDate, 'PPP') : 'Filter by date'}
+                  {selectedDate ? format(selectedDate, 'PPP') : t('table.filterByDate')}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -99,7 +102,7 @@ export function DataTableToolbar<TData>({
             }}
             className='h-8 px-2 lg:px-3'
           >
-            Reset
+            {t('table.reset')}
             <X className='ml-2 h-4 w-4' />
           </Button>
         )}

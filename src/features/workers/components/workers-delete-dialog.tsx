@@ -8,6 +8,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Worker } from '../data/schema'
 import { toast } from 'sonner'
 import { workerApi } from '@/services/worker.api'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   open: boolean
@@ -17,6 +18,7 @@ interface Props {
 
 export function WorkersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState('')
+  const { t } = useTranslation(['workers']);
 
   const handleDelete = async() => {
     try {
@@ -49,44 +51,38 @@ export function WorkersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             className='stroke-destructive mr-1 inline-block'
             size={18}
           />{' '}
-          Delete Worker
+            {t('dialogs.delete.title')}
         </span>
       }
       desc={
         <div className='space-y-4'>
-          <p className='mb-2'>
-            Are you sure you want to delete{' '}
-            <span className='font-bold'>{currentRow.name}</span>?
-            <br />
-            This action will permanently remove the worker with the cin number of{' '}
-            <span className='font-bold'>
-             {currentRow?.cin}
-            </span>{' '}
-              and role of{' '}
-            <span className='font-bold'>
-              {currentRow?.role?.toUpperCase()}
-            </span>{' '}
-            from the system. This cannot be undone.
-          </p>
+        <p className='mb-2'>
+          {t('dialogs.delete.confirmText', { name: currentRow.name })}
+          <br />
+          {t('dialogs.delete.warningText', { 
+            cin: currentRow?.cin,
+            role: currentRow?.role?.toUpperCase()
+          })}
+        </p>
 
-          <Label className='my-2'>
-            Cin:
-            <Input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter cin to confirm deletion.'
-            />
-          </Label>
+        <Label className='my-2'>
+          {t('dialogs.delete.cinLabel')}:
+          <Input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={t('dialogs.delete.cinPlaceholder')}
+          />
+        </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t('dialogs.delete.alertTitle')}</AlertTitle>
             <AlertDescription>
-              Please be carefull, this operation can not be rolled back.
+              {t('dialogs.delete.alertDescription')}
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='Delete'
+      confirmText={t('dialogs.delete.confirmButton')}
       destructive
     />
   )

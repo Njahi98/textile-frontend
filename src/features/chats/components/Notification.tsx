@@ -31,27 +31,6 @@ const NotificationTypeIcon = ({ type }: { type: string }) => {
   return <div className={`w-2 h-2 rounded-full ${colorClass}`} />;
 };
 
-const formatNotificationTime = (timestamp: string): string => {
-  try {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-
-    if (diffInMinutes < 1) return 'just now';
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d ago`;
-
-    return date.toLocaleDateString();
-  } catch {
-    return 'some time ago';
-  }
-};
-
 interface NotificationItemProps {
   notification: Notification;
   onMarkRead: (id: number) => void;
@@ -59,6 +38,30 @@ interface NotificationItemProps {
 }
 
 const NotificationItem = ({ notification, onMarkRead, onNavigate }: NotificationItemProps) => {
+
+  const {t}=useTranslation(['common'])
+
+  const formatNotificationTime = (timestamp: string): string => {
+  try {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+
+    if (diffInMinutes < 1) return t('notifications.justNow');
+    if (diffInMinutes < 60) return t('notifications.minutesAgo', { count: diffInMinutes });
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return t('notifications.hoursAgo', { count: diffInHours });
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return t('notifications.daysAgo', { count: diffInDays });
+
+    return date.toLocaleDateString();
+  } catch {
+    return t('notifications.someTimeAgo');
+  }
+};
+
   const handleClick = useCallback(() => {
     if (!notification.isRead) {
       onMarkRead(notification.id);
@@ -102,7 +105,7 @@ const NotificationItem = ({ notification, onMarkRead, onNavigate }: Notification
               size="sm"
               className="h-4 w-4 p-0 ml-2 opacity-60 hover:opacity-100 transition-opacity"
               onClick={handleMarkReadClick}
-              aria-label="Mark as read"
+              aria-label={t('notifications.markAsRead')}
             >
               <Check className="h-3 w-3" />
             </Button>
@@ -232,7 +235,7 @@ export function NotificationsDropdown() {
 
       <DropdownMenuContent align="end" className="w-85 sm:w-90 max-h-[400px] flex flex-col">
         <DropdownMenuLabel className="flex items-center justify-between py-3 shrink-0">
-        <span className="font-semibold text-sm">Notifications</span>
+        <span className="font-semibold text-sm">{t('notifications.notificationsName')}</span>
         <div className="flex items-center gap-2">
           {showOfflineBadge && (
             <Badge variant="outline" className="text-xs px-2 py-1">

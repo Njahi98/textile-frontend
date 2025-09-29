@@ -21,44 +21,6 @@
     "reset": "Réinitialiser",
     "clearFilters": "Effacer les filtres"
   },
-  "table": {
-    "headers": {
-      "username": "Nom d'utilisateur",
-      "name": "Nom",
-      "email": "Email",
-      "phoneNumber": "Numéro de Téléphone",
-      "status": "Statut",
-      "role": "Rôle",
-      "actions": "Actions"
-    },
-    "sort": {
-      "asc": "Croissant",
-      "desc": "Décroissant", 
-      "hide": "Masquer"
-    },
-    "filters": {
-      "filterUsers": "Filtrer les utilisateurs...",
-      "status": "Statut",
-      "role": "Rôle",
-      "active": "Actif",
-      "inactive": "Inactif",
-      "suspended": "Suspendu"
-    },
-    "pagination": {
-      "selectedRows": "{{selected}} sur {{total}} ligne(s) sélectionnée(s)",
-      "rowsPerPage": "Lignes par page",
-      "page": "Page {current} sur {total}",
-      "goToFirst": "Aller à la première page",
-      "goToPrevious": "Aller à la page précédente",
-      "goToNext": "Aller à la page suivante",
-      "goToLast": "Aller à la dernière page",
-      "noResults": "Aucun résultat."
-    },
-    "viewOptions": {
-      "view": "Affichage",
-      "toggleColumns": "Basculer les colonnes"
-    }
-  },
   "dialog": {
     "add": {
       "title": "Ajouter Nouvel Utilisateur",
@@ -76,6 +38,10 @@
     "alertTitle": "Attention !",
     "alertDescription": "Soyez prudent, cette opération ne peut pas être annulée."
   }
+  },
+  "table": {
+    "filterPlaceholder": "Filtrer les utilisateurs...",
+    "reset": "Réinitialiser"
   },
   "form": {
     "labels": {

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuditLogs } from '../context/audit-logs-context'
 import { AuditLog } from '../data/schema'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableRowActionsProps {
   row: Row<AuditLog>
@@ -18,6 +19,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useAuditLogs()
+  const { t } = useTranslation(['auditLogs']);
   return (
     <>
       <DropdownMenu modal={false}>
@@ -37,7 +39,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('view')
             }}
           >
-            View Details
+            {t('viewDetails')}
             <DropdownMenuShortcut>
               <Eye size={16} />
             </DropdownMenuShortcut>

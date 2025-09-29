@@ -25,6 +25,7 @@ import { ProductionLine } from '../data/schema'
 import { productionLineApi } from '@/services/productionLine.api'
 import { toast } from 'sonner'
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   open: boolean
@@ -45,6 +46,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, onSuccess }: Props) {
+  const { t } = useTranslation(['productionLines']);
   const isUpdate = !!currentRow
 
   const defaultValues: FormData = useMemo(() => ({
@@ -64,11 +66,15 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
   const handleSubmit = useCallback(async (data: FormData) => {
     try {
       if (isUpdate && currentRow) {
-        await productionLineApi.update(currentRow.id, data)
-        toast.success('Production line updated successfully')
+        const updateResponse = await productionLineApi.update(currentRow.id, data)
+        if(updateResponse.success){
+          toast.success(updateResponse.message)
+        }
       } else {
-        await productionLineApi.create(data)
-        toast.success('Production line created successfully')
+        const createResponse =  await productionLineApi.create(data)
+         if(createResponse.success){
+          toast.success(createResponse.message)
+        }
       }
       
       onSuccess?.()
@@ -89,12 +95,11 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Production Line</SheetTitle>
+          <SheetTitle>{isUpdate ? t('dialogs.mutate.updateTitle') : t('dialogs.mutate.createTitle')}</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the production line by providing necessary info. '
-              : 'Add a new production line by providing necessary info. '}
-            Click save when you&apos;re done.
+              ? t('dialogs.mutate.updateDescription')
+              : t('dialogs.mutate.createDescription')}
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
@@ -110,9 +115,9 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
               name='name'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t('form.name')}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter production line name' />
+                    <Input {...field} placeholder={t('form.namePlaceholder')} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,11 +129,11 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
               name='description'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('form.description')}</FormLabel>
                   <FormControl>
                     <Textarea 
                       {...field} 
-                      placeholder='Enter description'
+                      placeholder={t('form.descriptionPlaceholder')}
                       value={field.value ?? ''}
                     />
                   </FormControl>
@@ -142,11 +147,11 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
               name='capacity'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Capacity</FormLabel>
+                  <FormLabel>{t('form.capacity')}</FormLabel>
                   <FormControl>
                     <Input 
                       type="number"
-                      placeholder='Enter capacity'
+                      placeholder={t('form.capacityPlaceholder')}
                       value={field.value ?? ''}
                       onChange={e => field.onChange(e.target.value ? Number(e.target.value) : null)}
                     />
@@ -161,11 +166,11 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
               name='targetOutput'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Target Output</FormLabel>
+                  <FormLabel>{t('form.targetOutput')}</FormLabel>
                   <FormControl>
                     <Input 
                       type="number"
-                      placeholder='Enter target output'
+                      placeholder={t('form.targetOutputPlaceholder')}
                       value={field.value ?? ''}
                       onChange={e => field.onChange(e.target.value ? Number(e.target.value) : null)}
                     />
@@ -180,11 +185,11 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
               name='location'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>{t('form.location')}</FormLabel>
                   <FormControl>
                     <Input 
                       {...field}
-                      placeholder='Enter location'
+                      placeholder={t('form.locationPlaceholder')}
                       value={field.value ?? ''}
                     />
                   </FormControl>
@@ -196,10 +201,10 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
         </Form>
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
-            <Button variant='outline'>Cancel</Button>
+            <Button variant='outline'>{t('dialogs.mutate.cancel')}</Button>
           </SheetClose>
           <Button form='production-line-form' type='submit'>
-            {isUpdate ? 'Update' : 'Create'} Production Line
+            {isUpdate ? t('dialogs.mutate.updateButton') : t('dialogs.mutate.createButton')}
           </Button>
         </SheetFooter>
       </SheetContent>

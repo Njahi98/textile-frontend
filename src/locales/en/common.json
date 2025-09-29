@@ -1,5 +1,5 @@
 {
-  "navbar":{
+  "navbar": {
     "loginButton": "Sign in",
     "signUpButton": "Get started",
     "settingsButton": "Settings",
@@ -13,14 +13,24 @@
     "notifications": "Notifications",
     "settings": "Settings"
   },
-  "notifications":{
-  "markAllRead": "Mark all as read",
-  "clearAll": "Clear all",
-  "offline": "Offline",
-  "showingRecent": "Showing {{count}} recent notifications",
+  "notifications": {
+    "markAllRead": "Mark all as read",
+    "clearAll": "Clear all",
+    "offline": "Offline",
+    "showingRecent": "Showing {{count}} recent notifications",
     "loading": "Loading notifications...",
     "noNotifications": "No notifications yet",
-    "welcomeMessage": "You'll see new messages and updates here"
+    "welcomeMessage": "You'll see new messages and updates here",
+    "justNow": "just now",
+    "minutesAgo_one": "{{count}}m ago",
+    "minutesAgo_other": "{{count}}m ago",
+    "hoursAgo_one": "{{count}}h ago",
+    "hoursAgo_other": "{{count}}h ago",
+    "daysAgo_one": "{{count}}d ago",
+    "daysAgo_other": "{{count}}d ago",
+    "someTimeAgo": "some time ago",
+    "markAsRead": "Mark as read",
+    "notificationsName": "Notifications"
   },
   "notFound": {
     "title": "Oops! Page Not Found!",
@@ -28,13 +38,16 @@
     "goBack": "Go Back",
     "backHome": "Back to Home"
   },
-    "table": {
+  "table": {
+    "openMenu": "Open menu",
     "sort": {
       "asc": "Asc",
       "desc": "Desc",
       "hide": "Hide"
     },
     "filters": {
+      "selectedCount": "{{count}} selected",
+      "clearFilters": "Clear filters",
       "filterUsers": "Filter users...",
       "status": "Status",
       "role": "Role",
@@ -45,12 +58,13 @@
     "pagination": {
       "selectedRows": "{{selected}} of {{total}} row(s) selected",
       "rowsPerPage": "Rows per page",
-      "page": "Page {current} of {total}",
+      "page": "Page {{current}} of {{total}}",
       "goToFirst": "Go to first page",
       "goToPrevious": "Go to previous page",
       "goToNext": "Go to next page",
       "goToLast": "Go to last page",
-      "noResults": "No results."
+      "noResults": "No results.",
+      "ofDe": "of"
     },
     "viewOptions": {
       "view": "View",

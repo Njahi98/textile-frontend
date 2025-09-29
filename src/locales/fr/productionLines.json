@@ -1,0 +1,65 @@
+{
+  "header": {
+    "title": "Liste des Lignes de Production",
+    "subtitle": "Gérer vos lignes de production ici."
+  },
+  "errors": {
+    "failedToLoad": "Échec du chargement des lignes de production",
+    "unknownError": "Une erreur inconnue s'est produite.",
+    "noProductionLinesFound": "Aucune ligne de production trouvée."
+  },
+  "buttons": {
+    "addProductionLine": "Ajouter Ligne de Production"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "status": "Statut"
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "table": {
+    "openMenu": "Ouvrir le menu",
+    "filterPlaceholder": "Filtrer les lignes de production...",
+    "activeFilter": "Actif",
+    "reset": "Réinitialiser"
+  },
+  "messages": {
+    "updateSuccess": "Ligne de production mise à jour avec succès",
+    "updateError": "Échec de la modification du statut de la ligne de production",
+    "createSuccess": "Ligne de production créée avec succès",
+    "deleteError": "Échec de la suppression de la ligne de production",
+    "saveError": "Échec de l'enregistrement de la ligne de production",
+    "somethingWentWrong": "Quelque chose s'est mal passé"
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Supprimer cette ligne de production : {{id}} ?",
+      "description": "Vous êtes sur le point de supprimer une ligne de production avec l'ID <strong>{{id}}</strong>. <br />Cette action ne peut pas être annulée.",
+      "confirmButton": "Supprimer"
+    },
+    "mutate": {
+      "updateTitle": "Mettre à Jour Ligne de Production",
+      "createTitle": "Créer Ligne de Production",
+      "updateDescription": "Mettre à jour la ligne de production en fournissant les informations nécessaires. Cliquez sur enregistrer quand vous avez terminé.",
+      "createDescription": "Ajouter une nouvelle ligne de production en fournissant les informations nécessaires. Cliquez sur enregistrer quand vous avez terminé.",
+      "cancel": "Annuler",
+      "updateButton": "Mettre à Jour Ligne de Production",
+      "createButton": "Créer Ligne de Production"
+    }
+  },
+  "form": {
+    "name": "Nom",
+    "namePlaceholder": "Saisir le nom de la ligne de production",
+    "description": "Description",
+    "descriptionPlaceholder": "Saisir la description",
+    "capacity": "Capacité",
+    "capacityPlaceholder": "Saisir la capacité",
+    "targetOutput": "Production Cible",
+    "targetOutputPlaceholder": "Saisir la production cible",
+    "location": "Emplacement",
+    "locationPlaceholder": "Saisir l'emplacement"
+  }
+}

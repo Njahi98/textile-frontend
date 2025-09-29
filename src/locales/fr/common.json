@@ -20,7 +20,17 @@
   "showingRecent": "Affichage des {{count}} dernières notifications",
     "loading": "Chargement des notifications...",
     "noNotifications": "Pas encore de notifications",
-    "welcomeMessage": "Vous verrez ici les nouveaux messages et mises à jour"
+    "welcomeMessage": "Vous verrez ici les nouveaux messages et mises à jour",
+    "justNow": "à l'instant",
+  "minutesAgo_one": "il y a {{count}}m",
+  "minutesAgo_other": "il y a {{count}}m",
+  "hoursAgo_one": "il y a {{count}}h",
+  "hoursAgo_other": "il y a {{count}}h",
+  "daysAgo_one": "il y a {{count}}j",
+  "daysAgo_other": "il y a {{count}}j",
+  "someTimeAgo": "il y a quelque temps",
+  "markAsRead": "Marquer comme lu",
+"notificationsName": "Notifications"
   },
   "notFound": {
     "title": "Oups ! Page introuvable !",
@@ -29,12 +39,15 @@
     "backHome": "Retour à l'accueil"
   },
   "table": {
+    "openMenu": "Ouvrir le menu",
     "sort": {
       "asc": "Croissant",
       "desc": "Décroissant", 
       "hide": "Masquer"
     },
     "filters": {
+      "selectedCount": "{{count}} sélectionné(s)",
+    "clearFilters": "Effacer les filtres",
       "filterUsers": "Filtrer les utilisateurs...",
       "status": "Statut",
       "role": "Rôle",
@@ -45,16 +58,25 @@
     "pagination": {
       "selectedRows": "{{selected}} sur {{total}} ligne(s) sélectionnée(s)",
       "rowsPerPage": "Lignes par page",
-      "page": "Page {current} sur {total}",
+      "page": "Page {{current}} sur {{total}}",
       "goToFirst": "Aller à la première page",
       "goToPrevious": "Aller à la page précédente",
       "goToNext": "Aller à la page suivante",
       "goToLast": "Aller à la dernière page",
-      "noResults": "Aucun résultat."
+      "noResults": "Aucun résultat.",
+      "ofDe": "de"
     },
     "viewOptions": {
       "view": "Affichage",
       "toggleColumns": "Basculer les colonnes"
     }
-  }
+  },
+  "buttons": {
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "edit": "Modifier",
+  "submit": "Soumettre",
+  "loading": "Chargement..."
+}
 }

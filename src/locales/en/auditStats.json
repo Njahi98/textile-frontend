@@ -1,9 +1,5 @@
 {
-
-
-
-
-    "stats":{
+  "stats":{
   "pageTitle": "Audit Statistics",
   "pageDescription": "Analyze audit activity and user actions",
   "messages": {

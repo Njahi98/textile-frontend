@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "Worker List",
+    "subtitle": "Manage your workers and their roles here."
+  },
+  "errors": {
+    "failedToLoad": "Failed to load workers",
+    "unknownError": "An unknown error occurred.",
+    "noWorkersFound": "No workers found."
+  },
+  "buttons": {
+    "import": "Import",
+    "addWorker": "Add Worker"
+  },
+  "table": {
+    "filterPlaceholder": "Filter workers...",
+    "reset": "Reset"
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Delete Worker",
+      "confirmText": "Are you sure you want to delete {{name}}?",
+      "warningText": "This action will permanently remove the worker with the cin number of {{cin}} and role of {{role}} from the system. This cannot be undone.",
+      "cinLabel": "Cin",
+      "cinPlaceholder": "Enter cin to confirm deletion.",
+      "alertTitle": "Warning!",
+      "alertDescription": "Please be careful, this operation can not be rolled back.",
+      "confirmButton": "Delete"
+    },
+    "import": {
+      "title": "Import Workers",
+      "description": "Import workers from a CSV file. Required columns: name, cin. Optional: email, phone, role.",
+      "fileLabel": "CSV File",
+      "close": "Close",
+      "importing": "Importing...",
+      "import": "Import"
+    },
+    "action": {
+      "editTitle": "Edit Worker",
+      "addTitle": "Add New Worker",
+      "editDescription": "Update the worker here. Click save when you're done.",
+      "addDescription": "Create new worker here. Click save when you're done."
+    }
+  },
+  "form": {
+    "name": "Name",
+    "cin": "Cin",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "role": "Role",
+    "saveChanges": "Save changes"
+  }
+}

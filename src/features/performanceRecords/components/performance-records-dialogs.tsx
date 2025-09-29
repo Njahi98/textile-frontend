@@ -3,9 +3,12 @@ import { usePerformanceRecords } from '../context/performance-records-context'
 import { PerformanceRecordsMutateDrawer } from './performance-records-mutate-drawer'
 import { performanceApi, PerformanceRecord } from '@/services/performance.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 export function PerformanceRecordsDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = usePerformanceRecords()
+  const { t } = useTranslation(['performanceRecords']);
+  
 
   const handleDelete = async () => {
     if (!currentRow) return
@@ -13,12 +16,12 @@ export function PerformanceRecordsDialogs() {
     try {
       const response = await performanceApi.deletePerformanceRecord(currentRow.id)
       if (response.success) {
-        toast.success('Performance record deleted successfully')
+        toast.success(response.message || t('recordDeletedSuccess'))
       } else {
-        toast.error(response.message || 'Failed to delete performance record')
+        toast.error(response.message || t('failedToDeleteRecord'))
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'An error occurred while deleting the performance record')
+        toast.error(error instanceof Error ? error.message : t('errorDeletingRecord'))
     } finally {
       setOpen(null)
       setTimeout(() => {
@@ -61,15 +64,15 @@ export function PerformanceRecordsDialogs() {
             }}
             handleConfirm={() => void handleDelete()}
             className='max-w-md'
-            title={`Delete this performance record: ${currentRow.id} ?`}
+            title={t('deleteRecordTitle', { id: currentRow.id })}
             desc={
               <>
-                You are about to delete a performance record with the ID{' '}
-                <strong>{currentRow.id}</strong>. <br />
-                This action cannot be undone.
+            {t('deleteRecordDescription')} {' '}
+            <strong>{currentRow.id}</strong>. <br />
+            {t('actionCannotBeUndone')}
               </>
             }
-            confirmText='Delete'
+            confirmText={t('delete')}
           />
         </>
       )}

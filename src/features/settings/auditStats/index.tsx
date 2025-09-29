@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 export function AuditStats() {
   const [days, setDays] = useState<number>(30);
-  const { t } = useTranslation(['audit']);
+  const { t } = useTranslation(['auditStats']);
 
   const { data, error, isLoading, mutate } = useSWR<AuditStatsResponse, Error>(
     `/api/audit-logs/stats?days=${days}`,

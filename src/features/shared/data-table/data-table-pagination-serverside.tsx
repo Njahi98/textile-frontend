@@ -13,27 +13,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { AuditLogQueryParams } from '@/services/auditLog.api'
+import { useTranslation } from 'react-i18next'
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>
-  pagination: {
-    currentPage: number
-    totalPages: number
-    totalCount: number
-    hasNext: boolean
-    hasPrev: boolean
-  }
-  onQueryChange: (params: AuditLogQueryParams) => void
-  queryParams: AuditLogQueryParams
+interface PaginationInfo {
+  currentPage: number
+  totalPages: number
+  totalCount: number
+  hasNext: boolean
+  hasPrev: boolean
 }
 
-export function DataTablePagination<TData>({
+interface DataTablePaginationProps<TData, TQueryParams> {
+  table: Table<TData>
+  pagination: PaginationInfo
+  onQueryChange: (params: TQueryParams) => void
+  queryParams: TQueryParams & { page?: number; limit?: number }
+}
+
+export function DataTablePaginationServerSide<TData, TQueryParams>({
   table,
   pagination,
   onQueryChange,
   queryParams,
-}: DataTablePaginationProps<TData>) {
+}: DataTablePaginationProps<TData, TQueryParams>) {
+  const { t } = useTranslation(['common'])
+
   const handlePageChange = (page: number) => {
     onQueryChange({ ...queryParams, page })
   }
@@ -48,12 +52,16 @@ export function DataTablePagination<TData>({
       style={{ overflowClipMargin: 1 }}
     >
       <div className='text-muted-foreground hidden flex-1 text-sm sm:block'>
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {pagination.totalCount} row(s) selected.
+        {t('table.pagination.selectedRows', {
+          selected: table.getFilteredSelectedRowModel().rows.length,
+          total: table.getFilteredRowModel().rows.length,
+        })}
       </div>
       <div className='flex items-center sm:space-x-6 lg:space-x-8'>
         <div className='flex items-center space-x-2'>
-          <p className='hidden text-sm font-medium sm:block'>Rows per page</p>
+          <p className='hidden text-sm font-medium sm:block'>
+            {t('table.pagination.rowsPerPage')}
+          </p>
           <Select
             value={`${queryParams.limit ?? 50}`}
             onValueChange={(value) => {
@@ -73,7 +81,8 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className='flex w-[100px] items-center justify-center text-sm font-medium'>
-          Page {pagination.currentPage} of {pagination.totalPages}
+          Page {pagination.currentPage} {t('table.pagination.ofDe')}{' '}
+          {pagination.totalPages}
         </div>
         <div className='flex items-center space-x-2'>
           <Button
@@ -82,8 +91,8 @@ export function DataTablePagination<TData>({
             onClick={() => handlePageChange(1)}
             disabled={!pagination.hasPrev}
           >
-            <span className='sr-only'>Go to first page</span>
-            <ChevronsRight className='h-4 w-4' />
+            <span className='sr-only'>{t('table.pagination.goToFirst')}</span>
+            <ChevronsLeft className='h-4 w-4' />
           </Button>
           <Button
             variant='outline'
@@ -91,7 +100,7 @@ export function DataTablePagination<TData>({
             onClick={() => handlePageChange(pagination.currentPage - 1)}
             disabled={!pagination.hasPrev}
           >
-            <span className='sr-only'>Go to previous page</span>
+            <span className='sr-only'>{t('table.pagination.goToPrevious')}</span>
             <ChevronLeftIcon className='h-4 w-4' />
           </Button>
           <Button
@@ -100,7 +109,7 @@ export function DataTablePagination<TData>({
             onClick={() => handlePageChange(pagination.currentPage + 1)}
             disabled={!pagination.hasNext}
           >
-            <span className='sr-only'>Go to next page</span>
+            <span className='sr-only'>{t('table.pagination.goToNext')}</span>
             <ChevronRightIcon className='h-4 w-4' />
           </Button>
           <Button
@@ -109,8 +118,8 @@ export function DataTablePagination<TData>({
             onClick={() => handlePageChange(pagination.totalPages)}
             disabled={!pagination.hasNext}
           >
-            <span className='sr-only'>Go to last page</span>
-            <ChevronsLeft className='h-4 w-4' />
+            <span className='sr-only'>{t('table.pagination.goToLast')}</span>
+            <ChevronsRight className='h-4 w-4' />
           </Button>
         </div>
       </div>

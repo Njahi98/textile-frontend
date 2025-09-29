@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input'
 import { Worker } from '../data/schema'
 import { workerApi } from '@/services/worker.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z
   .object({
@@ -49,6 +50,9 @@ interface Props {
 }
 
 export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
+
+  const { t } = useTranslation(['workers']);
+
   const isEdit = !!currentRow
   const form = useForm<WorkerForm>({
     resolver: zodResolver(formSchema),
@@ -109,10 +113,9 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
-          <DialogTitle>{isEdit ? 'Edit Worker' : 'Add New Worker'}</DialogTitle>
+          <DialogTitle>{isEdit ? t('dialogs.action.editTitle') : t('dialogs.action.addTitle')}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the worker here. ' : 'Create new worker here. '}
-            Click save when you&apos;re done.
+            {isEdit ? t('dialogs.action.editDescription') : t('dialogs.action.addDescription')}
           </DialogDescription>
         </DialogHeader>
         <div className='-mr-4  w-full overflow-y-auto py-1 pr-4'>
@@ -128,7 +131,7 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Name
+                      {t('form.name')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -147,7 +150,7 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Cin
+                      {t('form.cin')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -167,7 +170,7 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Email
+                      {t('form.email')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -185,8 +188,8 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 name='phone'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Phone Number
+                    <FormLabel className='col-span-2 text-left'>
+                      {t('form.phoneNumber')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -205,7 +208,7 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Role
+                      {t('form.role')}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -224,7 +227,7 @@ export function WorkersActionDialog({ currentRow, open, onOpenChange }: Props) {
         </div>
         <DialogFooter>
           <Button type='submit' form='worker-form'>
-            Save changes
+            {t('form.saveChanges')}
           </Button>
         </DialogFooter>
       </DialogContent>

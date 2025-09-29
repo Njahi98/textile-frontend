@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InsightsFilters, insightsAPI, AIInsightResponse } from '@/services/insights.api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 // Storage keys for persistence
 const STORAGE_KEYS = {
@@ -46,44 +47,33 @@ const getRiskColor = (level: 'low' | 'medium' | 'high') => {
   }
 };
 
-// Utility function to get trend color and icon
-const getTrendDisplay = (trend: 'improving' | 'declining' | 'stable') => {
-  switch (trend) {
-    case 'improving':
-      return { color: 'text-green-600', icon: '↗', label: 'Improving' };
-    case 'declining':
-      return { color: 'text-red-600', icon: '↘', label: 'Declining' };
-    case 'stable':
-      return { color: 'text-blue-600', icon: '→', label: 'Stable' };
-    default:
-      return { color: 'text-gray-600', icon: '—', label: 'Unknown' };
-  }
-};
-
-const NoDataState: React.FC<{ onGenerate: () => void; hasFilters: boolean }> = ({ onGenerate, hasFilters }) => (
-  <Card className="border-dashed">
+const NoDataState: React.FC<{ onGenerate: () => void; hasFilters: boolean }> = ({ onGenerate, hasFilters }) => {
+  const { t } = useTranslation(['aiInsights']);
+   return (
+      <Card className="border-dashed">
     <CardContent className="flex flex-col items-center justify-center py-16">
       <div className="rounded-full bg-muted p-6 mb-4">
         <FileX className="h-12 w-12 text-muted-foreground" />
       </div>
       <CardTitle className="text-xl font-semibold text-center mb-2">
-        No AI Insights Available
+        {t('noDataTitle')}
       </CardTitle>
       <CardDescription className="text-center max-w-md mb-4">
         {hasFilters 
-          ? "Select a date range and click 'Generate Report' to create AI-powered insights for your production data."
-          : "Please select a date range first, then click 'Generate Report' to create AI-powered insights."
+          ? t('noDataDescriptionWithFilters')
+          : t('noDataDescriptionNoFilters')
         }
       </CardDescription>
       {hasFilters && (
         <Button onClick={onGenerate} className="mt-2">
           <PlayCircle className="h-4 w-4 mr-2" />
-          Generate Report
+          {t('generateReport')}
         </Button>
       )}
     </CardContent>
   </Card>
 );
+}
 
 // Helper functions for persistence
 const saveToStorage = (key: string, data: any) => {
@@ -127,6 +117,7 @@ interface PersistedRateLimitState {
 }
 
 export const AIInsightsDashboard: React.FC = () => {
+  const { t } = useTranslation(['aiInsights']);
   // Initialize filters from storage or empty state
   const [filters, setFilters] = useState<InsightsFilters>(() => {
     return loadFromStorage(STORAGE_KEYS.FILTERS_STATE) || {};
@@ -187,7 +178,7 @@ export const AIInsightsDashboard: React.FC = () => {
   // Manual refresh function that handles rate limiting and persistence
   const handleRefresh = async () => {
     if (!filters.startDate || !filters.endDate) {
-      toast.error('Please select both start and end dates before generating the report.', {
+      toast.error(t('selectDateRangeError'), {
         duration: 3000,
       });
       return;
@@ -239,7 +230,7 @@ export const AIInsightsDashboard: React.FC = () => {
           });
         }
       } else {
-        toast.error('An error occurred while generating insights.', {
+        toast.error(t('errorGeneratingInsights'), {
           duration: 3000,
         });
       }
@@ -264,7 +255,7 @@ export const AIInsightsDashboard: React.FC = () => {
             clearStorage(STORAGE_KEYS.INSIGHTS_DATA);
             setPersistedData(null);
             
-            toast.success('You can now generate a new AI insights report.', {
+            toast.success(t('canGenerateNewReport'), {
               duration: 3000,
             });
             
@@ -328,16 +319,16 @@ export const AIInsightsDashboard: React.FC = () => {
     };
 
     // Add report title and timestamp
-    csvContent.push(`"AI Insights Report - Generated on ${new Date().toLocaleDateString()}"`);
+    csvContent.push(`"${t('aiInsightsReport')} - ${t('generatedOn')} ${new Date().toLocaleDateString()}"`);
     csvContent.push('');
 
     // Data Analyzed Section
     if (dataAnalyzed) {
-      addSectionHeader('Data Analysis Summary');
-      csvContent.push(`"Records: **${dataAnalyzed.totalRecords}**"`);
-      csvContent.push(`"Workers: **${dataAnalyzed.workersAnalyzed}**"`);
-      csvContent.push(`"Production Lines: **${dataAnalyzed.productionLinesAnalyzed}**"`);
-      csvContent.push(`"Products: **${dataAnalyzed.productsAnalyzed}**"`);
+      addSectionHeader(t('dataAnalysisSummary'));
+      csvContent.push(`"${t('records')}: **${dataAnalyzed.totalRecords}**"`);
+      csvContent.push(`"${t('workers')}: **${dataAnalyzed.workersAnalyzed}**"`);
+      csvContent.push(`"${t('productionLines')}: **${dataAnalyzed.productionLinesAnalyzed}**"`);
+      csvContent.push(`"${t('products')}: **${dataAnalyzed.productsAnalyzed}**"`);
       if (dataAnalyzed.dateRange) {
         csvContent.push(`"Date Range: ${dataAnalyzed.dateRange.startDate} to ${dataAnalyzed.dateRange.endDate}"`);
       }
@@ -345,19 +336,19 @@ export const AIInsightsDashboard: React.FC = () => {
     }
 
     // KPIs Section
-    addSectionHeader('Key Performance Indicators');
-    csvContent.push(`"**Overall Efficiency**"`);
+    addSectionHeader(t('keyPerformanceIndicators'));
+    csvContent.push(`"**${t('overallEfficiency')}**"`);
     csvContent.push(`"**${insights.kpis.overallEfficiency.toFixed(1)}%**"`);
-    csvContent.push(`"**Quality Score**"`);
+    csvContent.push(`"**${t('qualityScore')}**"`);
     csvContent.push(`"**${insights.kpis.qualityScore.toFixed(1)}%**"`);
-    csvContent.push(`"**Productivity Trend**"`);
+    csvContent.push(`"**${t('productivityTrend')}**"`);
     csvContent.push(`"**${insights.kpis.productivityTrend.charAt(0).toUpperCase() + insights.kpis.productivityTrend.slice(1)}**"`);
-    csvContent.push(`"**Risk Level**"`);
+    csvContent.push(`"**${t('riskLevel')}**"`);
     csvContent.push(`"**${insights.kpis.riskLevel.toUpperCase()}**"`);
     csvContent.push('');
 
     // Executive Summary Section
-    addSectionHeader('Executive Summary', 'Key takeaways synthesized by AI');
+    addSectionHeader(t('executiveSummary'), t('executiveSummaryDescription'));
     const summaryLines = insights.summary.match(/.{1,80}(?:\s|$)/g) || [insights.summary];
     summaryLines.forEach(line => {
       csvContent.push(escapeCSV(line.trim()));
@@ -366,7 +357,7 @@ export const AIInsightsDashboard: React.FC = () => {
 
     // Critical Alerts Section
     if (insights.alerts && insights.alerts.length > 0) {
-      addSectionHeader('Critical Alerts', 'Items requiring your attention');
+      addSectionHeader(t('criticalAlerts'), t('criticalAlertsDescription'));
       
       insights.alerts.forEach((alert, index) => {
         const alertType = alert.type.charAt(0).toUpperCase() + alert.type.slice(1);
@@ -382,7 +373,7 @@ export const AIInsightsDashboard: React.FC = () => {
 
     // AI Recommendations Section
     if (insights.recommendations && insights.recommendations.length > 0) {
-      addSectionHeader('AI Recommendations', 'Prioritized actions to improve performance');
+      addSectionHeader(t('aiRecommendations'), t('aiRecommendationsDescription'));
       
       insights.recommendations.forEach((rec, index) => {
         const priority = rec.priority.toUpperCase();
@@ -391,7 +382,7 @@ export const AIInsightsDashboard: React.FC = () => {
         csvContent.push(`"**${priority}** **${category}**"`);
         csvContent.push(`"**${rec.title}**"`);
         csvContent.push(escapeCSV(rec.description));
-        csvContent.push(`"**Expected Impact:** ${rec.impact}"`);
+        csvContent.push(`"**${t('expectedImpact')}:** ${rec.impact}"`);
         
         if (index < insights.recommendations.length - 1) {
           csvContent.push('');
@@ -402,8 +393,8 @@ export const AIInsightsDashboard: React.FC = () => {
     // Add footer with export info
     csvContent.push('');
     csvContent.push('');
-    csvContent.push(`"Report exported on ${new Date().toLocaleString()}"`);
-    csvContent.push('"Generated by AI Insights Dashboard"');
+    csvContent.push(`"${t('reportExportedOn')} ${new Date().toLocaleString()}"`);
+    csvContent.push(`"${t('generatedBy')}"`);
 
     // Create CSV content
     const csv = csvContent.join('\n');
@@ -419,10 +410,24 @@ export const AIInsightsDashboard: React.FC = () => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    toast.success('AI insights report has been downloaded as CSV file.', {
+    toast.success(t('exportSuccess'), {
       duration: 3000,
     });
   };
+
+    // Utility function to get trend color and icon
+  const getTrendDisplay = useCallback((trend: 'improving' | 'declining' | 'stable') => {
+    switch (trend) {
+      case 'improving':
+        return { color: 'text-green-600', icon: '↗', label: t('improving') };
+      case 'declining':
+        return { color: 'text-red-600', icon: '↘', label: t('declining') };
+      case 'stable':
+        return { color: 'text-blue-600', icon: '→', label: t('stable') };
+      default:
+        return { color: 'text-gray-600', icon: '—', label: t('unknown') };
+    }
+  }, [t]);
 
   // Extract insights and dataAnalyzed from persisted data
   const insights = persistedData?.insights;
@@ -438,7 +443,7 @@ export const AIInsightsDashboard: React.FC = () => {
           <div className="bg-card p-6 rounded-lg shadow-lg border">
             <div className="flex items-center gap-3">
               <RefreshCw className="h-5 w-5 animate-spin text-primary" />
-              <span className="font-medium">Generating AI insights...</span>
+              <span className="font-medium">{t('generatingInsights')}</span>
             </div>
           </div>
         </div>
@@ -447,13 +452,13 @@ export const AIInsightsDashboard: React.FC = () => {
       {/* Introduction & Actions */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">AI Insights</h2>
-          <p className="text-muted-foreground">AI-driven analysis of production performance</p>
+          <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+          <p className="text-muted-foreground">{t('description')}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={exportToCSV} disabled={!insights}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            {t('export')}
           </Button>
           <Button 
             variant="outline" 
@@ -464,12 +469,12 @@ export const AIInsightsDashboard: React.FC = () => {
             {rateLimitInfo.isRateLimited ? (
               <>
                 <Clock className="h-4 w-4 mr-2" />
-                Wait {formatTime(cooldownTimer)}
+                {t('wait')} {formatTime(cooldownTimer)}
               </>
             ) : (
               <>
                 <RefreshCw className={`h-4 w-4 mr-2 ${isGenerating ? 'animate-spin' : ''}`} />
-                Generate Report
+                {t('generateReport')}
               </>
             )}
           </Button>
@@ -484,10 +489,8 @@ export const AIInsightsDashboard: React.FC = () => {
               <Clock className="h-5 w-5 text-amber-600" />
               <div>
                 <h3 className="font-semibold text-amber-800">Rate Limit Active</h3>
-                <p className="text-sm text-amber-700">
-                  AI insights can only be generated once every 30 minutes. Please wait {formatTime(cooldownTimer)} before generating a new report.
-                  Your current report will remain available until the timer expires. To keep these insights permanently, 
-                  please use the Export button to download them as a CSV file, as AI generated reports are not saved long-term.
+               <p className="text-sm text-amber-700">
+                  {t('rateLimitMessage', { time: formatTime(cooldownTimer) })}
                 </p>
               </div>
             </div>
@@ -500,7 +503,7 @@ export const AIInsightsDashboard: React.FC = () => {
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="startDate">Start Date</Label>
+            <Label htmlFor="startDate">{t('startDate')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -512,7 +515,7 @@ export const AIInsightsDashboard: React.FC = () => {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {filters.startDate ? format(new Date(filters.startDate), "PPP") : "Pick start date"}
+                  {filters.startDate ? format(new Date(filters.startDate), "PPP") : t('pickStartDate')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -530,7 +533,7 @@ export const AIInsightsDashboard: React.FC = () => {
             </Popover>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="endDate">End Date</Label>
+            <Label htmlFor="endDate">{t('endDate')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -542,7 +545,7 @@ export const AIInsightsDashboard: React.FC = () => {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {filters.endDate ? format(new Date(filters.endDate), "PPP") : "Pick end date"}
+                  {filters.endDate ? format(new Date(filters.endDate), "PPP") : t('pickEndDate')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -564,10 +567,10 @@ export const AIInsightsDashboard: React.FC = () => {
 
         {dataAnalyzed && (
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-muted-foreground">
-            <div>Records: <span className="font-medium text-foreground">{dataAnalyzed.totalRecords}</span></div>
-            <div>Workers: <span className="font-medium text-foreground">{dataAnalyzed.workersAnalyzed}</span></div>
-            <div>Production Lines: <span className="font-medium text-foreground">{dataAnalyzed.productionLinesAnalyzed}</span></div>
-            <div>Products: <span className="font-medium text-foreground">{dataAnalyzed.productsAnalyzed}</span></div>
+            <div>{t('records')}: <span className="font-medium text-foreground">{dataAnalyzed.totalRecords}</span></div>
+            <div>{t('workers')}: <span className="font-medium text-foreground">{dataAnalyzed.workersAnalyzed}</span></div>
+            <div>{t('productionLines')}: <span className="font-medium text-foreground">{dataAnalyzed.productionLinesAnalyzed}</span></div>
+            <div>{t('products')}: <span className="font-medium text-foreground">{dataAnalyzed.productsAnalyzed}</span></div>
           </div>
         )}
       </CardContent>
@@ -583,7 +586,7 @@ export const AIInsightsDashboard: React.FC = () => {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" /> Overall Efficiency
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" /> {t('overallEfficiency')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -594,7 +597,7 @@ export const AIInsightsDashboard: React.FC = () => {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Quality Score</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('qualityScore')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-green-500">
@@ -604,7 +607,7 @@ export const AIInsightsDashboard: React.FC = () => {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Productivity Trend</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('productivityTrend')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className={`text-2xl font-bold flex items-center gap-2 ${trendDisplay?.color}`}>
@@ -621,7 +624,7 @@ export const AIInsightsDashboard: React.FC = () => {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Risk Level</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('riskLevel')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="mt-1">
@@ -639,8 +642,8 @@ export const AIInsightsDashboard: React.FC = () => {
           {/* Summary */}
           <Card>
             <CardHeader>
-              <CardTitle>Executive Summary</CardTitle>
-              <CardDescription>Key takeaways synthesized by AI</CardDescription>
+              <CardTitle>{t('executiveSummary')}</CardTitle>
+              <CardDescription>{t('executiveSummaryDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="leading-relaxed text-muted-foreground">{insights.summary}</p>
@@ -651,8 +654,8 @@ export const AIInsightsDashboard: React.FC = () => {
           {insights.alerts && insights.alerts.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Critical Alerts</CardTitle>
-                <CardDescription>Items requiring your attention</CardDescription>
+                <CardTitle>{t('criticalAlerts')}</CardTitle>
+                <CardDescription>{t('criticalAlertsDescription')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -669,12 +672,12 @@ export const AIInsightsDashboard: React.FC = () => {
                               <Info className="h-4 w-4 text-blue-600" />
                             )}
                             <h4 className="font-semibold">
-                              {alert.type.charAt(0).toUpperCase() + alert.type.slice(1)} Alert
+                              {alert.type === 'critical' ? t('criticalAlert') : alert.type === 'warning' ? t('warningAlert') : t('infoAlert')}
                             </h4>
                           </div>
                           <p className="text-sm text-foreground/90">{alert.message}</p>
                           <p className="text-xs text-muted-foreground">
-                            <span className="font-medium">Recommended Action:</span> {alert.action}
+                            <span className="font-medium">{t('recommendedAction')}:</span> {alert.action}
                           </p>
                         </div>
                       </div>
@@ -688,8 +691,8 @@ export const AIInsightsDashboard: React.FC = () => {
           {/* Recommendations */}
           <Card>
             <CardHeader>
-              <CardTitle>AI Recommendations</CardTitle>
-              <CardDescription>Prioritized actions to improve performance</CardDescription>
+              <CardTitle>{t('aiRecommendations')}</CardTitle>
+              <CardDescription>{t('aiRecommendationsDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -710,7 +713,7 @@ export const AIInsightsDashboard: React.FC = () => {
                       <h4 className="font-semibold leading-snug">{rec.title}</h4>
                       <p className="text-sm text-muted-foreground mt-2">{rec.description}</p>
                       <p className="text-xs text-muted-foreground mt-3">
-                        <span className="font-medium text-foreground">Expected Impact:</span> {rec.impact}
+                        <span className="font-medium text-foreground">{t('expectedImpact')}:</span> {rec.impact}
                       </p>
                     </CardContent>
                   </Card>

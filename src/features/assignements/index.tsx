@@ -10,6 +10,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 import { ErrorState } from '@/components/error-state'
 import { Assignment } from '@/services/assignment.api'
 import { assignmentSchema } from './data/schema'
+import { useTranslation } from 'react-i18next'
 
 export default function Assignments() {
   interface AssignmentsApiResponse {
@@ -33,21 +34,23 @@ export default function Assignments() {
     "/api/assignments",
     fetcher
   );
+    const { t } = useTranslation(['assignment']);
+  
 
   if (isLoading) return <LoadingSpinner />;
   if (error)
     return (
-      <ErrorState
-        title="Failed to load assignments"
-        message={
-          typeof error.message === "string"
-            ? error.message
-            : "An unknown error occurred."
-        }
-        onRetry={() => void mutate()}
-      />
+<ErrorState
+  title={t('errors.failedToLoad')}
+  message={
+    typeof error.message === "string"
+      ? error.message
+      : t('errors.unknownError')
+  }
+  onRetry={() => void mutate()}
+/>
     );
-  if (!data?.success) return <div>No assignments found.</div>;
+if (!data?.success) return <div>{t('errors.noAssignmentsFound')}</div>;
 
   const validatedAssignments = data.assignments.map(assignment => {
     try {
@@ -62,9 +65,9 @@ export default function Assignments() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Assignments</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('header.title')}</h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your assignments for this month!
+              {t('header.subtitle')}
             </p>
           </div>
           <AssignmentsPrimaryButtons />

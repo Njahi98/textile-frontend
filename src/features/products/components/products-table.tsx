@@ -23,8 +23,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Product } from '@/services/product.api'
-import { DataTablePagination } from './data-table-pagination'
+import { DataTablePagination } from '../../shared/data-table/data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
+import { useTranslation } from 'react-i18next'
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,6 +44,8 @@ export function ProductsTable({ columns, data }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+  const { t } = useTranslation(['products']);
+  
 
   const table = useReactTable({
     data,
@@ -120,7 +123,7 @@ export function ProductsTable({ columns, data }: DataTableProps) {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                   {t('noResults')}
                 </TableCell>
               </TableRow>
             )}

@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { ProductionLine } from '../data/schema'
-import { DataTablePagination } from './data-table-pagination'
+import { DataTablePagination } from '../../shared/data-table/data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 
 declare module '@tanstack/react-table' {

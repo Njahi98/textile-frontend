@@ -81,6 +81,7 @@ export interface AssignmentsResponse {
 export interface AssignmentResponse {
   success: boolean;
   assignment: Assignment;
+  message: string;
 }
 
 export interface CalendarResponse {

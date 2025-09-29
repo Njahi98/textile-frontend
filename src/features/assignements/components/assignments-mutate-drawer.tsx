@@ -19,17 +19,20 @@ import { z } from 'zod'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 type AssignmentForm = z.infer<typeof createAssignmentSchema>
 
 interface WorkersApiResponse {
   success: boolean;
   workers: z.infer<typeof workerListSchema>;
+  message:string
 }
 
 interface ProductionLinesApiResponse {
   success: boolean;
   productionLines: z.infer<typeof productionLineListSchema>;
+  message:string
 }
 
 export function AssignmentsMutateDrawer({ 
@@ -42,6 +45,8 @@ export function AssignmentsMutateDrawer({
   currentRow?: Assignment; 
 }) {
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation(['assignment']);
+  
   const isUpdate = !!currentRow
 
   
@@ -74,21 +79,21 @@ export function AssignmentsMutateDrawer({
       setIsLoading(true)
       
       if (isUpdate && currentRow) {
-        const response = await assignmentApi.updateAssignment(currentRow.id, data)
-        if (response.success) {
-          toast.success('Assignment updated successfully')
+        const updateResponse = await assignmentApi.updateAssignment(currentRow.id, data)
+        if (updateResponse.success) {
+          toast.success(updateResponse.message ||t('messages.updateSuccess'))
         }
       } else {
-        const response = await assignmentApi.createAssignment(data)
-        if (response.success) {
-          toast.success('Assignment created successfully')
+        const createResponse = await assignmentApi.createAssignment(data)
+        if (createResponse.success) {
+          toast.success(createResponse.message || t('messages.createSuccess'))
         }
       }
       
       onOpenChange(false)
       form.reset()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'An error occurred')
+      toast.error(error instanceof Error ? error.message : t('messages.saveError'))
     } finally {
       setIsLoading(false)
     }
@@ -99,11 +104,11 @@ export function AssignmentsMutateDrawer({
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
           <SheetTitle>
-            {isUpdate ? 'Update Assignment' : 'Create Assignment'}
+            {isUpdate ? t('dialogs.mutate.updateTitle') : t('dialogs.mutate.createTitle')}
           </SheetTitle>
           <SheetDescription>
-            {isUpdate ? 'Update the assignment details below.' : 'Fill in the assignment details below.'}
-          </SheetDescription>
+            {isUpdate ? t('dialogs.mutate.updateDescription') : t('dialogs.mutate.createDescription')}
+          </SheetDescription> 
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={(e) => { e.preventDefault(); void form.handleSubmit(onSubmit)(e); }} className='flex-1 space-y-5 px-4'>
@@ -112,14 +117,14 @@ export function AssignmentsMutateDrawer({
               name='workerId'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Worker</FormLabel>
+                  <FormLabel>{t('form.worker')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={workers.map(worker => ({
                         value: worker.id.toString(),
                         label: `${worker.name} (${worker.cin})`
                       }))}
-                      placeholder="Select a worker"
+                      placeholder={t('form.selectWorker')}
                       defaultValue={field.value.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                       className='w-full'
@@ -134,14 +139,14 @@ export function AssignmentsMutateDrawer({
               name='productionLineId'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Production Line</FormLabel>
+                  <FormLabel>{t('form.productionLine')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={productionLines.map(line => ({
                         value: line.id.toString(),
                         label: `${line.name}${line.location ? ` - ${line.location}` : ''}`
                       }))}
-                      placeholder="Select a production line"
+                        placeholder={t('form.selectProductionLine')}
                       defaultValue={field.value.toString()}
                       onValueChange={(value) => field.onChange(Number(value))}
                       className='w-full'
@@ -156,12 +161,12 @@ export function AssignmentsMutateDrawer({
               name='position'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Position</FormLabel>
+                  <FormLabel>{t('form.position')}</FormLabel>
                   <FormControl>
                     <Input 
                       {...field} 
                       type="text"
-                      placeholder='Enter position number' 
+                      placeholder={t('form.positionPlaceholder')} 
                       className='w-full'
                     />
                   </FormControl>
@@ -174,14 +179,14 @@ export function AssignmentsMutateDrawer({
               name='shift'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Shift</FormLabel>
+                  <FormLabel>{t('form.shift')}</FormLabel>
                   <FormControl>
                     <SelectDropdown
                       items={SHIFT_OPTIONS.map(shift => ({
                         value: shift.value,
                         label: shift.label
                       }))}
-                      placeholder="Select a shift"
+                      placeholder={t('form.selectShift')}
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                       className='w-full'
@@ -196,7 +201,7 @@ export function AssignmentsMutateDrawer({
               name='date'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>{t('form.date')}</FormLabel>
                   <FormControl>
                     <Popover modal={true}>
                       <PopoverTrigger asChild>
@@ -208,7 +213,7 @@ export function AssignmentsMutateDrawer({
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? format(new Date(String(field.value)), 'PPP') : 'Pick a date'}
+                            {field.value ? format(new Date(String(field.value)), 'PPP') : t('form.pickDate')}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start" side="bottom">
@@ -234,14 +239,14 @@ export function AssignmentsMutateDrawer({
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            {t('dialogs.mutate.cancel')}
           </Button>
           <Button 
             type='submit' 
             disabled={isLoading}
             onClick={() => void form.handleSubmit(onSubmit)()}
           >
-            {isLoading ? 'Saving...' : isUpdate ? 'Update' : 'Create'}
+              {isLoading ? t('dialogs.mutate.saving') : isUpdate ? t('dialogs.mutate.updateButton') : t('dialogs.mutate.createButton')}
           </Button>
         </div>
       </SheetContent>

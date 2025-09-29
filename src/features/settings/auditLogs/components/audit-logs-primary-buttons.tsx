@@ -3,18 +3,19 @@ import { useAuditLogs } from '../context/audit-logs-context'
 import { Download, Trash2 } from 'lucide-react'
 import { auditLogApi } from '@/services/auditLog.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 export function AuditLogsPrimaryButtons() {
   const { setOpen } = useAuditLogs()
+  const { t } = useTranslation(['auditLogs']);
 
   const handleExport = () => {
     auditLogApi.downloadAuditLogsCSV()
       .then(() => {
-        toast.success('Audit logs exported successfully')
+        toast.success(t('exportSuccess'))
       })
       .catch((error) => {
-        toast.error('Failed to export audit logs')
-        console.error('Export error:', error)
+        toast.error(error instanceof Error ? error.message : t('exportFailed'))
       })
   }
 
@@ -25,14 +26,14 @@ export function AuditLogsPrimaryButtons() {
         className='space-x-1' 
         onClick={handleExport}
       >
-        <span>Export CSV</span> <Download size={18} />
+          <span>{t('exportCSV')}</span> <Download size={18} />
       </Button>
       <Button 
         variant="destructive" 
         className='space-x-1' 
         onClick={() => setOpen('cleanup')}
       >
-        <span>Cleanup</span> <Trash2 size={18} />
+          <span>{t('cleanup')}</span> <Trash2 size={18} />
       </Button>
     </div>
   )

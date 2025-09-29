@@ -3,9 +3,21 @@ import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
 import { Product } from '@/services/product.api'
-import { DataTableColumnHeader } from './data-table-column-header'
+import { DataTableColumnHeader } from '../../shared/data-table/data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Image as ImageIcon } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+
+const productStatusTypes = new Map<boolean, string>([
+  [
+    true,
+    'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200',
+  ],
+  [
+    false,
+    'bg-neutral-300/40 border-neutral-300',
+  ],
+])
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -126,17 +138,29 @@ export const columns: ColumnDef<Product>[] = [
       <div>{row.getValue('unitPrice') ? `$${row.getValue('unitPrice')}` : '-'}</div>
     ),
   },
-  {
-    accessorKey: 'isActive',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
-    ),
-    cell: ({ row }) => (
-      <div>{row.getValue('isActive') ? 'Active' : 'Inactive'}</div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
+{
+  accessorKey: 'isActive',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Status" />
+  ),
+  cell: ({ row }) => {
+    const isActive = row.original.isActive as boolean
+    const badgeColor = productStatusTypes.get(isActive)
+
+    return (
+      <div className="flex space-x-2">
+        <Badge variant="outline" className={cn('capitalize', badgeColor)}>
+          {isActive ? 'Active' : 'Inactive'}
+        </Badge>
+      </div>
+    )
   },
+  filterFn: (row, id, value) => {
+    return value.includes(row.getValue(id)?.toString())
+  },
+  enableSorting: false,
+  enableHiding: false,
+},
   {
     id: 'actions',
     cell: DataTableRowActions,

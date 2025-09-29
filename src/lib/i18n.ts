@@ -10,9 +10,16 @@ import enSidebar from '../locales/en/sidebar.json';
 import enHomeDashboard from '../locales/en/dashboard.json';
 import enAccountSettings from '../locales/en/accountSettings.json';
 import enUsers from '../locales/en/users.json';
-import enAudit from '../locales/en/audit.json';
 import enPerformanceAnalytics from '../locales/en/performanceAnalytics.json';
 import enAssignments from '../locales/en/assignment.json';
+import enWorkers from '../locales/en/workers.json';
+import enProductionLines from '../locales/en/productionLines.json';
+import enProducts from '../locales/en/products.json';
+import enPerformanceRecords from '../locales/en/performanceRecords.json';
+import enAuditLogs from '../locales/en/auditLogs.json';
+import enAuditStats from '../locales/en/auditStats.json';
+import enChat from '../locales/en/chat.json';
+import enAiInsights from '../locales/en/aiInsights.json';
 
 import frCommon from '../locales/fr/common.json';
 import frAuth from '../locales/fr/auth.json';
@@ -21,9 +28,16 @@ import frSidebar from '../locales/fr/sidebar.json';
 import frHomeDashboard from '../locales/fr/dashboard.json';
 import frAccountSettings from '../locales/fr/accountSettings.json';
 import frUsers from '../locales/fr/users.json';
-import frAudit from '../locales/fr/audit.json';
 import frPerformanceAnalytics from '../locales/fr/performanceAnalytics.json';
 import frAssignments from '../locales/fr/assignment.json';
+import frWorkers from '../locales/fr/workers.json';
+import frProductionLines from '../locales/fr/productionLines.json';
+import frProducts from '../locales/fr/products.json';
+import frPerformanceRecords from '../locales/fr/performanceRecords.json';
+import frAuditLogs from '../locales/fr/auditLogs.json';
+import frAuditStats from '../locales/fr/auditStats.json';
+import frChat from '../locales/fr/chat.json';
+import frAiInsights from '../locales/fr/aiInsights.json';
 
 const resources = {
   en: {
@@ -34,9 +48,16 @@ const resources = {
     dashboard: enHomeDashboard,
     accountSettings: enAccountSettings,
     users: enUsers,
-    audit: enAudit,
+    auditStats: enAuditStats,
     performanceAnalytics: enPerformanceAnalytics,
     assignment: enAssignments,
+    workers: enWorkers,
+    productionLines: enProductionLines,
+    products: enProducts,
+    performanceRecords: enPerformanceRecords,
+    auditLogs: enAuditLogs,
+    chat: enChat,
+    aiInsights: enAiInsights,
   },
   fr: {
     auth: frAuth,
@@ -46,9 +67,16 @@ const resources = {
     dashboard: frHomeDashboard,
     accountSettings: frAccountSettings,
     users: frUsers,
-    audit: frAudit,
+    auditStats: frAuditStats,
     performanceAnalytics: frPerformanceAnalytics,
     assignment: frAssignments,
+    workers: frWorkers,
+    productionLines: frProductionLines,
+    products: frProducts,
+    performanceRecords: frPerformanceRecords,
+    auditLogs: frAuditLogs,
+    chat: frChat,
+    aiInsights: frAiInsights,
   },
 };
 

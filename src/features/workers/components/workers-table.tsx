@@ -23,8 +23,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Worker } from '../data/schema'
-import { DataTablePagination } from './data-table-pagination'
+import { DataTablePagination } from '../../shared/data-table/data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
+import { useTranslation } from 'react-i18next'
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,6 +44,9 @@ export function WorkersTable({ columns, data }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+
+  const { t } = useTranslation(['common']);
+
 
   const table = useReactTable({
     data,
@@ -120,7 +124,7 @@ export function WorkersTable({ columns, data }: DataTableProps) {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  {t('table.pagination.noResults')}
                 </TableCell>
               </TableRow>
             )}

@@ -8,6 +8,7 @@ import { AlertTriangle } from 'lucide-react'
 import { auditLogApi } from '@/services/auditLog.api'
 import { toast } from 'sonner'
 import { mutate } from 'swr'
+import { useTranslation } from 'react-i18next'
 
 interface AuditLogCleanupDialogProps {
   open: boolean
@@ -17,27 +18,27 @@ interface AuditLogCleanupDialogProps {
 export function AuditLogCleanupDialog({ open, onOpenChange }: AuditLogCleanupDialogProps) {
   const [days, setDays] = useState<string>('365')
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation(['auditLogs']);
 
   const handleCleanup = async () => {
     const daysNumber = parseInt(days)
     
     if (isNaN(daysNumber) || daysNumber < 30) {
-      toast.error('Please enter a valid number of days (minimum 30)')
+      toast.error(t('validDaysError'))
       return
     }
 
     setIsLoading(true)
     try {
       const result = await auditLogApi.cleanupAuditLogs(daysNumber)
-      toast.success(result.message)
-      
-      await mutate('/api/audit-logs')
-      
+      if(result.success){
+        toast.success(result.message || 'Audit logs cleaned up successfully')
+        await mutate('/api/audit-logs')
+      }
       onOpenChange(false)
       setDays('365')
     } catch (error) {
-      toast.error('Failed to cleanup audit logs')
-      console.error('Cleanup error:', error)
+      toast.error(error instanceof Error ? error.message : t('cleanupFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -47,20 +48,19 @@ export function AuditLogCleanupDialog({ open, onOpenChange }: AuditLogCleanupDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Cleanup Audit Logs</DialogTitle>
+          <DialogTitle>{t('cleanupTitle')}</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              This action will permanently delete audit log records older than the specified number of days. 
-              This action cannot be undone.
+              {t('cleanupWarning')}
             </AlertDescription>
           </Alert>
 
           <div className="space-y-2">
-            <Label htmlFor="days">Keep logs for (days)</Label>
+            <Label htmlFor="days">{t('keepLogsFor')}</Label>
             <Input
               id="days"
               type="number"
@@ -70,7 +70,7 @@ export function AuditLogCleanupDialog({ open, onOpenChange }: AuditLogCleanupDia
               placeholder="365"
             />
             <p className="text-xs text-muted-foreground">
-              Minimum: 30 days. Records older than this will be deleted.
+              {t('minimumDaysNote')}
             </p>
           </div>
         </div>
@@ -81,14 +81,14 @@ export function AuditLogCleanupDialog({ open, onOpenChange }: AuditLogCleanupDia
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button
             variant="destructive"
             onClick={handleCleanup}
             disabled={isLoading}
           >
-            {isLoading ? 'Cleaning up...' : 'Cleanup'}
+              {isLoading ? t('cleaningUp') : t('cleanup')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -21,44 +21,6 @@
     "reset": "Reset",
     "clearFilters": "Clear filters"
   },
-  "table": {
-    "headers": {
-      "username": "Username",
-      "name": "Name",
-      "email": "Email",
-      "phoneNumber": "Phone Number",
-      "status": "Status",
-      "role": "Role",
-      "actions": "Actions"
-    },
-    "sort": {
-      "asc": "Asc",
-      "desc": "Desc",
-      "hide": "Hide"
-    },
-    "filters": {
-      "filterUsers": "Filter users...",
-      "status": "Status",
-      "role": "Role",
-      "active": "Active",
-      "inactive": "Inactive",
-      "suspended": "Suspended"
-    },
-    "pagination": {
-      "selectedRows": "{{selected}} of {{total}} row(s) selected",
-      "rowsPerPage": "Rows per page",
-      "page": "Page {current} of {total}",
-      "goToFirst": "Go to first page",
-      "goToPrevious": "Go to previous page",
-      "goToNext": "Go to next page",
-      "goToLast": "Go to last page",
-      "noResults": "No results."
-    },
-    "viewOptions": {
-      "view": "View",
-      "toggleColumns": "Toggle columns"
-    }
-  },
   "dialog": {
     "add": {
       "title": "Add New User",
@@ -76,6 +38,10 @@
     "alertTitle": "Warning!",
     "alertDescription": "Please be careful, this operation cannot be rolled back."
   }
+  },
+  "table": {
+    "filterPlaceholder": "Filter users...",
+    "reset": "Reset"
   },
   "form": {
     "labels": {

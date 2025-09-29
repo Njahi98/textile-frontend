@@ -19,6 +19,7 @@ import { useProductionLines } from '../context/production-lines-context'
 import { ProductionLine, productionLineSchema,  } from '../data/schema'
 import { productionLineApi } from '@/services/productionLine.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableRowActionsProps {
   row: Row<ProductionLine>
@@ -26,16 +27,17 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useProductionLines()
+  const { t } = useTranslation(['productionLines']);
   const productionLine = productionLineSchema.parse(row.original)
 
-  const labels = [
+const labels = [
   {
     value: 'true',
-    label: 'Active',
+    label: t('status.active'),
   },
   {
     value: 'false',
-    label: 'Inactive',
+    label: t('status.inactive'),
   },
 ]
 
@@ -43,10 +45,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
   const handleToggleStatus = async () => {
     try {
-      await productionLineApi.toggleStatus(productionLine.id)
-        toast.success('Production line updated successfully')
+      const response = await productionLineApi.toggleStatus(productionLine.id)
+      if(response.success){
+        toast.success(response.message)
+      }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to toggle production line status')
+      toast.error(error instanceof Error ? error.message : t('messages.updateError'))
     }
   }
 
@@ -59,7 +63,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
           >
             <Ellipsis className='h-4 w-4' />
-            <span className='sr-only'>Open menu</span>
+            <span className='sr-only'>{t('table.openMenu')}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
@@ -69,14 +73,14 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('edit')
             }}
           >
-            Edit
+            {t('actions.edit')}
             <DropdownMenuShortcut>
               <SquarePen size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>{t('actions.status')}</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup
                 value={productionLine.isActive ? 'true' : 'false'}
@@ -107,7 +111,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             }}
             className='text-red-500!'
           >
-            Delete
+            {t('actions.delete')}
             <DropdownMenuShortcut>
               <Trash2 size={16} />
             </DropdownMenuShortcut>

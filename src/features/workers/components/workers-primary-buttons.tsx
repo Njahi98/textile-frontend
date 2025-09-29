@@ -1,10 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { useWorkers } from '../context/workers-context'
 import { Upload, UserPlus } from 'lucide-react'
+import { useTranslation } from 'react-i18next';
 
 
 export function WorkersPrimaryButtons() {
-  const { setOpen } = useWorkers()
+  const { setOpen } = useWorkers();
+  const { t } = useTranslation(['workers']);
+
   return (
     <div className='flex gap-2'>
       <Button
@@ -12,10 +15,10 @@ export function WorkersPrimaryButtons() {
         className='space-x-1'
         onClick={() => setOpen('import')}
       >
-        <span>Import</span> <Upload size={18} />
+          <span>{t('buttons.import')}</span> <Upload size={18} />
       </Button>
       <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Add Worker</span> <UserPlus size={18} />
+          <span>{t('buttons.addWorker')}</span> <UserPlus size={18} />
       </Button>
     </div>
   )

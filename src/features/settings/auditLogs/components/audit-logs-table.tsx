@@ -23,9 +23,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { AuditLog } from '../data/schema'
-import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 import { AuditLogQueryParams } from '@/services/auditLog.api'
+import { DataTablePaginationServerSide } from '@/features/shared/data-table/data-table-pagination-serverside'
+import { useTranslation } from 'react-i18next'
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,6 +54,7 @@ export function AuditLogsTable({ columns, data, pagination, onQueryChange, query
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+  const { t } = useTranslation(['auditLogs']);
 
   const table = useReactTable({
     data,
@@ -137,14 +139,14 @@ export function AuditLogsTable({ columns, data, pagination, onQueryChange, query
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No audit logs found.
+                  {t('noLogsFound')}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination 
+      <DataTablePaginationServerSide
         table={table} 
         pagination={pagination}
         onQueryChange={onQueryChange}

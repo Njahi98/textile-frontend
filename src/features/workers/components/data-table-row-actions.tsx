@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useWorkers } from '../context/workers-context'
 import { Worker } from '../data/schema'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableRowActionsProps {
   row: Row<Worker>
@@ -19,6 +20,8 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useWorkers()
+  const { t } = useTranslation(['common']);
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -28,7 +31,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
           >
             <Ellipsis className='h-4 w-4' />
-            <span className='sr-only'>Open menu</span>
+            <span className='sr-only'>{t('table.openMenu')}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
@@ -38,7 +41,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('edit')
             }}
           >
-            Edit
+            {t('buttons.edit')}
             <DropdownMenuShortcut>
               <SquarePen size={16} />
             </DropdownMenuShortcut>
@@ -51,7 +54,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             }}
             className='text-red-500!'
           >
-            Delete
+            {t('buttons.delete')}
             <DropdownMenuShortcut>
               <Trash2 size={16} />
             </DropdownMenuShortcut>

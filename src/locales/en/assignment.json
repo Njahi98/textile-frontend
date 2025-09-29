@@ -1,6 +1,65 @@
 {
-    "calendar":
-    {
+  "header": {
+    "title": "Assignments",
+    "subtitle": "Here's a list of your assignments for this month!"
+  },
+  "errors": {
+    "failedToLoad": "Failed to load assignments",
+    "unknownError": "An unknown error occurred.",
+    "noAssignmentsFound": "No assignments found."
+  },
+  "buttons": {
+    "createAssignment": "Create Assignment"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "table": {
+    "openMenu": "Open menu",
+    "filterPlaceholder": "Filter by Worker name...",
+    "filterByDate": "Filter by date",
+    "reset": "Reset",
+    "noResults": "No results."
+  },
+  "messages": {
+    "deleteSuccess": "Assignment deleted successfully",
+    "deleteError": "Failed to delete assignment",
+    "deleteUnknownError": "An error occurred while deleting the assignment",
+    "updateSuccess": "Assignment updated successfully",
+    "createSuccess": "Assignment created successfully",
+    "saveError": "An error occurred"
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Delete this assignment: {{id}} ?",
+      "description": "You are about to delete an assignment with the ID {{id}}. Worker: {{workerName}}, Production Line: {{productionLineName}}. This action cannot be undone.",
+      "confirmButton": "Delete"
+    },
+    "mutate": {
+      "updateTitle": "Update Assignment",
+      "createTitle": "Create Assignment",
+      "updateDescription": "Update the assignment details below.",
+      "createDescription": "Fill in the assignment details below.",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updateButton": "Update",
+      "createButton": "Create"
+    }
+  },
+  "form": {
+    "worker": "Worker",
+    "selectWorker": "Select a worker",
+    "productionLine": "Production Line",
+    "selectProductionLine": "Select a production line",
+    "position": "Position",
+    "positionPlaceholder": "Enter position number",
+    "shift": "Shift",
+    "selectShift": "Select a shift",
+    "date": "Date",
+    "pickDate": "Pick a date"
+  },
+"calendar":{
   "header": {
     "title": "Assignment Calendar",
     "subtitle": "View and manage worker assignments on a monthly calendar."

@@ -22,9 +22,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { PerformanceRecord } from '../data/schema'
-import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 import { PerformanceRecordQueryParams } from '@/services/performance.api'
+import { DataTablePaginationServerSide } from '@/features/shared/data-table/data-table-pagination-serverside'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableProps {
   columns: ColumnDef<PerformanceRecord>[]
@@ -45,6 +46,9 @@ export function DataTable({ columns, data, pagination, onQueryChange, queryParam
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const { t } = useTranslation(['performanceRecords']);
+  
 
   const table = useReactTable({
     data,
@@ -121,14 +125,14 @@ export function DataTable({ columns, data, pagination, onQueryChange, queryParam
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No performance records found.
+                 {t('noRecordsFound')}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination 
+      <DataTablePaginationServerSide 
         table={table} 
         pagination={pagination}
         onQueryChange={onQueryChange}

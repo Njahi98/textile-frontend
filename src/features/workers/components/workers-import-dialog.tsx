@@ -24,6 +24,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { workerApi, ImportRowError, ImportRowSuccess } from '@/services/worker.api'
 import { useState } from 'react'
 import { Loader2, CheckCircle, XCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   file: z
@@ -51,6 +52,8 @@ interface ApiError {
 }
 
 export function WorkersImportDialog({ open, onOpenChange }: Props) {
+  const { t } = useTranslation(['workers']);
+
   const [isLoading, setIsLoading] = useState(false)
   const [importResult, setImportResult] = useState<{
     success: boolean
@@ -118,9 +121,9 @@ export function WorkersImportDialog({ open, onOpenChange }: Props) {
     >
       <DialogContent className='gap-4 sm:max-w-md'>
         <DialogHeader className='text-left'>
-          <DialogTitle>Import Workers</DialogTitle>
+          <DialogTitle>{t('dialogs.import.title')}</DialogTitle>
           <DialogDescription>
-            Import workers from a CSV file. Required columns: name, cin. Optional: email, phone, role.
+            {t('dialogs.import.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -169,7 +172,7 @@ export function WorkersImportDialog({ open, onOpenChange }: Props) {
               name='file'
               render={() => (
                 <FormItem className='mb-2 space-y-1'>
-                  <FormLabel>CSV File</FormLabel>
+                  <FormLabel>{t('dialogs.import.fileLabel')}</FormLabel>
                   <FormControl>
                     <Input 
                       type='file' 
@@ -189,7 +192,7 @@ export function WorkersImportDialog({ open, onOpenChange }: Props) {
         <DialogFooter className='gap-2'>
           <DialogClose asChild>
             <Button variant='outline' disabled={isLoading}>
-              Close
+              {t('dialogs.import.close')}
             </Button>
           </DialogClose>
           <Button 
@@ -200,10 +203,10 @@ export function WorkersImportDialog({ open, onOpenChange }: Props) {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Importing...
+                {t('dialogs.import.importing')}
               </>
             ) : (
-              'Import'
+              t('dialogs.import.import')
             )}
           </Button>
         </DialogFooter>

@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { PerformanceRecordQueryParams } from '@/services/performance.api'
+import { useTranslation } from 'react-i18next'
 
 interface DateRangeFilterProps {
   onQueryChange: (params: PerformanceRecordQueryParams) => void
@@ -19,6 +20,8 @@ interface DateRangeFilterProps {
 export function DateRangeFilter({ onQueryChange, queryParams }: DateRangeFilterProps) {
   const [startDateOpen, setStartDateOpen] = useState(false)
   const [endDateOpen, setEndDateOpen] = useState(false)
+  const { t } = useTranslation(['performanceRecords']);
+  
 
   const handleStartDateSelect = (date: Date | undefined) => {
     const startDate = date ? format(date, 'yyyy-MM-dd') : undefined
@@ -65,7 +68,7 @@ export function DateRangeFilter({ onQueryChange, queryParams }: DateRangeFilterP
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {queryParams.startDate ? format(new Date(queryParams.startDate), 'MMM dd, yyyy') : 'Start date'}
+            {queryParams.startDate ? format(new Date(queryParams.startDate), 'MMM dd, yyyy') : t('startDate')}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -96,7 +99,7 @@ export function DateRangeFilter({ onQueryChange, queryParams }: DateRangeFilterP
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {queryParams.endDate ? format(new Date(queryParams.endDate), 'MMM dd, yyyy') : 'End date'}
+            {queryParams.endDate ? format(new Date(queryParams.endDate), 'MMM dd, yyyy') : t('endDate')}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -123,7 +126,7 @@ export function DateRangeFilter({ onQueryChange, queryParams }: DateRangeFilterP
           onClick={clearDateFilters}
           className="h-8 px-2"
         >
-          Clear dates
+            {t('clearDates')}
           <X className="ml-1 h-3 w-3" />
         </Button>
       )}

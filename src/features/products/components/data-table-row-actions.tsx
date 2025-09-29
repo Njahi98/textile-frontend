@@ -19,6 +19,7 @@ import { useProducts } from '../context/products-context'
 import { Product } from '@/services/product.api'
 import { productApi } from '@/services/product.api'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 interface DataTableRowActionsProps {
   row: Row<Product>
@@ -26,34 +27,40 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useProducts()
+  const { t } = useTranslation(['products']);
+  
   const product = row.original
 
-  const labels = [
+const labels = [
   {
     value: 'true',
-    label: 'Active',
+    label: t('active'),
   },
   {
     value: 'false',
-    label: 'Inactive',
+    label: t('inactive'),
   },
 ]
 
   const handleToggleStatus = async () => {
     try {
-      await productApi.toggleStatus(product.id)
-      toast.success('Product status updated successfully')
+      const response = await productApi.toggleStatus(product.id)
+      if(response.success){
+        toast.success(response.message ?? t('productStatusUpdatedSuccess'))
+      }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to toggle product status')
+      toast.error(error instanceof Error ? error.message : t('failedToToggleStatus'))
     }
   }
 
   const handleDeleteImage = async () => {
     try {
-      await productApi.deleteImage(product.id)
-      toast.success('Product image deleted successfully')
+      const response = await productApi.deleteImage(product.id)
+      if(response.success){
+        toast.success(response.message ?? t('productImageDeletedSuccess'))
+      }    
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete product image')
+      toast.error(error instanceof Error ? error.message : t('failedToDeleteImage'))
     }
   }
 
@@ -76,7 +83,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('edit')
             }}
           >
-            Edit
+              {t('edit')}
             <DropdownMenuShortcut>
               <SquarePen size={16} />
             </DropdownMenuShortcut>
@@ -89,7 +96,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 onClick={() => void handleDeleteImage()}
                 className='text-orange-600'
               >
-                Delete Image
+                  {t('deleteImage')}
                 <DropdownMenuShortcut>
                   <ImageIcon size={16} />
                 </DropdownMenuShortcut>
@@ -99,7 +106,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           
           <DropdownMenuSeparator />
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger>{t('status')}</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup
                 value={product.isActive ? 'true' : 'false'}
@@ -130,7 +137,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             }}
             className='text-red-500!'
           >
-            Delete
+            {t('delete')}
             <DropdownMenuShortcut>
               <Trash2 size={16} />
             </DropdownMenuShortcut>
