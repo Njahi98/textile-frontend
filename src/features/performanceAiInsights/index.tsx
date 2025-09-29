@@ -156,6 +156,10 @@ export const AIInsightsDashboard: React.FC = () => {
   const [cooldownTimer, setCooldownTimer] = useState<number>(rateLimitInfo.remainingTime);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Sync cooldownTimer with rateLimitInfo.remainingTime when rate limit info changes
+  useEffect(() => {
+    setCooldownTimer(rateLimitInfo.remainingTime);
+  }, [rateLimitInfo.remainingTime]);
 
   // Save filters to storage whenever they change
   useEffect(() => {
@@ -184,10 +188,21 @@ export const AIInsightsDashboard: React.FC = () => {
       return;
     }
 
+    // Check if user is already rate limited before proceeding
+    if (rateLimitInfo.isRateLimited) {
+      toast.error(t('rateLimitMessage', { time: formatTime(rateLimitInfo.remainingTime) }), {
+        duration: 8000,
+      });
+      return;
+    }
+
     setIsGenerating(true);
     
+    // Store current data before attempting to generate new report
+    const currentData = persistedData;
+    
     try {
-      // Clear old data when generating new report
+      // Clear old data when generating new report (only if not rate limited)
       clearStorage(STORAGE_KEYS.INSIGHTS_DATA);
       setPersistedData(null);
       
@@ -211,6 +226,12 @@ export const AIInsightsDashboard: React.FC = () => {
       if (err?.response?.status === 429) {
         const errorData = err.response.data;
         
+        // Restore the data that was cleared if we get a 429 error
+        if (currentData) {
+          setPersistedData(currentData);
+          saveToStorage(STORAGE_KEYS.INSIGHTS_DATA, currentData);
+        }
+        
         if (errorData?.remainingTime) {
           const newRateLimitInfo = {
             isRateLimited: true,
@@ -221,8 +242,8 @@ export const AIInsightsDashboard: React.FC = () => {
           setRateLimitInfo(newRateLimitInfo);
           setCooldownTimer(errorData.remainingTime);
           
-          toast.error(errorData.message, {
-            duration: 5000,
+          toast.error(t('rateLimitMessage', { time: formatTime(errorData.remainingTime) }), {
+            duration: 8000,
           });
         } else {
           toast.error(errorData.message, {
@@ -482,17 +503,35 @@ export const AIInsightsDashboard: React.FC = () => {
       </div>
 
       {/* Rate Limit Warning */}
-      {rateLimitInfo.isRateLimited && (
+      {!rateLimitInfo.isRateLimited && (
         <Card className="border-amber-200 bg-amber-50">
           <CardContent>
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-amber-600" />
-              <div>
-                <h3 className="font-semibold text-amber-800">Rate Limit Active</h3>
-               <p className="text-sm text-amber-700">
-                  {t('rateLimitMessage', { time: formatTime(cooldownTimer) })}
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-800">{t('rateLimitActive')}</h3>
+                <p className="text-sm text-amber-700 mt-1">
+                  {t('rateLimitMessage')}
                 </p>
+                {persistedData?.insights && (
+                  <div className="mt-2 p-2 bg-amber-100 rounded-md">
+                    <p className="text-xs text-amber-800 font-medium">
+                      💡 {t('exportReminder')}
+                    </p>
+                  </div>
+                )}
               </div>
+              {persistedData?.insights && (
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={exportToCSV}
+                  className="bg-white border-amber-300 text-amber-800 hover:bg-amber-100"
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  {t('export')}
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
