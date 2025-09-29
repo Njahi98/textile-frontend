@@ -43,39 +43,57 @@ export function ThemeProvider({
     () => (localStorage.getItem(colorStorageKey) as ColorTheme) || defaultColorTheme
   )
 
-  useEffect(() => {
+  const applyTheme = (newTheme: Theme, newColorTheme: ColorTheme) => {
     const root = window.document.documentElement
 
-    // Remove all existing theme classes
     root.classList.remove("light", "dark")
     root.classList.remove("theme-neutral", "theme-rose", "theme-orange", "theme-green", "theme-blue", "theme-yellow", "theme-violet", "theme-stone", "theme-zinc", "theme-gray", "theme-slate")
 
-    // Apply color theme class
-    root.classList.add(`theme-${colorTheme}`)
+    root.classList.add(`theme-${newColorTheme}`)
 
-    if (theme === "system") {
+    if (newTheme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
         .matches
         ? "dark"
         : "light"
-
       root.classList.add(systemTheme)
-      return
+    } else {
+      root.classList.add(newTheme)
     }
+  }
 
-    root.classList.add(theme)
+  useEffect(() => {
+    applyTheme(theme, colorTheme)
   }, [theme, colorTheme])
 
   const value = {
     theme,
     colorTheme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: (newTheme: Theme) => {
+      // Check if View Transitions API is supported
+      if (!document.startViewTransition) {
+        localStorage.setItem(storageKey, newTheme)
+        setTheme(newTheme)
+        return
+      }
+
+      document.startViewTransition(() => {
+        localStorage.setItem(storageKey, newTheme)
+        setTheme(newTheme)
+      })
     },
-    setColorTheme: (colorTheme: ColorTheme) => {
-      localStorage.setItem(colorStorageKey, colorTheme)
-      setColorTheme(colorTheme)
+    setColorTheme: (newColorTheme: ColorTheme) => {
+      // Check if View Transitions API is supported
+      if (!document.startViewTransition) {
+        localStorage.setItem(colorStorageKey, newColorTheme)
+        setColorTheme(newColorTheme)
+        return
+      }
+
+      document.startViewTransition(() => {
+        localStorage.setItem(colorStorageKey, newColorTheme)
+        setColorTheme(newColorTheme)
+      })
     },
   }
 
