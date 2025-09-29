@@ -45,7 +45,7 @@ export interface AuthActions {
   logout: () => Promise<{ success: boolean; error?: string }>;
   getCurrentUser: () => Promise<{ success: boolean; error?: string }>;
   requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
-  resetPassword: (token: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (token: string, password: string) => Promise<{ success: boolean; error?: string, message?: string }>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
   setupAutoRefresh: () => void;

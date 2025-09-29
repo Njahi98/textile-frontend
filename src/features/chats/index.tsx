@@ -84,7 +84,7 @@ export default function Chats() {
     if (isToday(messageDate)) {
       dateKey = t('today')
     } else if (isYesterday(messageDate)) {
-      dateKey = t('Yesterday')
+      dateKey = t('yesterday')
     } else {
       dateKey = format(messageDate, 'd MMM, yyyy')
     }

@@ -8,9 +8,7 @@ import { useLanguage } from "./hooks/useLanguage";
 function App() {
   const routing = useRoutes(routes);
 
-  // Initialize auth state on app load
   useAuthInit();
-  // Ensure html lang/dir reflect current language
   useLanguage();
 
   return (

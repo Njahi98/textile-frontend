@@ -10,11 +10,13 @@ import { passwordResetSchema, PasswordResetData } from "@/lib/schemas";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export default function ResetPassword({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { t } = useTranslation(['auth']);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
@@ -39,15 +41,15 @@ export default function ResetPassword({
   // Redirect if no token is present
   useEffect(() => {
     if (!token) {
-      toast.error("Invalid or missing reset token");
+      toast.error(t('resetPassword.invalidToken'));
       void navigate("/auth/login");
     }
-  }, [token, navigate]);
+  }, [token, navigate,t]);
 
   const onSubmit = async (data: PasswordResetData) => {
     const result = await resetPassword(data.token, data.password);
     if (result.success) {
-      toast.success("Password has been reset successfully");
+      toast.success(result.message ?? t('messages.passwordResetSuccess'));
       void navigate("/auth/login");
     }
   };
@@ -62,9 +64,9 @@ export default function ResetPassword({
           >
             <div className="flex flex-col gap-6 flex-1">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold">Reset Password</h1>
+                <h1 className="text-2xl font-bold">{t('resetPassword.title')}</h1>
                 <p className="text-muted-foreground text-balance">
-                  Enter your new password below
+                  {t('resetPassword.subtitle')}
                 </p>
               </div>
 
@@ -75,7 +77,7 @@ export default function ResetPassword({
               )}
 
               <div className="grid gap-3">
-                <Label htmlFor="password">New Password</Label>
+                <Label htmlFor="password">{t('resetPassword.newPassword')}</Label>
                 <Input
                   {...register("password")}
                   id="password"
@@ -93,13 +95,13 @@ export default function ResetPassword({
                   className="w-full hover:cursor-pointer"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Resetting..." : "Reset Password"}
+                    {isLoading ? t('resetPassword.resetting') : t('resetPassword.resetButton')}
                 </Button>
 
                 <div className="text-center text-sm">
-                  Remember your password?{" "}
+                  {t('resetPassword.rememberPassword')}{" "}
                   <Link to="/auth/login" className="underline underline-offset-4">
-                    Back to login
+                    {t('resetPassword.backToLogin')}
                   </Link>
                 </div>
               </div>
@@ -109,10 +111,9 @@ export default function ResetPassword({
         </CardContent>
       </Card>
       
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div>
+<div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+  {t('login.agreementText')}
+</div>
     </div>
   );
 }

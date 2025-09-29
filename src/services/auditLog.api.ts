@@ -122,7 +122,7 @@ export const auditLogApi = {
     return response.data;
   },
 
-  async getAuditStats(days: number = 30): Promise<AuditStatsResponse> {
+  async getAuditStats(days = 30): Promise<AuditStatsResponse> {
     const response = await api.get<AuditStatsResponse>(`/api/audit-logs/stats?days=${days}`);
     return response.data;
   },

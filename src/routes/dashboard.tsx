@@ -56,7 +56,7 @@ export const dashboardRoutes: RouteObject = {
         {
           path: "calendar",
           element: createLazyComponent(
-            () => import("@/features/assignements/assignment-calendar")
+            () => import("@/features/assignementsCalendar")
           ),
         },
       ],
@@ -79,14 +79,14 @@ export const dashboardRoutes: RouteObject = {
           element: createLazyComponent(
             () =>
               import(
-                "@/features/performanceRecords/performance-analytics-dashboard"
+                "@/features/performanceAnalytics"
               )
           ),
         },
         {
           path: "ai-insights",
           element: createLazyComponent(
-            () => import("@/features/performanceRecords/AIInsightsDashboard")
+            () => import("@/features/performanceAiInsights")
           ),
         },
       ],
