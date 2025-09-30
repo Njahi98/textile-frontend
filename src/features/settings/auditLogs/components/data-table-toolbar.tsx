@@ -1,19 +1,19 @@
-import { X } from 'lucide-react'
-import { Table } from '@tanstack/react-table'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { DataTableFacetedFilter } from '../../../shared/data-table/data-table-faceted-filter'
-import { DataTableViewOptions } from '../../../shared/data-table/data-table-view-options'
-import { DateRangeFilter } from './date-range-filter'
-import { AuditLog } from '../data/schema'
-import { AuditLogQueryParams } from '@/services/auditLog.api'
-import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+import { X } from "lucide-react";
+import { Table } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTableFacetedFilter } from "../../../shared/data-table/data-table-faceted-filter";
+import { DataTableViewOptions } from "../../../shared/data-table/data-table-view-options";
+import { DateRangeFilter } from "./date-range-filter";
+import { AuditLog } from "../data/schema";
+import { AuditLogQueryParams } from "@/services/auditLog.api";
+import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
-  onQueryChange: (params: AuditLogQueryParams) => void
-  queryParams: AuditLogQueryParams
+  table: Table<TData>;
+  onQueryChange: (params: AuditLogQueryParams) => void;
+  queryParams: AuditLogQueryParams;
 }
 
 export function DataTableToolbar<TData>({
@@ -21,109 +21,116 @@ export function DataTableToolbar<TData>({
   onQueryChange,
   queryParams,
 }: DataTableToolbarProps<TData>) {
-  const { t } = useTranslation(['auditLogs']);
-  const isFiltered = table.getState().columnFilters.length > 0 || 
-                     queryParams.startDate || queryParams.endDate || queryParams.search
-  
+  const { t } = useTranslation(["auditLogs"]);
+  const isFiltered =
+    table.getState().columnFilters.length > 0 ||
+    queryParams.startDate ||
+    queryParams.endDate ||
+    queryParams.search;
+
   // Debounced search
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   const handleSearchChange = (value: string) => {
     // Clear existing timeout
     if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current)
+      clearTimeout(searchTimeoutRef.current);
     }
-    
+
     // Set new timeout
     searchTimeoutRef.current = setTimeout(() => {
-      onQueryChange({ 
-        ...queryParams, 
+      onQueryChange({
+        ...queryParams,
         page: 1, // Reset to first page when searching
-        search: value.length >= 2 ? value : undefined 
-      })
-    }, 500) // 500ms debounce
-  }
+        search: value.length >= 2 ? value : undefined,
+      });
+    }, 500); // 500ms debounce
+  };
 
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current)
+        clearTimeout(searchTimeoutRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   // Generate action options
   const getActionOptions = () => {
-    const auditLogs = table.getCoreRowModel().rows.map(row => row.original) as AuditLog[]
-    const uniqueActions = [...new Set(auditLogs.map(log => log.action))]
-    
-    return uniqueActions.map(action => ({
+    const auditLogs = table
+      .getCoreRowModel()
+      .rows.map((row) => row.original) as AuditLog[];
+    const uniqueActions = [...new Set(auditLogs.map((log) => log.action))];
+
+    return uniqueActions.map((action) => ({
       label: action,
       value: action,
-    }))
-  }
+    }));
+  };
 
   // Generate resource options
   const getResourceOptions = () => {
-    const auditLogs = table.getCoreRowModel().rows.map(row => row.original) as AuditLog[]
-    const uniqueResources = [...new Set(auditLogs.map(log => log.resource))]
-    
-    return uniqueResources.map(resource => ({
-      label: resource.replace('_', ' '),
+    const auditLogs = table
+      .getCoreRowModel()
+      .rows.map((row) => row.original) as AuditLog[];
+    const uniqueResources = [...new Set(auditLogs.map((log) => log.resource))];
+
+    return uniqueResources.map((resource) => ({
+      label: resource.replace("_", " "),
       value: resource,
-    }))
-  }
+    }));
+  };
 
   return (
-    <div className='flex items-center justify-between'>
-      <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
+    <div className="flex items-center justify-between">
+      <div className="flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2 w-full">
         <Input
-          placeholder={t('searchPlaceholder')}
-          defaultValue={queryParams.search ?? ''}
+          placeholder={t("searchPlaceholder")}
+          defaultValue={queryParams.search ?? ""}
           onChange={(event) => handleSearchChange(event.target.value)}
-          className='h-8 w-[150px] lg:w-[250px]'
+          className="h-8 w-full sm:w-[150px] lg:w-[250px]"
         />
-        <div className='flex gap-x-2 flex-wrap'>
+        <div className="flex gap-x-2 gap-y-2 flex-wrap">
           {/* Date Range Filter */}
-          <DateRangeFilter 
+          <DateRangeFilter
             onQueryChange={onQueryChange}
             queryParams={queryParams}
           />
-          
+
           {/* Action Filter */}
-          {table.getColumn('action') && (
+          {table.getColumn("action") && (
             <DataTableFacetedFilter
-              column={table.getColumn('action')}
-              title={t('action')}
+              column={table.getColumn("action")}
+              title={t("action")}
               options={getActionOptions()}
             />
           )}
-          
+
           {/* Resource Filter */}
-          {table.getColumn('resource') && (
+          {table.getColumn("resource") && (
             <DataTableFacetedFilter
-              column={table.getColumn('resource')}
-              title={t('resource')}
+              column={table.getColumn("resource")}
+              title={t("resource")}
               options={getResourceOptions()}
             />
           )}
         </div>
         {isFiltered && (
           <Button
-            variant='ghost'
+            variant="ghost"
             onClick={() => {
-              table.resetColumnFilters()
-              onQueryChange({ page: 1, limit: queryParams.limit })
+              table.resetColumnFilters();
+              onQueryChange({ page: 1, limit: queryParams.limit });
             }}
-            className='h-8 px-2 lg:px-3'
+            className="h-8 px-2 lg:px-3 text-xs sm:text-sm"
           >
-            {t('reset')}
-            <X className='ml-2 h-4 w-4' />
+            {t("reset")}
+            <X className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>
       <DataTableViewOptions table={table} />
     </div>
-  )
+  );
 }

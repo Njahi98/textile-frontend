@@ -471,22 +471,23 @@ export const AIInsightsDashboard: React.FC = () => {
       )}
 
       {/* Introduction & Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-          <p className="text-muted-foreground">{t('description')}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{t('title')}</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('description')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={exportToCSV} disabled={!insights}>
+        <div className="flex items-center gap-1 sm:gap-2 flex-wrap w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={exportToCSV} disabled={!insights} className="text-xs sm:text-sm px-2 sm:px-3">
             <Download className="h-4 w-4 mr-2" />
             {t('export')}
           </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleRefresh} 
-            disabled={isGenerating || rateLimitInfo.isRateLimited || !hasValidFilters}
-          >
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRefresh} 
+              disabled={isGenerating || rateLimitInfo.isRateLimited || !hasValidFilters}
+              className="text-xs sm:text-sm px-2 sm:px-3"
+            >
             {rateLimitInfo.isRateLimited ? (
               <>
                 <Clock className="h-4 w-4 mr-2" />
