@@ -7,8 +7,7 @@ export const useLanguage = () => {
   useEffect(() => {
     const updateLanguageAttributes = (language: string) => {
       document.documentElement.lang = language;
-      document.documentElement.dir = 'ltr';
-    };
+      };
 
     updateLanguageAttributes(i18n.language);
 

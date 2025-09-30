@@ -1,53 +1,44 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useLocation } from 'react-router-dom';
 
+const PUBLIC_ROUTES = ['/', '/auth/login', '/auth/register', '/auth/reset-password'];
 
-export const useAuthInit = () => {
-  const { getCurrentUser, isInitialized, setupAutoRefresh, clearAutoRefresh, isAuthenticated } = useAuthStore();
-  const location = useLocation();
-
-  useEffect(() => {
-    // Skip auth check if on auth pages (login, register, reset password)
-    const isOnAuthPage = location.pathname.startsWith('/auth/') || 
-                        location.pathname === '/login' || 
-                        location.pathname === '/register';
-    
-    if (!isInitialized && !isOnAuthPage) {
-      getCurrentUser().catch(() => {
-        // Silently fail - don't show errors for auth check
-      });
-    } else if (isOnAuthPage && !isInitialized) {
-      // If on auth page and not initialized, mark as initialized without checking auth
-      useAuthStore.setState({ isInitialized: true });
-    }
-  }, [getCurrentUser, isInitialized, location.pathname]);
-
-  // Setup auto-refresh when user becomes authenticated
-  useEffect(() => {
-    if (isAuthenticated && isInitialized) {
-      setupAutoRefresh();
-    } else {
-      clearAutoRefresh();
-    }
-
-    // Cleanup on unmount
-    return () => clearAutoRefresh();
-  }, [isAuthenticated, isInitialized, setupAutoRefresh, clearAutoRefresh]);
+const isPublicRoute = (pathname: string): boolean => {
+  return PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith('/auth/'));
 };
 
-// Additional hook for socket authentication
+export const useAuthInit = () => {
+  const { getCurrentUser, isInitialized } = useAuthStore();
+  const location = useLocation();
+  const hasInitialized = useRef(false);
+
+  useEffect(() => {
+    // Only run once
+    if (hasInitialized.current || isInitialized) return;
+    
+    // Skip auth check on public routes
+    if (isPublicRoute(location.pathname)) {
+      useAuthStore.setState({ isInitialized: true });
+      hasInitialized.current = true;
+      return;
+    }
+
+    // Protected route - check authentication
+    void getCurrentUser().finally(() => {
+      hasInitialized.current = true;
+    });
+  }, [getCurrentUser, isInitialized, location.pathname]);
+};
+
+// Socket authentication helper
 export const useSocketAuth = () => {
   const { isAuthenticated, user } = useAuthStore();
   
-  // Get auth token for socket connection (uses cookies)
-  const getSocketAuthToken = () => {
-    return isAuthenticated ? 'cookie-auth' : null;
-  };
-
   return {
     isAuthenticated,
     user,
-    getSocketAuthToken,
+    // Cookies are sent automatically with socket connection
+    getSocketAuthToken: () => isAuthenticated ? 'cookie-auth' : null,
   };
 };

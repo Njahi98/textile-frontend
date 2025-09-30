@@ -48,8 +48,6 @@ export interface AuthActions {
   resetPassword: (token: string, password: string) => Promise<{ success: boolean; error?: string, message?: string }>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
-  setupAutoRefresh: () => void;
-  clearAutoRefresh: () => void;
   googleLogin: (credential: string) => Promise<{ success: boolean; message?: string; user?: User }>;
 }
 
