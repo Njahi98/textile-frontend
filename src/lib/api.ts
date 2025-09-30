@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios';
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import i18n from './i18n';
 // Remove this line:
 // import Cookies from 'js-cookie';
@@ -35,7 +35,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError) => {
+  async (error: unknown) => {
     if (!axios.isAxiosError(error)) {
       return Promise.reject(error instanceof Error ? error : new Error('Unknown error'));
     }
