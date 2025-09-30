@@ -80,9 +80,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         error: null,
       });
       return { success: true };
-    } catch (error: any) {
-      // Silent error from interceptor - just mark initialized
-      if (error?.silent) {
+    } catch (error: unknown) {
+      // Check if it's a silent error
+      if (typeof error === 'object' && error !== null && 'silent' in error) {
         set({
           user: null,
           isAuthenticated: false,
@@ -92,7 +92,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         return { success: false };
       }
 
-      // Real error - clear auth and potentially redirect
       set({
         user: null,
         isAuthenticated: false,
@@ -108,7 +107,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     
     try {
       await authApi.logout();
-    } catch (error) {
+    } catch {
       // Always clear local state on logout, even if API fails
     }
     
@@ -132,9 +131,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isInitialized: true,
       });
       return { success: true };
-    } catch (error: any) {
-      // Silent error - try refresh
-      if (error?.silent) {
+    } catch (error: unknown) {
+      // Check if it's a silent error
+      if (typeof error === 'object' && error !== null && 'silent' in error) {
         const refreshResult = await get().refreshToken();
         if (refreshResult.success) {
           return { success: true };
