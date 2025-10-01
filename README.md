@@ -5,7 +5,7 @@ A modern React-based frontend for textile manufacturing management, built with T
 ![Dashboard Preview](./docs/dashboard.webp)
 
 ## Live Demo
-[https://textilepro.vercel.app/](https://textilepro.vercel.app/)
+[https://textilepro.netlify.app/](https://textilepro.netlify.app/)
 
 ## Features
 
