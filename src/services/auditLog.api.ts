@@ -160,5 +160,37 @@ export const auditLogApi = {
       console.error('Error downloading audit logs:', error);
       throw error;
     }
+  },
+
+  // Log export actions for frontend CSV exports
+  async logPerformanceAnalyticsExport(metadata: {
+    dateRange: { from: string; to: string };
+    groupBy: string;
+    filters?: { workerId?: number; productionLineId?: number };
+    dataPoints: number;
+    totalRecords: number;
+  }): Promise<{ success: boolean; message: string }> {
+    const response = await api.post<{ success: boolean; message: string }>('/api/audit-logs/log-export', {
+      exportType: 'performance_analytics',
+      metadata,
+    });
+    return response.data;
+  },
+
+  async logPerformanceAiInsightsExport(metadata: {
+    dataAnalyzed?: {
+      totalRecords: number;
+      workersAnalyzed: number;
+      productionLinesAnalyzed: number;
+      productsAnalyzed: number;
+      dateRange?: { startDate: string; endDate: string };
+    };
+    insightsGenerated: boolean;
+  }): Promise<{ success: boolean; message: string }> {
+    const response = await api.post<{ success: boolean; message: string }>('/api/audit-logs/log-export', {
+      exportType: 'performance_ai_insights',
+      metadata,
+    });
+    return response.data;
   }
 };

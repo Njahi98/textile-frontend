@@ -21,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { performanceApi } from '@/services/performance.api';
 import type { PerformanceAnalytics, AnalyticsQueryParams } from '@/services/performance.api';
+import { auditLogApi } from '@/services/auditLog.api';
 import { toast } from 'sonner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
@@ -215,7 +216,7 @@ const getErrorRateBadge = (rate: number) => {
     return item.date || item.name || 'Unknown';
   };
 
-const exportToCSV = () => {
+const exportToCSV = async () => {
   if (!analytics || !chartData.length) return;
   
   const csvContent: string[] = [];
@@ -506,6 +507,25 @@ const exportToCSV = () => {
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
   
+  // Log the export action
+  try {
+    await auditLogApi.logPerformanceAnalyticsExport({
+      dateRange: {
+        from: format(dateRange.from, 'yyyy-MM-dd'),
+        to: format(dateRange.to, 'yyyy-MM-dd'),
+      },
+      groupBy,
+      filters: {
+        ...(workerId && { workerId: parseInt(workerId) }),
+        ...(productionLineId && { productionLineId: parseInt(productionLineId) }),
+      },
+      dataPoints: chartData.length,
+      totalRecords: analytics.overall.totalRecords,
+    });
+  } catch (error) {
+    console.error('Failed to log export action:', error);
+  }
+
   // Show success message
   toast.success(`Detailed performance analytics report with ${chartData.length} data points and statistical analysis has been downloaded.`, {
     duration: 4000,

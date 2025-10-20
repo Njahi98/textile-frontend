@@ -1,7 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import i18n from './i18n';
-// Remove this line:
-// import Cookies from 'js-cookie';
 
 const VITE_API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -86,8 +84,6 @@ api.interceptors.response.use(
 );
 
 function handleAuthFailure(): void {
-  localStorage.removeItem('auth-storage');
-  
   const isPublicRoute = window.location.pathname === '/' || 
                        window.location.pathname.startsWith('/auth/');
   

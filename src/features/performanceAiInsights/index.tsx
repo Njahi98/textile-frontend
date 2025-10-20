@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { InsightsFilters, insightsAPI, AIInsightResponse } from '@/services/insights.api';
+import { auditLogApi } from '@/services/auditLog.api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -318,7 +319,7 @@ export const AIInsightsDashboard: React.FC = () => {
     }));
   };
 
-  const exportToCSV = () => {
+  const exportToCSV = async () => {
     if (!persistedData?.insights) return;
 
     const insights = persistedData.insights;
@@ -430,6 +431,16 @@ export const AIInsightsDashboard: React.FC = () => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+
+    // Log the export action
+    try {
+      await auditLogApi.logPerformanceAiInsightsExport({
+        dataAnalyzed,
+        insightsGenerated: !!insights,
+      });
+    } catch (error) {
+      console.error('Failed to log export action:', error);
+    }
 
     toast.success(t('exportSuccess'), {
       duration: 3000,
