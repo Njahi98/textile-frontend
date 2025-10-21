@@ -1,12 +1,10 @@
 "use client"
 
 import {
-  Bell,
   ChevronsUpDown,
   House,
   LogOut,
   Settings,
-  SquareUser,
 } from "lucide-react"
 
 import {
@@ -89,14 +87,6 @@ export function NavUser({
                 <House />
                 {t('navUser.home')}
               </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <SquareUser />
-                {t('navUser.profile')}
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                {t('navUser.notifications')}
               </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                 <Link to="/settings/account" className="flex items-center gap-2">

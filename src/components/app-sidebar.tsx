@@ -17,11 +17,13 @@ import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/auth.store";
 import { useTranslation } from "react-i18next";
+import { SiteLogo } from "./SiteLogo";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
@@ -123,12 +125,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="floating" collapsible="icon" {...props}>
       <SidebarHeader>
-        <NavUser user={user} />
+        <SiteLogo/>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarRail />
+      <SidebarFooter>
+      <NavUser user={user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }

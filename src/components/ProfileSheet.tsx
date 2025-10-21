@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SidebarMenuButton } from "./ui/sidebar";
-import { Bell, Home, LogOut, LucideProps, Settings, User } from "lucide-react";
+import { Home, LogOut, LucideProps, Settings } from "lucide-react";
 import { useAuthStore } from "@/stores/auth.store";
 import { useTranslation } from "react-i18next";
 
@@ -30,16 +30,6 @@ export function ProfileSheet() {
     icon: Home,
     label: t('profileSheet.home'),
     href: "/dashboard",
-  },
-  {
-    icon: User,
-    label: t('profileSheet.profile'),
-    href: "/profile",
-  },
-  {
-    icon: Bell,
-    label: t('profileSheet.notifications'),
-    href: "/notifications",
   },
   {
     icon: Settings,
