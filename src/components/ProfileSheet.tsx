@@ -75,7 +75,7 @@ export function ProfileSheet() {
               <SheetClose key={item.href} asChild>
                 <Link
                   to={item.href}
-                  className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground border border-transparent hover:border-border/50 active:scale-[0.98]"
+                  className="flex w-full items-center gap-3 rounded-md px-6 py-3 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground border border-transparent hover:border-border/50 active:scale-[0.98]"
                 >
                   <item.icon className="h-4 w-4 flex-shrink-0" />
                   <span>{item.label}</span>
@@ -89,7 +89,7 @@ export function ProfileSheet() {
               <button
                 type="button"
                 onClick={() => { void logout(); }}
-                className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all hover:bg-destructive/10 hover:text-destructive border border-transparent hover:border-destructive/20 active:scale-[0.98] group"
+                className="flex w-full items-center gap-3 rounded-md px-6 py-3 text-sm font-medium transition-all hover:bg-destructive/10 hover:text-destructive border border-transparent hover:border-destructive/20 active:scale-[0.98] group"
               >
                 <LogOut className="h-4 w-4 flex-shrink-0 group-hover:rotate-12 transition-transform" />
                 <span>Log out</span>

@@ -21,7 +21,7 @@ function Navbar() {
 
   return (
     <div className="relative z-50">
-      <nav className="max-w-screen-xl mx-auto py-4 rounded-xl px-4 md:px-6 shadow-sm flex items-center justify-between">
+      <nav className="max-w-screen-xl mx-auto py-4 rounded-md px-6 md:px-6 shadow-sm flex items-center justify-between">
 
         <Link to="/" reloadDocument className="flex items-center gap-2 min-w-0">
           <Factory className="h-8 w-8 text-muted-foreground" />
@@ -33,12 +33,12 @@ function Navbar() {
           <ColorThemeSwitcher/>
           <ThemeSwitcher />
           <Link to="/auth/login">
-            <Button variant="ghost" size="sm" className="text-foreground px-3 sm:px-4 whitespace-nowrap">
+            <Button variant="ghost" size="sm" className="text-foreground px-3 sm:px-6 whitespace-nowrap">
               {t('navbar.loginButton')}
             </Button>
           </Link>
           <Link to="/auth/register">
-            <Button size="sm" className="bg-foreground text-background px-3 sm:px-4 whitespace-nowrap hover:bg-foreground/90">
+            <Button size="sm" className="bg-foreground text-background px-3 sm:px-6 whitespace-nowrap hover:bg-foreground/90">
               {t('navbar.signUpButton')}
             </Button>
           </Link>
@@ -66,7 +66,7 @@ function Navbar() {
             onClick={closeMobileMenu}
           />
 
-          <div className="absolute top-full left-4 right-4 mt-2 bg-background border rounded-xl shadow-lg p-4 lg:hidden animate-in slide-in-from-top-2 duration-200">
+          <div className="absolute top-full left-4 right-4 mt-2 bg-background border rounded-md shadow-lg p-4 lg:hidden animate-in slide-in-from-top-2 duration-200">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between py-2 border-b">
                   <span className="text-sm font-medium text-muted-foreground">{t('navbar.settingsButton')}</span>

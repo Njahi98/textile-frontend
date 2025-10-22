@@ -28,7 +28,7 @@ const NotificationTypeIcon = ({ type }: { type: string }) => {
 
   const colorClass = iconMap[type as keyof typeof iconMap] || 'bg-gray-500';
 
-  return <div className={`w-2 h-2 rounded-full ${colorClass}`} />;
+  return <div className={`w-2 h-2 rounded-md ${colorClass}`} />;
 };
 
 interface NotificationItemProps {
@@ -288,7 +288,7 @@ export function NotificationsDropdown() {
             <span className="ml-2 text-sm text-muted-foreground">{t('notifications.loading')}</span>
           </div>
         ) : !hasNotifications ? (
-          <div className="text-center py-8 px-4 flex-1">
+          <div className="text-center py-8 px-6 flex-1">
             <div className="text-muted-foreground text-sm mb-2">{t('notifications.noNotifications')}</div>
             <div className="text-xs text-muted-foreground">
               {t('notifications.welcomeMessage')}

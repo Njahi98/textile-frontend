@@ -41,7 +41,7 @@ if (!data?.success) return <div>{t('errors.noProductionLinesFound')}</div>;
           </div>
           <ProductionLinesPrimaryButtons />
         </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+        <div className='-mx-4 flex-1 overflow-auto px-6 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <ProductionLinesTable data={productionLineList} columns={columns} />
         </div>
       </Main>

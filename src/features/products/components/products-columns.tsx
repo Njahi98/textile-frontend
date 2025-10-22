@@ -35,7 +35,7 @@ export const columns: ColumnDef<Product>[] = [
     ),
     meta: {
       className: cn(
-        'sticky md:table-cell left-0 z-10 rounded-tl',
+        'sticky md:table-cell left-0 z-10 rounded-md',
         'bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted'
       ),
     },
@@ -61,7 +61,7 @@ export const columns: ColumnDef<Product>[] = [
         <div className="flex items-center justify-center">
           {product.imageUrl ? (
             <div className="relative group">
-              <div className="w-16 h-16 rounded-lg overflow-hidden border border-border bg-background shadow-sm hover:shadow-md transition-all duration-200 group-hover:scale-105">
+              <div className="w-16 h-16 rounded-md overflow-hidden border border-border bg-background shadow-sm hover:shadow-md transition-all duration-200 group-hover:scale-105">
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
@@ -70,12 +70,12 @@ export const columns: ColumnDef<Product>[] = [
                 />
               </div>
               {/* Hover overlay with product name */}
-              <div className="absolute inset-0 bg-black/60 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-center p-1">
+              <div className="absolute inset-0 bg-black/60 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-center p-1">
                 {product.name}
               </div>
             </div>
           ) : (
-            <div className="w-16 h-16 rounded-lg border border-border bg-muted flex items-center justify-center">
+            <div className="w-16 h-16 rounded-md border border-border bg-muted flex items-center justify-center">
               <div className="text-center">
                 <ImageIcon className="h-6 w-6 text-muted-foreground mx-auto mb-1" />
                 <div className="text-xs text-muted-foreground font-medium">

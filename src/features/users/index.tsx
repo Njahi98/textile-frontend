@@ -44,7 +44,7 @@ export default function Users() {
           </div>
           <UsersPrimaryButtons />
         </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+        <div className='-mx-4 flex-1 overflow-auto px-6 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <UsersTable data={userList} columns={columns} />
         </div>
       </Main>

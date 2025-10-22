@@ -324,7 +324,7 @@ export default function Chats() {
         <section className='flex h-full gap-6'>
           {/* Left Side - Conversation List */}
           <div className='flex w-full flex-col gap-2 sm:w-56 lg:w-72 2xl:w-80'>
-            <div className='bg-background sticky top-0 z-10 -mx-4 px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
+            <div className='bg-background sticky top-0 z-10 -mx-4 px-6 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
              <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <h1 className="text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">
@@ -349,7 +349,7 @@ export default function Chats() {
                   size="icon"
                   variant="ghost"
                   onClick={handleRefresh}
-                  className="rounded-lg"
+                  className="rounded-md"
                   disabled={loading}
                 >
                   <RefreshCw
@@ -364,7 +364,7 @@ export default function Chats() {
                   size="icon"
                   variant="ghost"
                   onClick={() => setCreateConversationDialog(true)}
-                  className="rounded-lg"
+                  className="rounded-md"
                   disabled={!connected}
                 >
                   <SquarePen size={20} className="stroke-muted-foreground" />
@@ -441,7 +441,7 @@ export default function Chats() {
                               <AvatarFallback>{getInitials(conversationName)}</AvatarFallback>
                             </Avatar>
                             {hasUnread && (
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full"></div>
+                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-md"></div>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -529,7 +529,7 @@ export default function Chats() {
               </div>
 
               {/* Messages Area */}
-              <div className='flex flex-1 flex-col gap-2 rounded-md px-4 pt-0 pb-4'>
+              <div className='flex flex-1 flex-col gap-2 rounded-md px-6 pt-0 pb-4'>
                 <div className='flex size-full flex-1'>
                   <div className='chat-text-container relative -mr-4 flex flex-1 flex-col overflow-y-hidden'>
                     <ScrollArea className='chat-flex flex h-40 w-full grow flex-col-reverse justify-start gap-4 py-2 pr-4 pb-4'>
@@ -676,7 +676,7 @@ export default function Chats() {
           ) : (
             <div className='bg-primary-foreground absolute inset-0 left-full z-50 hidden w-full flex-1 flex-col justify-center rounded-md border shadow-xs transition-all duration-200 sm:static sm:z-auto sm:flex'>
               <div className='flex flex-col items-center space-y-6'>
-                <div className='border-border flex size-16 items-center justify-center rounded-full border-2'>
+                <div className='border-border flex size-16 items-center justify-center rounded-md border-2'>
                   <MessagesSquare className='size-8' />
                 </div>
           <div className="space-y-2 text-center">

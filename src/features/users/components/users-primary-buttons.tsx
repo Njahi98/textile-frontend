@@ -9,7 +9,7 @@ export function UsersPrimaryButtons() {
   return (
     <div className="flex gap-2">
       <Button
-        className="space-x-1 text-xs sm:text-sm px-2 sm:px-4"
+        className="space-x-1 text-xs sm:text-sm px-2 sm:px-6"
         onClick={() => setOpen("add")}
       >
         <span>{t("buttons.addUser")}</span> <UserPlus size={18} />

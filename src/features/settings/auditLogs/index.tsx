@@ -69,7 +69,7 @@ export default function AuditLogs() {
           </div>
           <AuditLogsPrimaryButtons />
         </div>
-        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 space-y-6 lg:flex-row lg:space-y-0 lg:space-x-12">
+        <div className="-mx-4 flex-1 overflow-auto px-6 py-1 space-y-6 lg:flex-row lg:space-y-0 lg:space-x-12">
           <AuditLogsTable 
             data={auditLogList} 
             columns={columns} 

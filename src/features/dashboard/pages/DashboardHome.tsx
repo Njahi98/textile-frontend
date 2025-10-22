@@ -271,7 +271,7 @@ export default function DashboardHome() {
             <div className="space-y-4">
               {topPerformers.slice(0, 5).map((performer, index) => (
                 <div key={performer.worker?.id || index} className="flex items-center">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10">
                     <span className="text-sm font-semibold">{index + 1}</span>
                   </div>
                   <div className="ml-4 space-y-1 flex-1">

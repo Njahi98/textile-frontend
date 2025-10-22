@@ -53,7 +53,7 @@ const NoDataState: React.FC<{ onGenerate: () => void; hasFilters: boolean }> = (
    return (
       <Card className="border-dashed">
     <CardContent className="flex flex-col items-center justify-center py-16">
-      <div className="rounded-full bg-muted p-6 mb-4">
+      <div className="rounded-md bg-muted p-6 mb-4">
         <FileX className="h-12 w-12 text-muted-foreground" />
       </div>
       <CardTitle className="text-xl font-semibold text-center mb-2">
@@ -472,7 +472,7 @@ export const AIInsightsDashboard: React.FC = () => {
       {/* Loading overlay when generating */}
       {isGenerating && (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-card p-6 rounded-lg shadow-lg border">
+          <div className="bg-card p-6 rounded-md shadow-lg border">
             <div className="flex items-center gap-3">
               <RefreshCw className="h-5 w-5 animate-spin text-primary" />
               <span className="font-medium">{t('generatingInsights')}</span>

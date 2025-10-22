@@ -111,7 +111,7 @@ export function AssignmentsMutateDrawer({
           </SheetDescription> 
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={(e) => { e.preventDefault(); void form.handleSubmit(onSubmit)(e); }} className='flex-1 space-y-5 px-4'>
+          <form onSubmit={(e) => { e.preventDefault(); void form.handleSubmit(onSubmit)(e); }} className='flex-1 space-y-5 px-6'>
             <FormField
               control={form.control}
               name='workerId'
@@ -232,7 +232,7 @@ export function AssignmentsMutateDrawer({
             />
           </form>
         </Form>
-        <div className='flex justify-end space-x-2 gap-2 px-4 pb-4'>
+        <div className='flex justify-end space-x-2 gap-2 px-6 pb-4'>
           <Button
             type='button'
             variant='outline'

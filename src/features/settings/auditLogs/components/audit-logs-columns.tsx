@@ -23,7 +23,7 @@ export const columns: ColumnDef<AuditLog>[] = [
     ),
     meta: {
       className: cn(
-        'sticky md:table-cell left-0 z-10 rounded-tl',
+        'sticky md:table-cell left-0 z-10 rounded-md',
         'bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted'
       ),
     },

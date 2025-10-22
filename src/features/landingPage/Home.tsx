@@ -168,7 +168,7 @@ export default function Home() {
               transition={{ duration: 0.3 }}
               src="/dashboard.webp"
               alt="TextilePro Dashboard Preview"
-              className="relative z-10 w-full rounded-xl shadow-2xl border border-border/30 transform -rotate-1 hover:rotate-0 transition-all duration-500"
+              className="relative z-10 w-full rounded-md shadow-2xl border border-border/30 transform -rotate-1 hover:rotate-0 transition-all duration-500"
               style={{
                 filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.25))'
               }}
@@ -207,7 +207,7 @@ export default function Home() {
                 key={feature.title}
                 variants={fadeInUp}
                 whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                className="bg-card/50 border border-border/50 rounded-lg p-6 backdrop-blur-sm hover:bg-card transition-all duration-300"
+                className="bg-card/50 border border-border/50 rounded-md p-6 backdrop-blur-sm hover:bg-card transition-all duration-300"
               >
                 <feature.icon className={`h-10 w-10 text-primary mb-4`} />
                 <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
@@ -247,7 +247,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="flex items-start space-x-4"
               >
-              <div className="flex-shrink-0 w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-foreground font-bold border border-border">
+              <div className="flex-shrink-0 w-12 h-12 bg-secondary rounded-md flex items-center justify-center text-foreground font-bold border border-border">
                 {item.step}
               </div>
               <div>
@@ -286,7 +286,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{}}
                 viewport={{ once: true }}
-                className="bg-card/25 border border-border/30 rounded-lg p-6 backdrop-blur-sm hover:bg-card/40 transition-all duration-300"
+                className="bg-card/25 border border-border/30 rounded-md p-6 backdrop-blur-sm hover:bg-card/40 transition-all duration-300"
               >
                 <div className="flex mb-4">
                   {['one','two','three','four','five'].map((id) => (
@@ -314,7 +314,7 @@ export default function Home() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto"
         >
-            <div className="bg-card/50 border border-border/40 rounded-xl p-12 backdrop-blur-sm text-center">
+            <div className="bg-card/50 border border-border/40 rounded-md p-12 backdrop-blur-sm text-center">
             <Shield className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-foreground mb-4">
               {t('sections.cta.title')}

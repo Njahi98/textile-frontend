@@ -968,7 +968,7 @@ const exportToCSV = async () => {
               <div className="space-y-4 md:space-y-6">
                 {topPerformers.map((performer, index) => (
                   <div key={performer.id || index} className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-primary/10 flex-shrink-0 mt-0.5">
+                    <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-md bg-primary/10 flex-shrink-0 mt-0.5">
                       <span className="text-xs md:text-sm font-semibold">{index + 1}</span>
                     </div>
                     

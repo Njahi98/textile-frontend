@@ -108,7 +108,7 @@ export function ProductionLinesMutateDrawer({ open, onOpenChange, currentRow, on
             onSubmit={(e) => {
               void form.handleSubmit(handleSubmit)(e)
             }}
-            className='flex-1 space-y-5 px-4'
+            className='flex-1 space-y-5 px-6'
           >
             <FormField
               control={form.control}

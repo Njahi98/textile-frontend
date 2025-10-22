@@ -22,12 +22,12 @@ export default function DashboardLayout() {
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 justify-between items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
+          <div className="flex items-center gap-2 px-6">
             <SidebarTrigger variant='outline' className='scale-125 sm:scale-100' />
             <Separator orientation="vertical" className="h-6" />
             <DynamicBreadCrumb/>          
           </div>
-          <div className="flex items-center gap-2 px-4">
+          <div className="flex items-center gap-2 px-6">
             <LanguageSwitcher/>
             <NotificationsDropdown/>
             <ColorThemeSwitcher />

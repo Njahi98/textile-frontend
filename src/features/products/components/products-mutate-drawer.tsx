@@ -181,7 +181,7 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
               onSubmit={(e) => {
                 void form.handleSubmit(handleSubmit)(e)
               }}
-              className='space-y-5 px-4 py-4'
+              className='space-y-5 px-6 py-4'
             >
               {/* Image Upload Section */}
               <FormItem className='space-y-1'>
@@ -204,7 +204,7 @@ export function ProductsMutateDrawer({ open, onOpenChange, currentRow, onSuccess
                           type="button"
                           variant="destructive"
                           size="sm"
-                          className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
+                          className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-md"
                           onClick={() => void handleDeleteImage()}
                           disabled={isDeletingImage}
                         >

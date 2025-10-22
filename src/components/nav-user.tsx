@@ -53,9 +53,9 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-md">
                 <AvatarImage src={user?.avatarUrl} alt={user?.username} />
-                <AvatarFallback className="rounded-lg">{user?.username.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="rounded-md">{user?.username.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
              <div className="grid flex-1 text-left text-sm leading-tight">
                             <span className="truncate font-medium">{user?.username}</span>
@@ -66,7 +66,7 @@ export function NavUser({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-md"
             side= {isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}

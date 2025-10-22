@@ -161,7 +161,7 @@ const SelectedUserBadge = ({
     <Badge key={user.id} variant='default' className="flex items-center gap-1 pr-1">
       {displayName}
       <button
-        className='ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 hover:bg-black/10 p-0.5 transition-colors'
+        className='ring-offset-background focus:ring-ring ml-1 rounded-md outline-none focus:ring-2 focus:ring-offset-2 hover:bg-black/10 p-0.5 transition-colors'
         onKeyDown={handleKeyDown}
         onClick={handleRemove}
         type="button"
@@ -295,7 +295,7 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
 
           {/* Group Settings */}
           {selectedUsers.length > 0 && (
-            <div className="space-y-3 p-3 bg-muted/30 rounded-lg">
+            <div className="space-y-3 p-3 bg-muted/30 rounded-md">
               <div className="flex items-center space-x-2">
                 <Switch
                   id="group-mode"
@@ -337,7 +337,7 @@ export function NewChat({ onOpenChange, open, onCreateConversation, searchUsers 
 
           {/* User Search */}
           <div className="flex-1 overflow-hidden">
-            <Command className='rounded-lg border h-full flex flex-col'>
+            <Command className='rounded-md border h-full flex flex-col'>
               <CommandInput
                 placeholder={t('searchPeople')}
                 className='text-foreground'

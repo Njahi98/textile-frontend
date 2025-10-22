@@ -40,7 +40,7 @@ export function ColorThemeSwitcher() {
             onClick={() => setColorTheme(theme.value as any)}
             className="flex items-center gap-2"
           >
-            <div className={`w-4 h-4 rounded-full ${theme.color}`} />
+            <div className={`w-4 h-4 rounded-md ${theme.color}`} />
             <span>{theme.name}</span>
             {colorTheme === theme.value && (
               <span className="ml-auto text-xs">✓</span>

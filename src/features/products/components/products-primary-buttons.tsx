@@ -10,7 +10,7 @@ export function ProductsPrimaryButtons() {
   return (
     <div className="flex gap-1 sm:gap-2 flex-wrap">
       <Button
-        className="space-x-1 text-xs sm:text-sm px-2 sm:px-4"
+        className="space-x-1 text-xs sm:text-sm px-2 sm:px-6"
         onClick={() => setOpen("add")}
       >
         <span>{t("addProduct")}</span> <PackagePlus size={18} />

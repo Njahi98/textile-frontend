@@ -33,7 +33,7 @@ function AuthLayout() {
         <div className="relative">
           <div className={`absolute inset-y-0 transition-all duration-500 ease-in-out hidden md:block w-1/2
             ${imagePosition === 'left' ? 'left-0' : 'left-1/2'}`}>
-            <div className="bg-muted min-h-[600px] w-full relative rounded-xl border py-6 shadow-sm">
+            <div className="bg-muted min-h-[600px] w-full relative rounded-md border py-6 shadow-sm">
               <img
                 src="/illustration-dashboard.webp"
                 alt="Dashboard illustration"

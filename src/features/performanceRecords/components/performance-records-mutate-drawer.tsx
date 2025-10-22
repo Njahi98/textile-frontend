@@ -143,7 +143,7 @@ export function PerformanceRecordsMutateDrawer({
         </SheetHeader>
         <div className='flex-1 overflow-y-auto'>
           <Form {...form}>
-            <form onSubmit={(e) => { e.preventDefault(); void form.handleSubmit(onSubmit)(e); }} className='space-y-5 px-4 py-4'>
+            <form onSubmit={(e) => { e.preventDefault(); void form.handleSubmit(onSubmit)(e); }} className='space-y-5 px-6 py-4'>
             <FormField
               control={form.control}
               name='workerId'
@@ -333,7 +333,7 @@ export function PerformanceRecordsMutateDrawer({
           </form>
         </Form>
         </div>
-        <div className='flex justify-end space-x-2 gap-2 px-4 pb-4'>
+        <div className='flex justify-end space-x-2 gap-2 px-6 pb-4'>
           <Button
             type='button'
             variant='outline'

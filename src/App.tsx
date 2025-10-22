@@ -15,7 +15,10 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
        <Toaster position="top-right" toastOptions={{
             style: {
-              background: "black", color:"white"
+              background: "black",
+              color:"white",
+              fontFamily: "var(--font-sans)",
+              borderRadius: "var(--radius)",
             },
           }}/>
       {routing}

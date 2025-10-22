@@ -24,14 +24,14 @@ export function AuditLogsPrimaryButtons() {
     <div className="flex gap-2 sm:gap-2 flex-wrap">
       <Button
         variant="outline"
-        className="space-x-1 text-xs sm:text-sm px-2 sm:px-4"
+        className="space-x-1 text-xs sm:text-sm px-2 sm:px-6"
         onClick={handleExport}
       >
         <span>{t("exportCSV")}</span> <Download size={18} />
       </Button>
       <Button
         variant="destructive"
-        className="space-x-1 text-xs sm:text-sm px-2 sm:px-4"
+        className="space-x-1 text-xs sm:text-sm px-2 sm:px-6"
         onClick={() => setOpen("cleanup")}
       >
         <span>{t("cleanup")}</span> <Trash2 size={18} />
