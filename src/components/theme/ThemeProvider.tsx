@@ -1,7 +1,7 @@
 import { createContext, use, useEffect, useState } from "react"
 
 type Theme = "dark" | "light" | "system"
-type ColorTheme = "neutral" | "rose" | "orange" | "green" | "blue" | "yellow" | "violet" | "stone" | "zinc" | "gray" | "slate"
+type ColorTheme = "neutral" | "rose" | "orange" | "green" | "blue" | "yellow" | "violet" | "zinc" | "slate" | "indigo"
 
 interface ThemeProviderProps  {
   children: React.ReactNode
@@ -47,7 +47,7 @@ export function ThemeProvider({
     const root = window.document.documentElement
 
     root.classList.remove("light", "dark")
-    root.classList.remove("theme-neutral", "theme-rose", "theme-orange", "theme-green", "theme-blue", "theme-yellow", "theme-violet", "theme-stone", "theme-zinc", "theme-gray", "theme-slate")
+    root.classList.remove("theme-neutral", "theme-rose", "theme-orange", "theme-green", "theme-blue", "theme-yellow", "theme-violet", "theme-zinc", "theme-slate","theme-indigo")
 
     root.classList.add(`theme-${newColorTheme}`)
 

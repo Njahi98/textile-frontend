@@ -9,18 +9,24 @@ import {
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 const colorThemes = [
+  //default
   { name: "Neutral", value: "neutral", color: "bg-neutral-500" },
+  // Cool
+  { name: "Indigo", value: "indigo", color: "bg-indigo-500" },
+  { name: "Blue", value: "blue", color: "bg-blue-500" },
+  { name: "Violet", value: "violet", color: "bg-violet-500" },
+  { name: "Green", value: "green", color: "bg-green-500" },
+  // Neutral
+  { name: "Zinc", value: "zinc", color: "bg-zinc-500" },
+  { name: "Slate", value: "slate", color: "bg-slate-500" },
+  // Warm
   { name: "Rose", value: "rose", color: "bg-rose-500" },
   { name: "Orange", value: "orange", color: "bg-orange-500" },
-  { name: "Green", value: "green", color: "bg-green-500" },
-  { name: "Blue", value: "blue", color: "bg-blue-500" },
   { name: "Yellow", value: "yellow", color: "bg-yellow-500" },
-  { name: "Violet", value: "violet", color: "bg-violet-500" },
-  { name: "Stone", value: "stone", color: "bg-stone-500" },
-  { name: "Zinc", value: "zinc", color: "bg-zinc-500" },
-  { name: "Gray", value: "gray", color: "bg-gray-500" },
-  { name: "Slate", value: "slate", color: "bg-slate-500" },
+
+
 ] as const;
+
 
 export function ColorThemeSwitcher() {
   const { colorTheme, setColorTheme } = useTheme();
