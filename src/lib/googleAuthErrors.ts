@@ -1,19 +1,21 @@
+import i18n from 'i18next';
+
 export const getGoogleAuthErrorMessage = (error: any): string => {
-  if (!error) return 'An unknown error occurred';
+  if (!error) return i18n.t('auth.googleAuth.errors.defaultError');
 
   // Handle specific Google error types
   if (typeof error === 'string') {
     switch (error) {
       case 'popup_blocked_by_browser':
-        return 'Popup was blocked by your browser. Please allow popups for this site and try again.';
+        return i18n.t('auth.googleAuth.errors.popupBlocked');
       case 'popup_closed_by_user':
-        return 'Sign-in was cancelled.';
+        return i18n.t('auth.googleAuth.errors.popupClosed');
       case 'access_denied':
-        return 'Access was denied. Please try again.';
+        return i18n.t('auth.googleAuth.errors.accessDenied');
       case 'immediate_failed':
-        return 'Automatic sign-in failed. Please click the button to sign in manually.';
+        return i18n.t('auth.googleAuth.errors.immediateFailed');
       default:
-        return 'Google Sign-In failed. Please try again.';
+        return i18n.t('auth.googleAuth.errors.defaultError');
     }
   }
 
@@ -21,13 +23,13 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
   if (error.error) {
     switch (error.error) {
       case 'popup_blocked_by_browser':
-        return 'Popup was blocked by your browser. Please allow popups for this site and try again.';
+        return i18n.t('auth.googleAuth.errors.popupBlocked');
       case 'access_denied':
-        return 'You denied access to your Google account. Please try again and allow access.';
+        return i18n.t('auth.googleAuth.errors.accessDenied');
       case 'invalid_client':
-        return 'Google Sign-In is not properly configured. Please contact support.';
+        return i18n.t('auth.googleAuth.errors.invalidClient');
       default:
-        return error.error_description || 'Google Sign-In failed. Please try again.';
+        return error.error_description ?? i18n.t('auth.googleAuth.errors.defaultError');
     }
   }
 
@@ -36,23 +38,23 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
     const reason = error.getNotDisplayedReason();
     switch (reason) {
       case 'browser_not_supported':
-        return 'Your browser does not support Google Sign-In. Please try a different browser.';
+        return i18n.t('auth.googleAuth.errors.browserNotSupported');
       case 'invalid_client':
-        return 'Google Sign-In is not properly configured. Please contact support.';
+        return i18n.t('auth.googleAuth.errors.invalidClient');
       case 'missing_client_id':
-        return 'Google Sign-In is not configured. Please contact support.';
+        return i18n.t('auth.googleAuth.errors.missingClientId');
       case 'opt_out_or_no_session':
-        return 'You have opted out of Google Sign-In or are not signed into Google. Please enable Google Sign-In in your account settings or sign into Google first.';
+        return i18n.t('auth.googleAuth.errors.optOutOrNoSession');
       case 'secure_http_required':
-        return 'Google Sign-In requires a secure connection. Please use HTTPS.';
+        return i18n.t('auth.googleAuth.errors.secureHttpRequired');
       case 'suppressed_by_user':
-        return 'Google Sign-In was dismissed.';
+        return i18n.t('auth.googleAuth.errors.suppressedByUser');
       case 'unregistered_origin':
-        return 'This website is not authorized for Google Sign-In. Please contact support.';
+        return i18n.t('auth.googleAuth.errors.unregisteredOrigin');
       case 'unknown_reason':
-        return 'Google Sign-In failed for an unknown reason. Please try again.';
+        return i18n.t('auth.googleAuth.errors.unknownReason');
       default:
-        return 'Google Sign-In could not be displayed. Please try again.';
+        return i18n.t('auth.googleAuth.errors.notDisplayed');
     }
   }
 
@@ -61,5 +63,5 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
     return error.message;
   }
 
-  return 'Google Sign-In failed. Please try again or use email login.';
+  return i18n.t('auth.googleAuth.errors.defaultError');
 };

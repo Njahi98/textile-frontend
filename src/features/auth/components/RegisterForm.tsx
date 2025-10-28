@@ -43,10 +43,18 @@ export default function RegisterForm({
 
   const onSubmit = async (data: RegisterFormData) => {
     const result = await registerUser(data);
+    try {
     if (result.success) {
       toast.success(t('messages.registerSuccess'));
       void navigate('/dashboard');
+    }else{
+      toast.error(t('messages.renderIOwarning'))
     }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
+    }
+
+  
   };
 
   return (

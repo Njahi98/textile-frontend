@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/auth.store';
 import { toast } from 'sonner';
 import { getGoogleAuthErrorMessage } from '@/lib/googleAuthErrors';
+import { useTranslation } from 'react-i18next';
 
 interface GoogleLoginButtonProps {
   text?: string;
@@ -25,27 +26,28 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   onError 
 }) => {
   const { googleLogin, isLoading } = useAuthStore();
+  const { t } = useTranslation('auth');
   const initialized = useRef(false);
 
   useEffect(() => {
     if (initialized.current || disabled) return;
 
     const initializeGoogleSignIn = () => {
-      if (window.google && window.google.accounts) {
+      if (window.google?.accounts) {
         // Define the callback globally
         window.handleCredentialResponse = async (response: any) => {
           try {
             const result = await googleLogin(response.credential);
             if (result.success) {
-              toast.success('Google login successful!');
+              toast.success(t('googleAuth.errors.loginSuccessful'));
               onSuccess?.();
             } else {
-              toast.error(result.message || 'Google login failed. Please try again.');
+              toast.error(result.message ?? t('googleAuth.errors.loginFailed'));
               onError?.();
             }
           } catch (error) {
             console.error('Google login failed:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Google login failed. Please try again.';
+            const errorMessage = error instanceof Error ? error.message : t('googleAuth.errors.loginFailed');
             toast.error(errorMessage);
             onError?.();
           }
@@ -86,22 +88,22 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
         delete window.handleCredentialResponse;
       }
     };
-  }, [disabled, googleLogin, onSuccess, onError]);
+  }, [disabled, googleLogin, onSuccess, onError, t]);
 
   const handleGoogleLogin = () => {
     if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-      toast.error('Google Sign-In is not configured. Please contact support.');
+      toast.error(t('googleAuth.errors.notConfigured'));
       return;
     }
 
-    if (window.google && window.google.accounts) {
+    if (window.google?.accounts) {
       try {
         window.google.accounts.id.prompt((notification: any) => {
           if (notification.isNotDisplayed()) {
             const errorMessage = getGoogleAuthErrorMessage(notification);
             toast.error(errorMessage);
           } else if (notification.isSkippedMoment()) {
-            toast.info('Google sign-in was dismissed.');
+            toast.info(t('googleAuth.errors.dismissed'));
           }
         });
       } catch (error) {
@@ -110,7 +112,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
         toast.error(errorMessage);
       }
     } else {
-      toast.error('Google Sign-In is not available. Please refresh the page and try again.');
+      toast.error(t('googleAuth.errors.notAvailable'));
     }
   };
 

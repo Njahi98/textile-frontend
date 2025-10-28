@@ -43,10 +43,17 @@ export default function LoginForm({
 
   const onSubmit = async (data: LoginFormData) => {
     const result = await login(data.email, data.password);
+    try {
     if (result.success) {
       toast.success(t('messages.loginSuccess'));
       void navigate('/dashboard');
+    }else{
+      toast.error(t('messages.renderIOwarning'))
     }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
+    }
+
   };
 
   const onPasswordReset = async (data: PasswordResetRequestData) => {
