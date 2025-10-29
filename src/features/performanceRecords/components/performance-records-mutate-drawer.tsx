@@ -295,41 +295,41 @@ export function PerformanceRecordsMutateDrawer({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='date'
-              render={({ field }) => (
-                <FormItem className='space-y-1'>
-                  <FormLabel>{t('date')}</FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'w-full justify-start text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? format(field.value, 'PPP') : t('pickDate')}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date: Date) => date < new Date('1900-01-01')}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+<FormField
+  control={form.control}
+  name='date'
+  render={({ field }) => (
+    <FormItem className='space-y-1'>
+      <FormLabel>{t('date')}</FormLabel>
+      <Popover modal={true}>
+        <PopoverTrigger asChild>
+          <FormControl>
+            <Button
+              variant="outline"
+              className={cn(
+                'w-full justify-start text-left font-normal',
+                !field.value && 'text-muted-foreground'
               )}
-            />
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {field.value ? format(field.value, 'PPP') : t('pickDate')}
+            </Button>
+          </FormControl>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={field.value}
+            onSelect={field.onChange}
+            disabled={(date: Date) => date < new Date('1900-01-01')}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
           </form>
         </Form>
         </div>
