@@ -138,7 +138,6 @@ export default function RegisterForm({
 
                 <div className="grid-cols-3 gap-4 flex place-items-center">
                   <GoogleLoginButton 
-                    text={t('register.googleSignup')}
                     disabled={isLoading}
                     onSuccess={() => void navigate('/dashboard')}
                   />

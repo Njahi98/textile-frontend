@@ -195,7 +195,6 @@ export default function LoginForm({
 
                   <div className="grid-cols-3 gap-4 flex place-items-center">
                     <GoogleLoginButton 
-                      text={t('login.googleLogin')}
                       disabled={isLoading}
                       onSuccess={() => void navigate('/dashboard')}
                     />
