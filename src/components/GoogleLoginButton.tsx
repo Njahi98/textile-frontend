@@ -1,26 +1,50 @@
 import { useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/auth.store';
 import { toast } from 'sonner';
 import { getGoogleAuthErrorMessage } from '@/lib/googleAuthErrors';
 import { useTranslation } from 'react-i18next';
 
 interface GoogleLoginButtonProps {
-  text?: string;
   disabled?: boolean;
   onSuccess?: () => void;
   onError?: () => void;
 }
 
+interface GoogleCredentialResponse {
+  credential: string;
+}
+
+interface GoogleAccounts {
+  id: {
+    initialize: (config: {
+      client_id: string;
+      callback: (response: GoogleCredentialResponse) => void;
+      auto_select?: boolean;
+      cancel_on_tap_outside?: boolean;
+      error_callback?: (error: unknown) => void;
+      ux_mode?: 'popup' | 'redirect';
+    }) => void;
+    renderButton: (element: HTMLElement, config: {
+      theme: 'outline' | 'filled_blue' | 'filled_black';
+      size: 'large' | 'medium' | 'small';
+      text?: 'signin_with' | 'signup_with' | 'continue_with' | 'signin';
+      shape?: 'rectangular' | 'pill' | 'circle' | 'square';
+      width?: number;
+      type?: 'standard' | 'icon';
+    }) => void;
+  };
+}
+
 declare global {
   interface Window {
-    google: any;
-    handleCredentialResponse?: (response: any) => void;
+    google?: {
+      accounts: GoogleAccounts;
+    };
+    handleCredentialResponse?: (response: GoogleCredentialResponse) => void;
   }
 }
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ 
-  text = 'Continue with Google',
   disabled = false,
   onSuccess,
   onError 
@@ -28,42 +52,69 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   const { googleLogin, isLoading } = useAuthStore();
   const { t } = useTranslation('auth');
   const initialized = useRef(false);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (initialized.current || disabled) return;
+    if (initialized.current || disabled || !buttonRef.current) return;
 
     const initializeGoogleSignIn = () => {
-      if (window.google?.accounts) {
+      if (window.google?.accounts && buttonRef.current && containerRef.current) {
         // Define the callback globally
-        window.handleCredentialResponse = async (response: any) => {
-          try {
-            const result = await googleLogin(response.credential);
-            if (result.success) {
-              toast.success(t('googleAuth.errors.loginSuccessful'));
-              onSuccess?.();
-            } else {
-              toast.error(result.message ?? t('googleAuth.errors.loginFailed'));
+        window.handleCredentialResponse = (response: GoogleCredentialResponse) => {
+          const handleResponse = async () => {
+            try {
+              if (!response?.credential) {
+                console.error('No credential received from Google');
+                toast.error(t('googleAuth.errors.loginFailed'));
+                onError?.();
+                return;
+              }
+
+              const result = await googleLogin(response.credential);
+              if (result.success) {
+                toast.success(t('googleAuth.errors.loginSuccessful'));
+                onSuccess?.();
+              } else {
+                toast.error(result.message ?? t('googleAuth.errors.loginFailed'));
+                onError?.();
+              }
+            } catch (error) {
+              console.error('Google login failed:', error);
+              const errorMessage = error instanceof Error ? error.message : t('googleAuth.errors.loginFailed');
+              toast.error(errorMessage);
               onError?.();
             }
-          } catch (error) {
-            console.error('Google login failed:', error);
-            const errorMessage = error instanceof Error ? error.message : t('googleAuth.errors.loginFailed');
-            toast.error(errorMessage);
-            onError?.();
-          }
+          };
+          
+          void handleResponse();
         };
 
+        // Initialize with popup mode
         window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
           callback: window.handleCredentialResponse,
           auto_select: false,
           cancel_on_tap_outside: true,
-          // Handle initialization errors
-          error_callback: (error: any) => {
+          ux_mode: 'popup',
+          error_callback: (error: unknown) => {
             console.error('Google Sign-In initialization error:', error);
             const errorMessage = getGoogleAuthErrorMessage(error);
             toast.error(errorMessage);
           }
+        });
+
+        // Get the container width to set button width
+        const containerWidth = containerRef.current.offsetWidth;
+
+        // Render the Google Sign-In button
+        window.google.accounts.id.renderButton(buttonRef.current, {
+          theme: 'outline',
+          size: 'large',
+          text: 'continue_with',
+          shape: 'rectangular',
+          width: containerWidth, // Use pixel width instead of percentage
+          type: 'standard'
         });
 
         initialized.current = true;
@@ -90,48 +141,28 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
     };
   }, [disabled, googleLogin, onSuccess, onError, t]);
 
-  const handleGoogleLogin = () => {
-    if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-      toast.error(t('googleAuth.errors.notConfigured'));
-      return;
-    }
-
-    if (window.google?.accounts) {
-      try {
-        window.google.accounts.id.prompt((notification: any) => {
-          if (notification.isNotDisplayed()) {
-            const errorMessage = getGoogleAuthErrorMessage(notification);
-            toast.error(errorMessage);
-          } else if (notification.isSkippedMoment()) {
-            toast.info(t('googleAuth.errors.dismissed'));
-          }
-        });
-      } catch (error) {
-        console.error('Google prompt error:', error);
-        const errorMessage = getGoogleAuthErrorMessage(error);
-        toast.error(errorMessage);
-      }
-    } else {
-      toast.error(t('googleAuth.errors.notAvailable'));
-    }
-  };
+  if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
+    return (
+      <div className="w-full p-3 border border-gray-300 rounded-md text-center text-gray-500">
+        Google Sign-In Not Configured
+      </div>
+    );
+  }
 
   return (
-    <Button 
-      variant="outline" 
-      className="w-full hover:cursor-pointer"
-      type="button"
-      disabled={disabled || isLoading}
-      onClick={handleGoogleLogin}
+    <div 
+      ref={containerRef}
+      className="w-full"
+      style={{ 
+        opacity: disabled || isLoading ? 0.6 : 1,
+        pointerEvents: disabled || isLoading ? 'none' : 'auto'
+      }}
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="mr-2 h-4 w-4">
-        <path
-          d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-          fill="currentColor"
-        />
-      </svg>
-      {text}
-    </Button>
+      <div 
+        ref={buttonRef}
+        className="w-full flex justify-center"
+      />
+    </div>
   );
 };
 

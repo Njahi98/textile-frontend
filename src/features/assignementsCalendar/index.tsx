@@ -269,7 +269,7 @@ return (
           <CardContent className="p-3 md:p-6">
             {loading ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-md h-8 w-8 border-b-2 border-primary"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : (
               <div className="grid grid-cols-7 gap-0.5 md:gap-1">

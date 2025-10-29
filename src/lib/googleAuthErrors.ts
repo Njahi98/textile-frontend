@@ -34,7 +34,10 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
   }
 
   // Handle notification reasons from Google Identity Services
+  // Note: getNotDisplayedReason() is deprecated in FedCM migration
+  // These methods are no longer available in the new API
   if (error.getNotDisplayedReason) {
+    // Fallback for older implementations - this will likely not be called
     const reason = error.getNotDisplayedReason();
     switch (reason) {
       case 'browser_not_supported':
