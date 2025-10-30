@@ -12,7 +12,7 @@ const createLazyComponent = (factory: () => Promise<{ default: any }>) => {
 };
 
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
-const AuthLayout = lazy(() => import("@/features/auth/pages/AuthLayout"));
+const AuthLayout = lazy(() => import("@/features/auth/layout/AuthLayout"));
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -24,7 +24,7 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         path: "/",
-        element: createLazyComponent(() => import("@/features/landingPage/Home")),
+        element: createLazyComponent(() => import("@/features/landingPage")),
       },
       {
         path: "auth",

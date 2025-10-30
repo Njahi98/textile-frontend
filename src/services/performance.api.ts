@@ -194,4 +194,18 @@ export const performanceApi = {
     }>(`/api/performance/analytics${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
     return response.data;
   },
+
+  async exportPerformanceAnalyticsCsv(params?: AnalyticsQueryParams) {
+    const searchParams = new URLSearchParams();
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    if (params?.workerId) searchParams.append('workerId', params.workerId);
+    if (params?.productionLineId) searchParams.append('productionLineId', params.productionLineId);
+    if (params?.groupBy) searchParams.append('groupBy', params.groupBy);
+
+    const response = await api.get(`/api/performance/analytics/export${searchParams.toString() ? `?${searchParams.toString()}` : ''}` , {
+      responseType: 'blob'
+    });
+    return response.data as Blob;
+  },
 };

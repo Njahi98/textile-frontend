@@ -6,7 +6,6 @@
   "buttons": {
     "export": "Export",
     "refresh": "Refresh",
-    "generateReport": "Generate Report",
     "loading": "Loading...",
     "tryAgain": "Try Again"
   },
@@ -78,5 +77,8 @@
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor"
+  },
+  "export":{
+    "success": "Detailed performance analytics report with {{count}} data points and statistical analysis has been downloaded"
   }
 }

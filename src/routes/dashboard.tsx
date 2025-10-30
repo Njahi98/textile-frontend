@@ -14,7 +14,7 @@ const createLazyComponent = (factory: () => Promise<{ default: any }>) => {
 
 
 const DashboardLayout = lazy(
-  () => import("@/features/dashboard/pages/DashboardLayout")
+  () => import("@/features/dashboard/layout/DashboardLayout")
 );
 
 export const dashboardRoutes: RouteObject = {
@@ -27,7 +27,7 @@ export const dashboardRoutes: RouteObject = {
     {
       path: "dashboard",
       element: createLazyComponent(
-        () => import("@/features/dashboard/pages/DashboardHome")
+        () => import("@/features/dashboard/home")
       ),
     },
     {
@@ -51,12 +51,12 @@ export const dashboardRoutes: RouteObject = {
       children: [
         {
           path: "overview",
-          element: createLazyComponent(() => import("@/features/assignements")),
+          element: createLazyComponent(() => import("@/features/assignemnt/Records")),
         },
         {
           path: "calendar",
           element: createLazyComponent(
-            () => import("@/features/assignementsCalendar")
+            () => import("@/features/assignemnt/Calendar")
           ),
         },
       ],
@@ -71,7 +71,7 @@ export const dashboardRoutes: RouteObject = {
         {
           path: "overview",
           element: createLazyComponent(
-            () => import("@/features/performanceRecords")
+            () => import("@/features/performance/Records")
           ),
         },
         {
@@ -79,14 +79,14 @@ export const dashboardRoutes: RouteObject = {
           element: createLazyComponent(
             () =>
               import(
-                "@/features/performanceAnalytics"
+                "@/features/performance/Analytics"
               )
           ),
         },
         {
           path: "ai-insights",
           element: createLazyComponent(
-            () => import("@/features/performanceAiInsights")
+            () => import("@/features/performance/AiInsights")
           ),
         },
       ],
@@ -97,19 +97,19 @@ export const dashboardRoutes: RouteObject = {
         {
           path: "account",
           element: createLazyComponent(
-            () => import("@/features/settings/account/AccountSettings")
+            () => import("@/features/accountSettings")
           ),
         },
          {
           path: "audit-logs",
           element: createLazyComponent(
-            () => import("@/features/settings/auditLogs")
+            () => import("@/features/audit/Logs")
           ),
         },
         {
           path: "audit-stats",
           element: createLazyComponent(
-            () => import("@/features/settings/auditStats")
+            () => import("@/features/audit/Stats")
           ),
         }
       ],

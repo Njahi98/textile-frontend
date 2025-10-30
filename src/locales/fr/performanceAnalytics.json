@@ -6,7 +6,6 @@
   "buttons": {
     "export": "Exporter",
     "refresh": "Actualiser",
-    "generateReport": "Générer le Rapport",
     "loading": "Chargement...",
     "tryAgain": "Essayer Encore"
   },
@@ -78,5 +77,8 @@
     "good": "Bon",
     "fair": "Correct",
     "poor": "Mauvais"
+  },
+  "export":{
+    "success": "Le rapport d'analyse de performance détaillé avec {{count}} points de données et l'analyse statistique a été téléchargé"
   }
 }
