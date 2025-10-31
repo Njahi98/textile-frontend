@@ -16,7 +16,7 @@ interface UserSummary  {
 
 interface Props  {
   user: UserSummary;
-  onMutate: () => Promise<any> | void;
+  onMutate: () => void | Promise<void>;
 };
 
 export default function ProfilePictureCard({ user, onMutate }: Props) {
@@ -37,9 +37,9 @@ export default function ProfilePictureCard({ user, onMutate }: Props) {
     }
 
     const initials = user
-      ? `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}`.toUpperCase() ||
+      ? (`${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() ||
         user.username?.[0]?.toUpperCase() ||
-        "U"
+        "U")
       : "U";
 
     return (
@@ -71,8 +71,9 @@ export default function ProfilePictureCard({ user, onMutate }: Props) {
         await onMutate();
         toast.success(response.message);
       }
-    } catch (error: any) {
-      toast.error(error.message || t("messages.avatarUpdateError"));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t("messages.avatarUpdateError")
+      toast.error(message);
     } finally {
       setIsUploadingAvatar(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -87,8 +88,9 @@ export default function ProfilePictureCard({ user, onMutate }: Props) {
         await onMutate();
         toast.success(response.message);
       }
-    } catch (error: any) {
-      toast.error(error.message || t("messages.avatarDeleteError"));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t("messages.avatarDeleteError")
+      toast.error(message);
     } finally {
       setIsDeletingAvatar(false);
     }
@@ -127,7 +129,7 @@ export default function ProfilePictureCard({ user, onMutate }: Props) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleDeleteAvatar}
+                  onClick={()=> void handleDeleteAvatar()}
                   disabled={isDeletingAvatar}
                 >
                   {isDeletingAvatar ? (
@@ -153,7 +155,7 @@ export default function ProfilePictureCard({ user, onMutate }: Props) {
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={handleAvatarUpload}
+            onChange={(event)=> void handleAvatarUpload(event)}
           />
         </div>
       </CardContent>

@@ -73,5 +73,6 @@
   },
   "common": {
     "notSet": "Non défini"
-  }
+  },
+  "unknownError": "Une erreur inconnue est survenue"
 }

@@ -10,7 +10,7 @@ export default function Footer() {
           <Factory className="h-6 w-6 text-muted-foreground" />
           <span className="text-xl font-bold text-foreground">TextilePro</span>
         </div>
-        <div className="text-muted-foreground text-sm">
+        <div className="text-muted-foreground text-center sm:text-left text-sm">
           {t('footer.copyright')}
         </div>
       </div>

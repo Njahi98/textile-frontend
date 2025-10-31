@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Activity, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PerformanceAnalytics } from '@/services/performance.api';
 
 interface EmptyStateCardProps {
   groupBy: string;
-  analytics: any;
+  analytics: PerformanceAnalytics;
   t: (k: string) => string;
   onRetry: () => void;
 }

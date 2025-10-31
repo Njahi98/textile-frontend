@@ -43,7 +43,7 @@ export function ColorThemeSwitcher() {
         {colorThemes.map((theme) => (
           <DropdownMenuItem
             key={theme.value}
-            onClick={() => setColorTheme(theme.value as any)}
+            onClick={() => setColorTheme(theme.value)}
             className="flex items-center gap-2"
           >
             <div className={`w-4 h-4 rounded-md ${theme.color}`} />

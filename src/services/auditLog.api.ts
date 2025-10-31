@@ -7,9 +7,9 @@ export interface AuditLog {
   resource: string;
   resourceId: string | null;
   tableName: string | null;
-  oldValues: any;
-  newValues: any;
-  metadata: any;
+  oldValues: unknown;
+  newValues: unknown;
+  metadata: unknown;
   description: string | null;
   ipAddress: string | null;
   userAgent: string | null;
@@ -64,15 +64,15 @@ export interface AuditStatsResponse {
       endDate: string;
     };
     totalActions: number;
-    actionsByType: Array<{
+    actionsByType: {
       action: string;
       count: number;
-    }>;
-    actionsByResource: Array<{
+    }[];
+    actionsByResource: {
       resource: string;
       count: number;
-    }>;
-    actionsByUser: Array<{
+    }[];
+    actionsByUser: {
       userId: number | null;
       _count: number;
       user?: {
@@ -83,12 +83,12 @@ export interface AuditStatsResponse {
         lastName: string | null;
         role: string;
       };
-    }>;
-    recentActivity: Array<{
+    }[];
+    recentActivity: {
       hour: string;
       count: number;
-    }>;
-    topUsers: Array<{
+    }[];
+    topUsers: {
       id: number;
       username: string;
       email: string;
@@ -96,7 +96,7 @@ export interface AuditStatsResponse {
       lastName: string | null;
       role: string;
       action_count: number;
-    }>;
+    }[];
   };
 }
 
@@ -139,7 +139,7 @@ export const auditLogApi = {
     }
   },
 
-  async cleanupAuditLogs(days: number = 365): Promise<{ success: boolean; message: string; deletedCount: number; daysToKeep: number }> {
+  async cleanupAuditLogs(days = 365): Promise<{ success: boolean; message: string; deletedCount: number; daysToKeep: number }> {
     const response = await api.delete<{ success: boolean; message: string; deletedCount: number; daysToKeep: number }>(`/api/audit-logs/cleanup?days=${days}`);
     return response.data;
   },

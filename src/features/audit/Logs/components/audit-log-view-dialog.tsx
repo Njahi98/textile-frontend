@@ -42,7 +42,7 @@ export function AuditLogViewDialog({
   };
 
 
-  const JsonDisplay = ({ data, title }: { data: any; title: string }) => {
+  const JsonDisplay = ({ data, title }: { data:unknown; title: string }) => {
     if (!data) return null;
 
     const jsonString = JSON.stringify(data, null, 2);

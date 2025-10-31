@@ -35,17 +35,17 @@ export default function Hero() {
           variants={fadeInUp}
           className="flex flex-col gap-4 items-center w-full sm:flex-row sm:justify-center"
         >
-          <Link to="/auth/login" className="w-full sm:w-auto">
-            <button type="button" className="w/full sm:w-auto px-8 py-4 bg-foreground text-background hover:bg-foreground/90 text-lg rounded-md transition-all transform hover:scale-105 flex items-center justify-center font-semibold shadow-lg cursor-pointer">
-              {t('buttons.signIn')}
-              <LogIn className="ml-2 h-5 w-5" />
-            </button>
+          <Link to="/auth/login" className="w-auto">
+        <button type="button" className="w-auto px-8 py-4 bg-foreground text-background hover:bg-foreground/90 text-lg rounded-md transition-all transform hover:scale-105 flex items-center justify-center font-semibold shadow-lg cursor-pointer">
+          {t('buttons.signIn')}
+          <LogIn className="ml-2 h-5 w-5" />
+        </button>
           </Link>
-          <Link to="/auth/register" className="w-full sm:w-auto">
-            <button type="button" className="w/full sm:w-auto px-8 py-4 border border-border text-foreground/80 hover:bg-secondary text-lg rounded-md transition-colors flex items-center justify-center backdrop-blur-sm cursor-pointer">
-              {t('buttons.getStarted')}
-              <Rocket className="ml-2 h-5 w-5" />
-            </button>
+          <Link to="/auth/register" className="w-auto">
+        <button type="button" className="w-auto px-8 py-4 border border-border text-foreground/80 hover:bg-secondary text-lg rounded-md transition-colors flex items-center justify-center backdrop-blur-sm cursor-pointer">
+          {t('buttons.getStarted')}
+          <Rocket className="ml-2 h-5 w-5" />
+        </button>
           </Link>
         </motion.div>
       </motion.div>

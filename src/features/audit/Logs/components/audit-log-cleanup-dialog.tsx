@@ -85,7 +85,7 @@ export function AuditLogCleanupDialog({ open, onOpenChange }: AuditLogCleanupDia
           </Button>
           <Button
             variant="destructive"
-            onClick={handleCleanup}
+            onClick={() => void handleCleanup()}
             disabled={isLoading}
           >
               {isLoading ? t('cleaningUp') : t('cleanup')}

@@ -36,7 +36,7 @@ export default function FeaturesGrid() {
               key={feature.title}
               variants={fadeInUp}
               whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-              className="bg-card/50 border border-border/50 rounded-md p-6 backdrop-blur-sm hover:bg-card transition-all duration-300"
+              className="bg-card/50 border border-border/50 rounded-md p-4 backdrop-blur-sm hover:bg-card transition-all duration-300"
             >
               <feature.icon className={`h-10 w-10 text-primary mb-4`} />
               <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>

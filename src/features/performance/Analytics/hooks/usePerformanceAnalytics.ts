@@ -34,7 +34,7 @@ export default function usePerformanceAnalytics() {
         throw new Error('Invalid analytics data structure received');
       }
       setAnalytics(response.analytics);
-    } catch (err: any) {
+    } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch analytics');
       
     } finally {

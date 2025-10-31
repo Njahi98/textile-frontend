@@ -6,6 +6,7 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, MapPin, Use
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import type { CalendarDay } from "../hooks/useAssignmentCalendar";
+import { Assignment } from "../../Records/data/schema";
 
 interface Props {
   year: number;
@@ -13,7 +14,7 @@ interface Props {
   loading: boolean;
   calendarDays: CalendarDay[];
   selectedDay: Date | null;
-  selectedDayAssignments: any[];
+  selectedDayAssignments: Assignment[];
   setSelectedDay: (d: Date | null) => void;
   navigateMonth: (dir: "prev" | "next") => void;
   goToToday: () => void;
@@ -141,7 +142,7 @@ export default function CalendarView({ year, month, loading, calendarDays, selec
                                     </span>
                                   </h4>
                                   <div className="grid gap-2">
-                                    {shiftAssignments.map((assignment: any) => (
+                                    {shiftAssignments.map((assignment) => (
                                       <Card key={assignment.id} className="p-3">
                                         <div className="space-y-2">
                                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">

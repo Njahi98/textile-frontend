@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+import axios from "axios";
 
 export interface InsightsFilters {
     startDate?: string;
@@ -13,18 +14,18 @@ export interface AIInsightResponse {
     message:string;
     insights: {
         summary: string;
-        recommendations: Array<{
+        recommendations: {
             category: 'productivity' | 'quality' | 'efficiency' | 'workforce' | 'maintenance';
             priority: 'high' | 'medium' | 'low';
             title: string;
             description: string;
             impact: string;
-        }>;
-        alerts: Array<{
+        }[];
+        alerts: {
             type: 'warning' | 'critical' | 'info';
             message: string;
             action: string;
-        }>;
+        }[];
         kpis: {
             overallEfficiency: number;
             qualityScore: number;
@@ -48,14 +49,14 @@ class InsightsAPI {
                 params: filters
             });
             return response.data;
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error fetching AI insights:', error);
             
-            // Handle rate limiting specifically - preserve the original error structure
-            if (error.response?.status === 429) {
-                // Don't transform the error, just re-throw it as-is to preserve the response structure
-                throw error;
-            }
+               if (axios.isAxiosError(error)) {
+        if (error.response?.status === 429) {
+          throw error;
+        }
+      }
             
             throw error;
         }

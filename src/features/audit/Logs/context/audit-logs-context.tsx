@@ -22,9 +22,9 @@ export default function AuditLogsProvider({ children }: Props) {
   const [currentRow, setCurrentRow] = useState<AuditLog | null>(null)
 
   return (
-    <AuditLogsContext.Provider value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <AuditLogsContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </AuditLogsContext.Provider>
+    </AuditLogsContext>
   )
 }
 

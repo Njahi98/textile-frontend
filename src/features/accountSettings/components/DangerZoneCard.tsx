@@ -26,8 +26,9 @@ export default function DangerZoneCard({ onLogout }: Props) {
       setTimeout(() => {
         onLogout();
       }, 500);
-    } catch (error: any) {
-      toast.error(error.message || t("messages.accountDeleteError"));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t("messages.accountDeleteError");
+      toast.error(message);
     } finally {
       setIsDeleting(false);
     }
@@ -65,7 +66,7 @@ export default function DangerZoneCard({ onLogout }: Props) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{t("buttons.cancel")}</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction onClick={()=>void handleDeleteAccount()} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                 {t("dialogs.deleteConfirm.confirm")}
               </AlertDialogAction>
             </AlertDialogFooter>

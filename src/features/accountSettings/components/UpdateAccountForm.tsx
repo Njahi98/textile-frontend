@@ -23,7 +23,7 @@ interface UserDetails  {
 
 interface Props  {
   user: UserDetails;
-  onMutate: () => Promise<any> | void;
+  onMutate: () => Promise<void> | void;
 };
 
 const updateAccountSchema = z.object({
@@ -100,8 +100,9 @@ export default function UpdateAccountForm({ user, onMutate }: Props) {
         toast.success(response.message);
       }
       reset({ ...data, password: "" });
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t("unknownError");
+      toast.error(message);
     } finally {
       setIsUpdating(false);
     }
@@ -114,6 +115,10 @@ export default function UpdateAccountForm({ user, onMutate }: Props) {
         <CardDescription>{t("sections.updateAccount.description")}</CardDescription>
       </CardHeader>
       <CardContent>
+        {/*this is a false positive, React Hook Form's handleSubmit returns a function that: Prevents default automatically, Validates the form,
+        Calls onSubmit with validated data, Returns void (not Promise) so we just ignore the ESLint Error */}
+
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">

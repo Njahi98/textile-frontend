@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { CheckCircle, Shield } from "lucide-react";
+import { CheckCircle, Factory } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export default function CTA() {
   const { t } = useTranslation(['home']);
   return (
-    <section className="relative z-10 px-6 lg:px-12 py-20">
+    <section className="relative z-10 px-2 lg:px-12 py-20">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -14,8 +14,8 @@ export default function CTA() {
         viewport={{ once: true }}
         className="max-w-4xl mx-auto"
       >
-        <div className="bg-card/50 border border-border/40 rounded-md p-12 backdrop-blur-sm text-center">
-          <Shield className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
+        <div className="bg-card/50 border border-border/40 rounded-md p-4 sm:p-12 backdrop-blur-sm text-center">
+          <Factory className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-foreground mb-4">{t('sections.cta.title')}</h2>
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">{t('sections.cta.description')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 w-full max-w-md mx-auto">
