@@ -47,5 +47,12 @@
   "keyPerformanceIndicators": "Indicateurs Clés de Performance",
   "reportExportedOn": "Rapport exporté le",
   "generatedBy": "Généré par le Tableau de Bord d'Analyses IA",
-  "exportReminder": "Exportez votre rapport actuel maintenant pour conserver ces analyses de façon permanente !"
+  "exportReminder": "Exportez votre rapport actuel maintenant pour conserver ces analyses de façon permanente !",
+  "assignmentMetrics": "Métriques d'assignation et de planification",
+  "assignmentMetricsDescription": "Suivez dans quelle mesure votre personnel respecte les affectations planifiées",
+  "totalAssignments": "Nombre total d'affectations",
+  "assignmentCompliance": "Respect des affectations",
+  "complianceGood": "Excellent ! Les travailleurs respectent systématiquement leurs affectations.",
+  "complianceFair": "Conformité moyenne. Certains travailleurs ne respectent pas les affectations planifiées.",
+  "compliancePoor": "Faible respect des affectations détecté. Vérifiez la communication et les processus de planification."
 }

@@ -15,7 +15,7 @@ export interface AIInsightResponse {
     insights: {
         summary: string;
         recommendations: {
-            category: 'productivity' | 'quality' | 'efficiency' | 'workforce' | 'maintenance';
+            category: 'productivity' | 'quality' | 'efficiency' | 'workforce' | 'maintenance' | 'scheduling';
             priority: 'high' | 'medium' | 'low';
             title: string;
             description: string;
@@ -39,6 +39,8 @@ export interface AIInsightResponse {
         workersAnalyzed: number;
         productionLinesAnalyzed: number;
         productsAnalyzed: number;
+        totalAssignments?: number;
+        assignmentCompliance?: string;
     };
 }
 
@@ -52,11 +54,11 @@ class InsightsAPI {
         } catch (error) {
             console.error('Error fetching AI insights:', error);
             
-               if (axios.isAxiosError(error)) {
-        if (error.response?.status === 429) {
-          throw error;
-        }
-      }
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 429) {
+                    throw error;
+                }
+            }
             
             throw error;
         }

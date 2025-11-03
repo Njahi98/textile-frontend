@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Download, RefreshCw, Clock } from 'lucide-react';
 import { toast } from 'sonner';
- 
+
 import { useTranslation } from 'react-i18next';
 
 import useAiInsights from './hooks/useAiInsights';
@@ -16,6 +16,7 @@ import RateLimitBanner from './components/RateLimitBanner';
 
 import NoDataState from './components/NoDataState';
 import FiltersSection from './components/FiltersSection';
+import AssignmentMetricsCard from './components/AssignmentMetricsCard';
 import { buildAiInsightsCsv } from './data/exportToCsv';
 
 export const AIInsightsDashboard: React.FC = () => {
@@ -50,7 +51,7 @@ export const AIInsightsDashboard: React.FC = () => {
     if (!persistedData?.insights) return;
     const csv = buildAiInsightsCsv((k) => t(k), { insights: persistedData.insights, dataAnalyzed: persistedData.dataAnalyzed });
 
-    
+
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -61,7 +62,7 @@ export const AIInsightsDashboard: React.FC = () => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    
+
     try {
       await auditLogApi.logPerformanceAiInsightsExport({
         dataAnalyzed,
@@ -81,10 +82,10 @@ export const AIInsightsDashboard: React.FC = () => {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 relative">
-      
+
       <LoadingOverlay visible={isGenerating} />
 
-      
+
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{t('title')}</h2>
@@ -95,13 +96,13 @@ export const AIInsightsDashboard: React.FC = () => {
             <Download className="h-4 w-4 mr-2" />
             {t('export')}
           </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleRefresh} 
-              disabled={isGenerating || rateLimitInfo.isRateLimited || !hasValidFilters}
-              className="text-xs sm:text-sm px-2 sm:px-3"
-            >
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleRefresh} 
+            disabled={isGenerating || rateLimitInfo.isRateLimited || !hasValidFilters}
+            className="text-xs sm:text-sm px-2 sm:px-3"
+          >
             {rateLimitInfo.isRateLimited ? (
               <>
                 <Clock className="h-4 w-4 mr-2" />
@@ -117,24 +118,37 @@ export const AIInsightsDashboard: React.FC = () => {
         </div>
       </div>
 
-      
+
       <RateLimitBanner isVisible={!rateLimitInfo.isRateLimited} cooldownText={formatTime(cooldownTimer)} canQuickExport={!!persistedData?.insights} onExport={exportToCSV} />
 
-      
+
       <FiltersSection
         filters={filters}
         onChangeDateRange={handleDateRangeChange}
         dataAnalyzed={dataAnalyzed || null}
       />
 
-      
+
       {!insights ? (
         <NoDataState onGenerate={handleRefresh} hasFilters={hasValidFilters} />
       ) : (
         <>
-          <KPICards overallEfficiency={insights.kpis.overallEfficiency} qualityScore={insights.kpis.qualityScore} productivityTrend={insights.kpis.productivityTrend} riskLevel={insights.kpis.riskLevel} />
+          <KPICards 
+            overallEfficiency={insights.kpis.overallEfficiency} 
+            qualityScore={insights.kpis.qualityScore} 
+            productivityTrend={insights.kpis.productivityTrend} 
+            riskLevel={insights.kpis.riskLevel} 
+          />
 
-          
+          {dataAnalyzed?.totalAssignments !== undefined && (
+            <AssignmentMetricsCard 
+              metrics={{
+                totalAssignments: dataAnalyzed.totalAssignments,
+                assignmentCompliance: dataAnalyzed.assignmentCompliance || '0%',
+              }}
+            />
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>{t('executiveSummary')}</CardTitle>
@@ -145,10 +159,10 @@ export const AIInsightsDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          
-          <AlertsCard alerts={insights.alerts} />
 
+          <AlertsCard alerts={insights.alerts} />
           
+
           <RecommendationsGrid recommendations={insights.recommendations} />
         </>
       )}

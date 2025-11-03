@@ -12,7 +12,8 @@ interface SilentError {
 
 export const api = axios.create({
   baseURL: VITE_API_URL,
-  timeout: 10000,
+  //google gemini sometimes takes too long to generate a result so i added some timeout delay
+  timeout: 30000, 
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 
 interface Recommendation {
-  category: 'productivity' | 'quality' | 'efficiency' | 'workforce' | 'maintenance';
+  category: 'productivity' | 'quality' | 'efficiency' | 'workforce' | 'maintenance' | 'scheduling';
   priority: 'high' | 'medium' | 'low';
   title: string;
   description: string;
@@ -35,8 +35,8 @@ const RecommendationsGrid: React.FC<{ recommendations: Recommendation[] }> = ({ 
       </CardHeader>
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {recommendations.map((rec) => (
-            <Card key={`${rec.title}-${rec.category}-${rec.priority}`}>
+          {recommendations.map((rec, index) => (
+            <Card key={`${rec.title}-${rec.category}-${rec.priority}-${index}`}>
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between mb-3">
                   <Badge variant="outline" className={`${getPriorityColor(rec.priority)} border`}>
