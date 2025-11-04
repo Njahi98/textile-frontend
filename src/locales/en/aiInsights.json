@@ -12,7 +12,7 @@
   "canGenerateNewReport": "You can now generate a new AI insights report.",
   "exportSuccess": "AI insights report has been downloaded as CSV file.",
   "rateLimitActive": "Rate Limit Active",
-  "rateLimitMessage": "AI insights can only be generated once every 30 minutes. To keep these insights permanently, please use the Export button to download them as a CSV file, as AI generated reports are not saved long-term.",
+  "rateLimitMessage": "AI insights can only be generated once every 5 minutes. To keep these insights permanently, please use the Export button to download them as a CSV file, as AI generated reports are not saved long-term.",
   "generatingInsights": "Generating AI insights...",
   "startDate": "Start Date",
   "endDate": "End Date",

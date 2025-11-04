@@ -12,7 +12,7 @@
   "canGenerateNewReport": "Vous pouvez maintenant générer un nouveau rapport d'analyses IA.",
   "exportSuccess": "Le rapport d'analyses IA a été téléchargé sous forme de fichier CSV.",
   "rateLimitActive": "Limite de Taux Active",
-  "rateLimitMessage": "Les analyses IA ne peuvent être générées qu'une fois toutes les 30 minutes. Pour conserver ces analyses de façon permanente, veuillez utiliser le bouton Exporter pour les télécharger sous forme de fichier CSV, car les rapports générés par IA ne sont pas sauvegardés à long terme.",
+  "rateLimitMessage": "Les analyses IA ne peuvent être générées qu'une fois toutes les 5 minutes. Pour conserver ces analyses de façon permanente, veuillez utiliser le bouton Exporter pour les télécharger sous forme de fichier CSV, car les rapports générés par IA ne sont pas sauvegardés à long terme.",
   "generatingInsights": "Génération des analyses IA en cours...",
   "startDate": "Date de Début",
   "endDate": "Date de Fin",
