@@ -2,11 +2,13 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, BarChart, Bar, LineChart, Line, Legend, ScatterChart, Scatter } from 'recharts';
+import { TFunction } from 'i18next';
+import { ChartDataItem } from '../data/chartData';
 
 interface ChartsTabsProps {
-  chartData: any[];
+  chartData: ChartDataItem[];
   groupBy: string;
-  t: (k: string, options?: Record<string, any>) => string;
+  t: TFunction<readonly ["performanceAnalytics"], undefined>
 }
 
 const ChartsTabs: React.FC<ChartsTabsProps> = ({ chartData, groupBy, t }) => (

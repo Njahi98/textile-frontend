@@ -79,7 +79,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
                 toast.error(result.message ?? t('googleAuth.errors.loginFailed'));
                 onError?.();
               }
-            } catch (error) {
+            } catch (error: unknown) {
               console.error('Google login failed:', error);
               const errorMessage = error instanceof Error ? error.message : t('googleAuth.errors.loginFailed');
               toast.error(errorMessage);
@@ -99,7 +99,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
           ux_mode: 'popup',
           error_callback: (error: unknown) => {
             console.error('Google Sign-In initialization error:', error);
-            const errorMessage = getGoogleAuthErrorMessage(error);
+            const errorMessage = getGoogleAuthErrorMessage(error as Error);
             toast.error(errorMessage);
           }
         });

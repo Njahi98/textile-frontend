@@ -3,7 +3,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { lazy, Suspense } from "react";
 
-const createLazyComponent = (factory: () => Promise<{ default: any }>) => {
+const createLazyComponent = (factory: () => Promise<{ default: React.ComponentType }>) => {
   const LazyComponent = lazy(factory);
   return (
     <Suspense fallback={<LoadingSpinner />}>

@@ -1,9 +1,29 @@
 import i18n from 'i18next';
 
-export const getGoogleAuthErrorMessage = (error: any): string => {
+interface GoogleErrorObject {
+  error?: string;
+  error_description?: string;
+  message?: string;
+  getNotDisplayedReason?: () => string;
+}
+
+type GoogleAuthError = string | GoogleErrorObject | Error;
+
+function isGoogleErrorObject(error: unknown): error is GoogleErrorObject {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    ('error' in error || 'error_description' in error || 'message' in error || 'getNotDisplayedReason' in error)
+  );
+}
+
+function isError(error: unknown): error is Error {
+  return error instanceof Error;
+}
+
+export const getGoogleAuthErrorMessage = (error: GoogleAuthError): string => {
   if (!error) return i18n.t('auth.googleAuth.errors.defaultError');
 
-  // Handle specific Google error types
   if (typeof error === 'string') {
     switch (error) {
       case 'popup_blocked_by_browser':
@@ -19,8 +39,7 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
     }
   }
 
-  // Handle error objects
-  if (error.error) {
+  if (isGoogleErrorObject(error) && error.error) {
     switch (error.error) {
       case 'popup_blocked_by_browser':
         return i18n.t('auth.googleAuth.errors.popupBlocked');
@@ -33,11 +52,8 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
     }
   }
 
-  // Handle notification reasons from Google Identity Services
-  // Note: getNotDisplayedReason() is deprecated in FedCM migration
-  // These methods are no longer available in the new API
-  if (error.getNotDisplayedReason) {
-    // Fallback for older implementations - this will likely not be called
+
+  if (isGoogleErrorObject(error) && error.getNotDisplayedReason) {
     const reason = error.getNotDisplayedReason();
     switch (reason) {
       case 'browser_not_supported':
@@ -61,8 +77,11 @@ export const getGoogleAuthErrorMessage = (error: any): string => {
     }
   }
 
-  // Fallback for other error types
-  if (error.message) {
+  if (isError(error) && error.message) {
+    return error.message;
+  }
+
+  if (isGoogleErrorObject(error) && error.message) {
     return error.message;
   }
 

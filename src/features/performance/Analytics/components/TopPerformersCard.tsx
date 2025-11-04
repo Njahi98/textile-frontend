@@ -2,11 +2,12 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChartDataItem, getErrorRateBadge, getDisplayName } from '../data/chartData';
+import { TFunction } from 'i18next';
 
 interface TopPerformersCardProps {
   topPerformers: ChartDataItem[];
   groupBy: string;
-  t: (key: string, options?: Record<string, any>) => string;
+  t: TFunction<readonly ["performanceAnalytics"], undefined>
 }
 
 const TopPerformersCard: React.FC<TopPerformersCardProps> = ({ topPerformers, groupBy, t }) => (

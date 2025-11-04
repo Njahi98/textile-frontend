@@ -2,7 +2,7 @@ import { RouteObject } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
-const createLazyComponent = (factory: () => Promise<{ default: any }>) => {
+const createLazyComponent = (factory: () => Promise<{ default: React.ComponentType }>) => {
   const LazyComponent = lazy(factory);
   return (
     <Suspense fallback={<LoadingSpinner />}>
