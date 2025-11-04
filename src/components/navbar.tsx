@@ -6,6 +6,7 @@ import { ColorThemeSwitcher } from "./theme/ColorThemeSwitcher";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import GithubRepoIcon from "./GithubRepoIcon";
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,7 +23,6 @@ function Navbar() {
   return (
     <div className="relative z-50">
       <nav className="max-w-screen-xl mx-auto py-4 rounded-md px-6 md:px-6 shadow-sm flex items-center justify-between">
-
         <Link to="/" reloadDocument className="flex items-center gap-2 min-w-0">
           <Factory className="h-8 w-8 text-muted-foreground" />
           <p className="text-xl sm:text-2xl text-foreground font-bold truncate">TextilePro.</p>
@@ -30,6 +30,7 @@ function Navbar() {
 
         <div className="hidden lg:flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher/>
+          <GithubRepoIcon />
           <ColorThemeSwitcher/>
           <ThemeSwitcher />
           <Link to="/auth/login">
@@ -70,8 +71,9 @@ function Navbar() {
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between py-2 border-b">
                   <span className="text-sm font-medium text-muted-foreground">{t('navbar.settingsButton')}</span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     <LanguageSwitcher/>
+                    <GithubRepoIcon />
                     <ColorThemeSwitcher/>
                     <ThemeSwitcher />
                   </div>
