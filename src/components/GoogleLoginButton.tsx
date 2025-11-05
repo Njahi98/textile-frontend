@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 import { toast } from 'sonner';
 import { getGoogleAuthErrorMessage } from '@/lib/googleAuthErrors';
@@ -14,33 +14,16 @@ interface GoogleCredentialResponse {
   credential: string;
 }
 
-interface GoogleAccounts {
-  id: {
-    initialize: (config: {
-      client_id: string;
-      callback: (response: GoogleCredentialResponse) => void;
-      auto_select?: boolean;
-      cancel_on_tap_outside?: boolean;
-      error_callback?: (error: unknown) => void;
-      ux_mode?: 'popup' | 'redirect';
-    }) => void;
-    renderButton: (element: HTMLElement, config: {
-      theme: 'outline' | 'filled_blue' | 'filled_black';
-      size: 'large' | 'medium' | 'small';
-      text?: 'signin_with' | 'signup_with' | 'continue_with' | 'signin';
-      shape?: 'rectangular' | 'pill' | 'circle' | 'square';
-      width?: number;
-      type?: 'standard' | 'icon';
-    }) => void;
-  };
-}
-
 declare global {
   interface Window {
     google?: {
-      accounts: GoogleAccounts;
+      accounts: {
+        id: {
+          initialize: (config: any) => void;
+          renderButton: (element: HTMLElement, config: any) => void;
+        };
+      };
     };
-    handleCredentialResponse?: (response: GoogleCredentialResponse) => void;
   }
 }
 
@@ -51,21 +34,22 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
 }) => {
   const { googleLogin, isLoading } = useAuthStore();
   const { t } = useTranslation('auth');
-  const initialized = useRef(false);
   const buttonRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (initialized.current || disabled || !buttonRef.current) return;
+    if (disabled || !buttonRef.current) return;
 
-    const initializeGoogleSignIn = () => {
-      if (window.google?.accounts && buttonRef.current && containerRef.current) {
-        // Define the callback globally
-        window.handleCredentialResponse = (response: GoogleCredentialResponse) => {
-          const handleResponse = async () => {
+    const timer = setTimeout(() => {
+      const init = () => {
+        if (!window.google || !buttonRef.current || !containerRef.current) return;
+
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
+          callback: async (response: GoogleCredentialResponse) => {
             try {
               if (!response?.credential) {
-                console.error('No credential received from Google');
                 toast.error(t('googleAuth.errors.loginFailed'));
                 onError?.();
                 return;
@@ -79,66 +63,40 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
                 toast.error(result.message ?? t('googleAuth.errors.loginFailed'));
                 onError?.();
               }
-            } catch (error: unknown) {
-              console.error('Google login failed:', error);
-              const errorMessage = error instanceof Error ? error.message : t('googleAuth.errors.loginFailed');
-              toast.error(errorMessage);
+            } catch (error) {
+              const msg = error instanceof Error ? error.message : t('googleAuth.errors.loginFailed');
+              toast.error(msg);
               onError?.();
             }
-          };
-          
-          void handleResponse();
-        };
-
-        // Initialize with popup mode
-        window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
-          callback: window.handleCredentialResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true,
+          },
           ux_mode: 'popup',
           error_callback: (error: unknown) => {
-            console.error('Google Sign-In initialization error:', error);
-            const errorMessage = getGoogleAuthErrorMessage(error as Error);
-            toast.error(errorMessage);
+            toast.error(getGoogleAuthErrorMessage(error as Error));
           }
         });
 
-        // Get the container width to set button width
-        const containerWidth = containerRef.current.offsetWidth;
-
-        // Render the Google Sign-In button
-        window.google.accounts.id.renderButton(buttonRef.current, {
+        window.google.accounts.id.renderButton(buttonRef.current!, {
           theme: 'outline',
           size: 'large',
           text: 'continue_with',
-          shape: 'rectangular',
-          width: containerWidth, // Use pixel width instead of percentage
-          type: 'standard'
+          width: containerRef.current!.offsetWidth
         });
 
-        initialized.current = true;
-      }
-    };
+        setTimeout(() => setReady(true), 300);
+      };
 
-    // Load Google Identity Services script
-    if (!window.google) {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = initializeGoogleSignIn;
-      document.head.appendChild(script);
-    } else {
-      initializeGoogleSignIn();
-    }
-
-    return () => {
-      // Cleanup
-      if (window.handleCredentialResponse) {
-        delete window.handleCredentialResponse;
+      if (window.google) {
+        init();
+      } else {
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.onload = init;
+        document.head.appendChild(script);
       }
-    };
+    }, 600);
+
+    return () => clearTimeout(timer);
   }, [disabled, googleLogin, onSuccess, onError, t]);
 
   if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
@@ -152,15 +110,26 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   return (
     <div 
       ref={containerRef}
-      className="w-full"
+      className="w-full relative overflow-hidden"
       style={{ 
         opacity: disabled || isLoading ? 0.6 : 1,
-        pointerEvents: disabled || isLoading ? 'none' : 'auto'
+        pointerEvents: disabled || isLoading ? 'none' : 'auto',
+        height: '44px'
       }}
     >
+      {!ready && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+        </div>
+      )}
+      
       <div 
         ref={buttonRef}
-        className="w-full flex justify-center"
+        className="w-full h-full flex justify-center items-center"
+        style={{ 
+          opacity: ready ? 1 : 0,
+          transition: 'opacity 0.3s'
+        }}
       />
     </div>
   );

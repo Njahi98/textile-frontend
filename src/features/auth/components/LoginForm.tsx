@@ -193,12 +193,12 @@ export default function LoginForm({
                     </span>
                   </div>
 
-                  <div className="grid-cols-3 gap-4 flex place-items-center">
-                    <GoogleLoginButton 
-                      disabled={isLoading}
-                      onSuccess={() => void navigate('/dashboard')}
-                    />
-                  </div>
+               <div className="h-11">
+    <GoogleLoginButton 
+      disabled={isLoading}
+      onSuccess={() => void navigate('/dashboard')}
+    />
+  </div>
 
                   <div className="text-center text-sm">
                     {t('login.noAccount')}{" "}
