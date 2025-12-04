@@ -1,4 +1,4 @@
-import { createContext, use, useEffect, useState } from "react"
+import { createContext, use, useEffect, useMemo, useState } from "react"
 
 type Theme = "dark" | "light" | "system"
 type ColorTheme = "neutral" | "rose" | "orange" | "green" | "blue" | "yellow" | "violet" | "zinc" | "slate" | "indigo"
@@ -66,7 +66,7 @@ export function ThemeProvider({
     applyTheme(theme, colorTheme)
   }, [theme, colorTheme])
 
-  const value = {
+  const value = useMemo(() => ({
     theme,
     colorTheme,
     setTheme: (newTheme: Theme) => {
@@ -95,7 +95,7 @@ export function ThemeProvider({
         setColorTheme(newColorTheme)
       })
     },
-  }
+  }), [theme, colorTheme, storageKey, colorStorageKey])
 
   return (
     <ThemeProviderContext {...props} value={value}>
