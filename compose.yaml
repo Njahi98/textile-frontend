@@ -1,0 +1,23 @@
+services:
+  frontend:
+    build: .
+    image: textile-frontend:dev
+    container_name: textile_frontend_c_v1
+    ports:
+      - 5173:5173
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+      - ./vite.config.ts:/app/vite.config.ts
+    environment:
+      VITE_API_URL: '${VITE_API_URL:-http://localhost:3000}'
+      VITE_GOOGLE_CLIENT_ID: '${VITE_GOOGLE_CLIENT_ID:-Insert_Google_Client_ID}'
+      ALLOWED_ORIGINS: '${ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}'
+    networks:
+      - textile-network
+
+networks:
+  textile-network:
+    name: textile-network
+    driver: bridge
