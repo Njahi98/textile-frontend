@@ -19,5 +19,4 @@ services:
 
 networks:
   textile-network:
-    name: textile-network
-    driver: bridge
+    external: true
