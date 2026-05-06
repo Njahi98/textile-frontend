@@ -97,6 +97,36 @@ A modern React-based frontend for textile manufacturing management, built with T
    npm run dev
    ```
 
+## Docker Setup
+
+For a quick and easy deployment, you can use Docker Compose:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Njahi98/textile-frontend.git
+   cd textile-frontend
+   ```
+
+2. Create a `.env` file by copying `.env.example` and filling in the required values:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Create the shared Docker network:
+   ```bash
+   docker network create textile-network
+   ```
+
+4. Start the application with Docker Compose:
+   ```bash
+   docker compose up 
+   ```
+   The frontend will be running at by default `http://localhost:5173`.
+
+5. To stop the services:
+   ```bash
+   docker compose down
+   ```
 
 
 ## Backend Integration

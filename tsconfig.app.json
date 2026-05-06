@@ -8,7 +8,6 @@
     "skipLibCheck": true,
 
     /* Shadcn things */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
